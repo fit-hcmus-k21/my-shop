@@ -23,10 +23,12 @@ namespace ProjectMyShop.Helpers
         {
             get
             {
-                if (_connection == null)
+                if (_connection == null || _connection.State != ConnectionState.Open)
                 {
 ;                   Connect();
                 }
+
+
 
                 return _connection;
             }

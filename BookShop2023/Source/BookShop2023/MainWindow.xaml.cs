@@ -48,7 +48,6 @@ namespace ProjectMyShop
             if (loginMode.IsNullOrEmpty())
             {
                 loginMode = AccountBUS.Instance().GetRole();
-                MessageBox.Show("Role: " + loginMode);
             } else
             {
                 if (int.Parse(loginMode) == 1)
@@ -59,6 +58,8 @@ namespace ProjectMyShop
                     loginMode = "staff";
                 }
             }
+            //MessageBox.Show("Role: " + loginMode);
+
             if (loginMode != null && loginMode.Equals("admin"))
             {
                 // role admin
@@ -117,7 +118,7 @@ namespace ProjectMyShop
         }
         #endregion
 
-        #region Mở dashboard cho staff: không có các chức năng riêng của admin
+        #region Mở dashboard cho staff: không có các chức năng riêng của admin: thống kê..
         private void openDashBoardStaff()
         {
            
@@ -125,7 +126,10 @@ namespace ProjectMyShop
             _manageOrderPage = new ManageOrder();
             _manageCategory = new ManageCategory();
 
-            Button[] buttons1 = new Button[] { dashboardButton, categoriesButton, productButton, orderButton, statButton, configButton };
+            // hide statistics
+            statButton.Visibility = Visibility.Collapsed;
+
+            Button[] buttons1 = new Button[] { dashboardButton, categoriesButton, productButton, orderButton, configButton };
             buttons = buttons1;
             if (AppConfig.GetValue(AppConfig.LastWindow) == "0")
             {
@@ -143,11 +147,6 @@ namespace ProjectMyShop
                 {
                     changeButtonColor(orderButton);
                     pageNavigation.NavigationService.Navigate(_manageOrderPage);
-                }
-                else if (AppConfig.GetValue(AppConfig.LastWindow) == "Statistics")
-                {
-                    changeButtonColor(statButton);
-                    pageNavigation.NavigationService.Navigate(statisticsPage);
                 }
 
                 else if (AppConfig.GetValue(AppConfig.LastWindow) == "ManageProduct")

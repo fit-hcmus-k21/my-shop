@@ -283,11 +283,15 @@ namespace ProjectMyShop.Views
 
                 #region Đọc dữ liệu Categories
                 var categoriesTab = tabs[0];
+                Debug.WriteLine("Sheet name: " + categoriesTab.Name);
+
 
                 // bắt đầu từ ô B2
                 var col = 'B';
-                var row = 2;
+                int row = 2;
                 var cell = categoriesTab.Cells[$"{col}{row}"];
+                Debug.WriteLine("Cell value: " + cell.Value);
+
 
                 while (cell.Value != null)
                 {
@@ -318,12 +322,15 @@ namespace ProjectMyShop.Views
                 #region Đọc dữ liệu Products
                 // Thông tin các cột: Order - Category - Name - Author - PublishedYear - PurchasePrice - SellingPrice - Quantity - ImageName - Description
                 var productsTab = tabs[1];
+                Debug.WriteLine("Sheet name: " + productsTab.Name);
+
 
                 // bắt đầu từ ô B2
                 col = 'B';
                 row = 2;
 
                 cell = productsTab.Cells[$"{col}{row}"];
+                Debug.WriteLine("Cell value: " + cell.Value);
 
                 while (cell.Value != null)
                 {
@@ -357,6 +364,7 @@ namespace ProjectMyShop.Views
 
                 #endregion
 
+                MessageBox.Show("Count Category: " + _categories.Count + " | Product count: " + _ProductBUS.GetTotalProduct());
 
                 loadProducts();
             }

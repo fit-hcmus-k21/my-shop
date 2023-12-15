@@ -87,7 +87,7 @@ namespace ProjectMyShop.Views
                     if (rememberMe.IsChecked == true)
                     {
                         AppConfig.SetValue(AppConfig.LoginStatus, ((int)AppConfig.LoginStatusEnum.LoggedIn).ToString());
-                        AppConfig.SetValue(AppConfig.LoginMode, AccountBUS.Instance().GetRole());
+                        AppConfig.SetValue(AppConfig.LoginMode, AccountBUS.Instance().GetRole().Equals("admin") ? "1" : "2");
                        
                     }
 

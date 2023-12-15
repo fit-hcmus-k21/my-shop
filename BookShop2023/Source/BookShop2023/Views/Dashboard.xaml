@@ -47,7 +47,7 @@
                                    Style="{StaticResource MaterialDesignSubtitle1TextBlock}"/>
 
                 </StackPanel>
-                <materialDesign:PackIcon Kind="CellProduct" Width="50" Margin="0, 0, 10, 10" VerticalAlignment="Bottom"
+                <materialDesign:PackIcon Kind="BookOpenPageVariant" Width="50" Margin="0, 0, 10, 10" VerticalAlignment="Bottom"
                         HorizontalAlignment="Right" Foreground="Azure"
                         Height="50"/>
 
@@ -158,17 +158,17 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="     Manufacturer"
+                    <DataGridTemplateColumn Header="            Author"
                                         IsReadOnly="True">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="{Binding Manufacturer}"></TextBlock>
+                                    <TextBlock Text="{Binding Author}"></TextBlock>
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="        Sold price"
+                    <DataGridTemplateColumn Header="        Selling price"
                                         IsReadOnly="True">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>

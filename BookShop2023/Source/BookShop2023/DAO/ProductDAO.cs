@@ -144,25 +144,25 @@ namespace ProjectMyShop.DAO
         {
             // ID Auto Increment
             var sql = "";
-            if (Product.ImagePath != null)
-            {
-                sql = "insert into Product(Name, Manufacturer, PurchasePrice, SellingPrice, Quantity, UploadDate, Description, CatID, ImagePath) " +
-                    "values (@Name, @Manufacturer, @PurchasePrice, @SellingPrice, @Quantity, @UploadDate, @Description, @CatID, @ImagePath)"; //
-            }
-            else
-            {
-                sql = "insert into Product(Name, Manufacturer, PurchasePrice, SellingPrice, Quantity, UploadDate, Description, CatID) " +
-                    "values (@Name, @Manufacturer, @PurchasePrice, @SellingPrice, @Quantity, @UploadDate, @Description, @CatID)"; //
-            }
+
+                sql = "insert into Product(Name, CatID, PurchasePrice, SellingPrice, Quantity, UploadDate, Description, Author, ImagePath, PublishedYear) " +
+                    "values (@Name, @CatID, @PurchasePrice, @SellingPrice, @Quantity, @UploadDate, @Description, @Author, @ImagePath, @PublishedYear)"; //
+
             SqlCommand sqlCommand = new SqlCommand(sql, DB.Instance.Connection);
 
             sqlCommand.Parameters.AddWithValue("@Name", Product.Name);
+            sqlCommand.Parameters.AddWithValue("@Author", Product.Author);
+
             sqlCommand.Parameters.AddWithValue("@PurchasePrice", Product.PurchasePrice);
             sqlCommand.Parameters.AddWithValue("@SellingPrice", Product.SellingPrice);
             sqlCommand.Parameters.AddWithValue("@Quantity", Product.Quantity);
             sqlCommand.Parameters.AddWithValue("@UploadDate", Product.UploadDate);
             sqlCommand.Parameters.AddWithValue("@Description", Product.Description);
             sqlCommand.Parameters.AddWithValue("@CatID", Product.CatID);
+
+            sqlCommand.Parameters.AddWithValue("@ImagePath", Product.ImagePath);
+            sqlCommand.Parameters.AddWithValue("@PublishedYear", Product.PublishedYear);
+
 
 
             try
@@ -180,10 +180,15 @@ namespace ProjectMyShop.DAO
         {
             string sql = "select ident_current('Product')";
             SqlCommand sqlCommand = new SqlCommand(sql, DB.Instance.Connection);
-            var resutl = sqlCommand.ExecuteScalar();
-            System.Diagnostics.Debug.WriteLine(resutl);
-            return System.Convert.ToInt32(sqlCommand.ExecuteScalar());
+            var result = sqlCommand.ExecuteScalar();
+            System.Diagnostics.Debug.WriteLine(result);
+            if (result == DBNull.Value)
+            {
+                return 0;
+            }
+            return System.Convert.ToInt32(result);
         }
+
         public void deleteProduct(int Productid)
         {
             string sql = "delete from Product where ID = @ID";

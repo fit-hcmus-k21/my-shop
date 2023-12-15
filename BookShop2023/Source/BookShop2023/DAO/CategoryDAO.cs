@@ -84,6 +84,7 @@ namespace ProjectMyShop.DAO
             }
             catch (Exception ex)
             {
+                
                 System.Diagnostics.Debug.WriteLine($"Inserted {cat.ID} Fail: " + ex.Message);
             }
 
@@ -93,10 +94,15 @@ namespace ProjectMyShop.DAO
         {
             string sql = "select ident_current('Category')";
             SqlCommand sqlCommand = new SqlCommand(sql, DB.Instance.Connection);
-            var resutl = sqlCommand.ExecuteScalar();
-            System.Diagnostics.Debug.WriteLine(resutl);
-            return System.Convert.ToInt32(sqlCommand.ExecuteScalar());
+            var result = sqlCommand.ExecuteScalar();
+            System.Diagnostics.Debug.WriteLine(result);
+            if (result == DBNull.Value)
+            {
+                return 0;
+            }
+            return System.Convert.ToInt32(result);
         }
+
         public int isExisted(Category cat)
         {
             string sql = "select ID from Category where Name = @Name";
