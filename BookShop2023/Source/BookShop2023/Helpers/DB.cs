@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using static ProjectMyShop.Config.AppConfig;
 
 namespace ProjectMyShop.Helpers
 {
@@ -50,6 +51,15 @@ namespace ProjectMyShop.Helpers
         {
             bool result = true;
 
+            ConnectionString = AppConfig.ConnectionString();
+            if (ConnectionString == null || ConnectionString.Equals(""))
+            {
+                MessageBox.Show("ConnectionString is empty ! Cannot connect to db.");
+                return false;
+            }
+
+            _connection = new SqlConnection(ConnectionString);
+
             try
             {
                 _connection.Open();
@@ -81,6 +91,60 @@ namespace ProjectMyShop.Helpers
             _connection.Close();
         }
 
+
+        #region Hàm bổ trợ cho chức năng test connection của settings
+        public static bool TestConnection(string server, string db, int authType, string username, string password)
+        {
+
+            var builder = new SqlConnectionStringBuilder();
+
+            builder.DataSource = server;
+            builder.InitialCatalog = db;
+
+
+            if ( authType == ((int)AuthTypeEnum.SqlServerAuthentication))
+            {
+                //MessageBox.Show("Auth type: sql server !, username, password : " + username + " " + password);
+                builder.UserID = username;
+                builder.Password = password;
+            }
+            else
+            {
+                builder.IntegratedSecurity = true;
+            }
+
+            builder.TrustServerCertificate = true;
+            builder.ConnectTimeout = 3; // s
+            builder.Pooling = false;
+
+
+            bool result = true;
+
+            using (SqlConnection connection = new SqlConnection(builder.ToString()))
+            {
+                try
+                {
+                    connection.Open();
+                    connection.Close();
+                }
+                catch (SqlException ex)
+                {
+                    System.Diagnostics.Debug.WriteLine(ex.Message);
+
+                    // Kiểm tra mã lỗi để xác định có phải là lỗi đăng nhập không thành công không
+                    if (ex.Number == 18456) // Mã lỗi 18456 là lỗi đăng nhập không thành công
+                    {
+                        MessageBox.Show("Login failed. Please check your username and password.");
+                    }
+
+                    result = false;
+                }
+            }
+
+            return result;
+        }
+
+        #endregion
 
     }
 }

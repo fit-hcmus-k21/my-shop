@@ -85,7 +85,7 @@ namespace ProjectMyShop.Config
             builder.DataSource = server;
             builder.InitialCatalog = database;
 
-            if (authType != null && authType.Equals(AuthTypeEnum.SqlServerAuthentication.ToString()))
+            if (authType != null && authType.Equals(((int) AuthTypeEnum.SqlServerAuthentication).ToString()))
             {
                 builder.UserID = Username;
                 builder.Password = Password;

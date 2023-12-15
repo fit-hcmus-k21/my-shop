@@ -1,4 +1,5 @@
-﻿using ProjectMyShop.BUS;
+﻿using Microsoft.IdentityModel.Tokens;
+using ProjectMyShop.BUS;
 using ProjectMyShop.Config;
 using ProjectMyShop.Views;
 using System;
@@ -43,7 +44,22 @@ namespace ProjectMyShop
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             // check whether user logged in mode staff or admin
-            if (int.Parse(AppConfig.GetValue(AppConfig.LoginMode)) == (int)AppConfig.LoginModeEnum.Admin)
+            string? loginMode = AppConfig.GetValue(AppConfig.LoginMode);
+            if (loginMode.IsNullOrEmpty())
+            {
+                loginMode = AccountBUS.Instance().GetRole();
+                MessageBox.Show("Role: " + loginMode);
+            } else
+            {
+                if (int.Parse(loginMode) == 1)
+                {
+                    loginMode = "admin";
+                } else
+                {
+                    loginMode = "staff";
+                }
+            }
+            if (loginMode != null && loginMode.Equals("admin"))
             {
                 // role admin
                 openDashBoardAdmin();

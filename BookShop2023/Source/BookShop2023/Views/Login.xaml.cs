@@ -119,16 +119,15 @@ namespace ProjectMyShop.Views
 
 
         #region Mở cửa sổ Settings
-        private Settings settingsScreen;
 
         private void settingBtn_Click(object sender, RoutedEventArgs e)
         {
+            Settings settingsScreen = new Settings();
+
             // Tạo một đối tượng Settings nếu chưa có
-            if (settingsScreen == null)
-            {
-                settingsScreen = new Settings();
-                settingsScreen.Closed += SettingsScreen_Closed; // Đăng ký sự kiện khi cửa sổ được đóng
-            }
+
+            settingsScreen = new Settings();
+            settingsScreen.Closed += SettingsScreen_Closed; // Đăng ký sự kiện khi cửa sổ được đóng
 
             // Ẩn cửa sổ đăng nhập
             this.Hide();

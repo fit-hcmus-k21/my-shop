@@ -33,7 +33,6 @@ namespace ProjectMyShop.DAO
             {
                 if (reader.HasRows)
                 {
-                    return true;
                     #region Lấy dữ liệu User
                     while (reader.Read())
                     {
@@ -44,6 +43,7 @@ namespace ProjectMyShop.DAO
                         AccountBUS.Instance().SetUserInfo(Name, Role);
                     }
                     #endregion
+                    return true;
                 }
                 else
                 {
