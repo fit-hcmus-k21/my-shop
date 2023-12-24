@@ -31,9 +31,9 @@ namespace ProjectMyShop
 
         #region Khai báo các user controls, buttons..
         Dashboard dashboard;
-        ManageProduct manageProductPage;
+        ManageProduct _manageProductPage;
         ManageOrder _manageOrderPage;
-        Statistics statisticsPage;
+        Statistics _statisticsPage;
         ManageCategory _manageCategory;
         Configuration _configPage;
         Login login;
@@ -94,23 +94,27 @@ namespace ProjectMyShop
                 if (AppConfig.GetValue(AppConfig.LastWindow) == "ManageCategory")
                 {
                     changeButtonColor(categoriesButton);
+                    _manageCategory = new ManageCategory();
                     pageNavigation.NavigationService.Navigate(_manageCategory);
                 }
                 else if (AppConfig.GetValue(AppConfig.LastWindow) == "ManageOrder")
                 {
                     changeButtonColor(orderButton);
+                    _manageOrderPage = new ManageOrder();   
                     pageNavigation.NavigationService.Navigate(_manageOrderPage);
                 }
                 else if (AppConfig.GetValue(AppConfig.LastWindow) == "Statistics")
                 {
                     changeButtonColor(statButton);
-                    pageNavigation.NavigationService.Navigate(statisticsPage);
+                    _statisticsPage = new Statistics();
+                    pageNavigation.NavigationService.Navigate(_statisticsPage);
                 }
 
                 else if (AppConfig.GetValue(AppConfig.LastWindow) == "ManageProduct")
                 {
                     changeButtonColor(productButton);
-                    pageNavigation.NavigationService.Navigate(manageProductPage);
+                    _manageProductPage = new ManageProduct();
+                    pageNavigation.NavigationService.Navigate(_manageProductPage);
                 }
 
             }
@@ -141,18 +145,22 @@ namespace ProjectMyShop
                 if (AppConfig.GetValue(AppConfig.LastWindow) == "ManageCategory")
                 {
                     changeButtonColor(categoriesButton);
+                    _manageCategory = new ManageCategory();
                     pageNavigation.NavigationService.Navigate(_manageCategory);
                 }
                 else if (AppConfig.GetValue(AppConfig.LastWindow) == "ManageOrder")
                 {
+
                     changeButtonColor(orderButton);
+                    _manageOrderPage = new ManageOrder();
                     pageNavigation.NavigationService.Navigate(_manageOrderPage);
                 }
 
                 else if (AppConfig.GetValue(AppConfig.LastWindow) == "ManageProduct")
                 {
                     changeButtonColor(productButton);
-                    pageNavigation.NavigationService.Navigate(manageProductPage);
+                    _manageProductPage = new ManageProduct();
+                    pageNavigation.NavigationService.Navigate(_manageProductPage);
                 }
 
             }
@@ -180,8 +188,8 @@ namespace ProjectMyShop
         private void productButton_Click(object sender, RoutedEventArgs e)
         {
             changeButtonColor(productButton);
-            manageProductPage = new ManageProduct();
-            pageNavigation.NavigationService.Navigate(manageProductPage);
+            _manageProductPage = new ManageProduct();
+            pageNavigation.NavigationService.Navigate(_manageProductPage);
         }
 
         private void orderButton_Click(object sender, RoutedEventArgs e)
@@ -193,8 +201,8 @@ namespace ProjectMyShop
         private void statButton_Click(object sender, RoutedEventArgs e)
         {
             changeButtonColor(statButton);
-            statisticsPage = new Statistics();
-            pageNavigation.NavigationService.Navigate(statisticsPage);
+            _statisticsPage = new Statistics();
+            pageNavigation.NavigationService.Navigate(_statisticsPage);
         }
 
         private void configButton_Click(object sender, RoutedEventArgs e)

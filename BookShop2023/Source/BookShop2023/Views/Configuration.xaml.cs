@@ -29,10 +29,7 @@ namespace ProjectMyShop.Views
             InitializeComponent();
         }
 
-        private void nProductComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
 
-        }
 
         private void cancelButton_Click(object sender, RoutedEventArgs e)
         {
@@ -41,16 +38,33 @@ namespace ProjectMyShop.Views
 
         private void saveButton_Click(object sender, RoutedEventArgs e)
         {
-            var item = (ComboBoxItem)nProductComboBox.SelectedValue;
+            string content = rowsPerPage.Text.ToString();
 
-            var content = "";
+            // validate content
+            //...
 
-            if(item != null)
+            try
             {
-                content = (string)item.Content;
+                int num = int.Parse(content);
+                // Nếu chuyển đổi thành công
+                if (num <= 0)
+                {
+                    // Hiển thị hộp thoại thông báo khi giá trị nhỏ hơn 0
+                    MessageBox.Show("Number of product per page must be greater than or equal to 0!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
             }
-            
-            if(content != "")
+
+            catch (FormatException)
+            {
+                // Xử lý trường hợp chuỗi không thể chuyển đổi thành số nguyên
+                MessageBox.Show("Invalid input. Please enter a valid number.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+
+            if (content != "")
                 AppConfig.SetValue(AppConfig.NumberProductPerPage, content);
 
             if (lastWindowCheckBox.IsChecked == false)
@@ -66,20 +80,12 @@ namespace ProjectMyShop.Views
                 nProduct = AppConfig.GetValue(AppConfig.NumberProductPerPage);
             }
 
-            if (nProduct == "3")
-                nProductComboBox.SelectedIndex = 0;
-            else if (nProduct == "6")
-                nProductComboBox.SelectedIndex = 1;
-            else if (nProduct == "9")
-                nProductComboBox.SelectedIndex = 2;
-            else if (nProduct == "12")
-                nProductComboBox.SelectedIndex = 3;
-            else if (nProduct == "20")
-                nProductComboBox.SelectedIndex = 4;
+            rowsPerPage.Text = nProduct;
+
 
             if (AppConfig.GetValue(AppConfig.OpenLastWindow) == "0")
                 lastWindowCheckBox.IsChecked = false;
-            else 
+            else
                 lastWindowCheckBox.IsChecked = true;
         }
     }

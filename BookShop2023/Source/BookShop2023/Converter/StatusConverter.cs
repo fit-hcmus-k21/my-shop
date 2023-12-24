@@ -18,7 +18,7 @@ namespace ProjectMyShop.Converter
         {
             if (value == null) return DependencyProperty.UnsetValue;
 
-            return GetDescription((Enum)value);
+            return GetDescription((int)value);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
@@ -26,7 +26,7 @@ namespace ProjectMyShop.Converter
             return value;
         }
 
-        public static string GetDescription(Enum en)
+        public static string GetDescription(int en)
         {
             Type type = en.GetType();
             MemberInfo[] memInfo = type.GetMember(en.ToString());

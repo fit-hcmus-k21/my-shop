@@ -34,16 +34,11 @@
                     <!--Checked state-->
                     <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="MediumPurple"/>
                 </CheckBox.Resources> Open the last window when application startup</CheckBox>
-            <Label Content="Number of product per page"/>
-            <ComboBox HorizontalAlignment="Left" BorderThickness="1" BorderBrush="MediumPurple" x:Name="nProductComboBox" Width="50" Height="30" SelectionChanged="nProductComboBox_SelectionChanged" RenderTransformOrigin="-0.994,1.569">
-                <ComboBoxItem>3</ComboBoxItem>
-                <ComboBoxItem>6</ComboBoxItem>
-                <ComboBoxItem>9</ComboBoxItem>
-                <ComboBoxItem>12</ComboBoxItem>
-                <ComboBoxItem>20</ComboBoxItem>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Number of product per page" />
+                <TextBox Width="50" Margin="20 0 0 0" Name="rowsPerPage" />
+            </StackPanel>
 
-            </ComboBox>
-            
 
         </StackPanel>
 

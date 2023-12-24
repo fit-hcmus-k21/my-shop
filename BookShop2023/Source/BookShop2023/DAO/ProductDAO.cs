@@ -10,11 +10,14 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Media.Imaging;
 using System.IO;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using System.Data;
 
 namespace ProjectMyShop.DAO
 {
     internal class ProductDAO : DB
     {
+        #region not updated yet
         public int getTotalProduct()
         {
             var sql = "select count(*) as total from Product";
@@ -209,12 +212,12 @@ namespace ProjectMyShop.DAO
             string sql;
             if (Product.ImagePath != null)
             {
-                sql = "update Product set Name = @Name, Manufacturer = @Manufacturer, Description = @Description, " +
+                sql = "update Product set Name = @Name, Author = @Author, Description = @Description, " +
                 "PurchasePrice = @PurchasePrice, Quantity = @Quantity, SellingPrice = @SellingPrice, ImagePath = @ImagePath where ID = @ID";
             }
             else
             {
-                sql = "update Product set Name = @Name, Manufacturer = @Manufacturer, Description = @Description, " +
+                sql = "update Product set Name = @Name, Author = @Author, Description = @Description, " +
                 "PurchasePrice = @PurchasePrice, Quantity = @Quantity, SellingPrice = @SellingPrice where ID = @ID";
             }
             SqlCommand sqlCommand = new SqlCommand(sql, DB.Instance.Connection);
@@ -242,7 +245,7 @@ namespace ProjectMyShop.DAO
         {
             string sqlFormattedDate = src.ToString("yyyy-MM-dd");
 
-            var sql = "select TOP(5) p.ID, p.Name, p.Manufacturer, p.Quantity, p.Description, p.PurchasePrice, p.SellingPrice, p.CatID, p.UploadDate, p.ImagePath, sum(do.Quantity) as Quantity from Orders o join OrderDetail do on o.ID = do.OrderID join Product p on p.ID = do.ProductID where CreatedAt between DATEADD(DAY, -7, @SelectedDate) and DATEADD(DAY, 1, @SelectedDate) group by p.ID, p.Name, p.Manufacturer, p.Quantity, p.Description, p.PurchasePrice, p.SellingPrice, p.CatID, p.UploadDate, p.ImagePath order by sum(do.Quantity) desc;";
+            var sql = "select TOP(5) p.ID, p.Name, p.Author, p.Quantity, p.Description, p.PurchasePrice, p.SellingPrice, p.CatID, p.UploadDate, p.ImagePath, sum(do.Quantity) as Quantity from Orders o join OrderDetail do on o.ID = do.OrderID join Product p on p.ID = do.ProductID where CreatedAt between DATEADD(DAY, -7, @SelectedDate) and DATEADD(DAY, 1, @SelectedDate) group by p.ID, p.Name, p.Author, p.Quantity, p.Description, p.PurchasePrice, p.SellingPrice, p.CatID, p.UploadDate, p.ImagePath order by sum(do.Quantity) desc;";
 
             var sqlParameter = new SqlParameter();
             sqlParameter.ParameterName = "@SelectedDate";
@@ -258,7 +261,7 @@ namespace ProjectMyShop.DAO
             {
                 var ID = (int)reader["ID"];
                 var Name = (String)reader["Name"];
-                var Manufacturer = (String)reader["Manufacturer"];
+                var Author = (String)reader["Author"];
 
                 var SellingPrice = (int)(decimal)reader["SellingPrice"];
                 var PurchasePrice = (int)(decimal)reader["PurchasePrice"];
@@ -303,7 +306,7 @@ namespace ProjectMyShop.DAO
         {
             string sqlFormattedDate = src.ToString("yyyy-MM-dd");
 
-            var sql = "select TOP(5) p.ID, p.Name, p.Manufacturer, p.Quantity, p.Description, p.PurchasePrice, p.SellingPrice, p.CatID, p.UploadDate, p.ImagePath, sum(do.Quantity) as Quantity from Orders o join OrderDetail do on o.ID = do.OrderID join Product p on p.ID = do.ProductID where datepart(year, CreatedAt) = datepart(year, @SelectedDate) and datepart(month, CreatedAt) = datepart(month, @SelectedDate) group by p.ID, p.Name, p.Manufacturer, p.Quantity, p.Description, p.PurchasePrice, p.SellingPrice, p.CatID, p.UploadDate, p.ImagePath order by sum(do.Quantity) desc;";
+            var sql = "select TOP(5) p.ID, p.Name, p.Author, p.Quantity, p.Description, p.PurchasePrice, p.SellingPrice, p.CatID, p.UploadDate, p.ImagePath, sum(do.Quantity) as Quantity from Orders o join OrderDetail do on o.ID = do.OrderID join Product p on p.ID = do.ProductID where datepart(year, CreatedAt) = datepart(year, @SelectedDate) and datepart(month, CreatedAt) = datepart(month, @SelectedDate) group by p.ID, p.Name, p.Author, p.Quantity, p.Description, p.PurchasePrice, p.SellingPrice, p.CatID, p.UploadDate, p.ImagePath order by sum(do.Quantity) desc;";
 
             var sqlParameter = new SqlParameter();
             sqlParameter.ParameterName = "@SelectedDate";
@@ -320,7 +323,7 @@ namespace ProjectMyShop.DAO
             {
                 var ID = (int)reader["ID"];
                 var Name = (String)reader["Name"];
-                var Manufacturer = (String)reader["Manufacturer"];
+                var Author = (String)reader["Author"];
                 var SellingPrice = (int)(decimal)reader["SellingPrice"];
                 var PurchasePrice = (int)(decimal)reader["PurchasePrice"];
                 var Description = (String)reader["Description"];
@@ -349,7 +352,7 @@ namespace ProjectMyShop.DAO
         {
             string sqlFormattedDate = src.ToString("yyyy-MM-dd");
 
-            var sql = "select TOP(5) p.ID, p.Name, p.Manufacturer, p.Quantity, p.Description, p.PurchasePrice, p.SellingPrice, p.CatID, p.UploadDate, p.ImagePath, sum(do.Quantity) as Quantity from Orders o join OrderDetail do on o.ID = do.OrderID join Product p on p.ID = do.ProductID where datepart(year, CreatedAt) = datepart(year, @SelectedDate) group by p.ID, p.Name, p.Manufacturer, p.Quantity, p.Description, p.PurchasePrice, p.SellingPrice, p.CatID, p.UploadDate, p.ImagePath order by sum(do.Quantity) desc;";
+            var sql = "select TOP(5) p.ID, p.Name, p.Author, p.Quantity, p.Description, p.PurchasePrice, p.SellingPrice, p.CatID, p.UploadDate, p.ImagePath, sum(do.Quantity) as Quantity from Orders o join OrderDetail do on o.ID = do.OrderID join Product p on p.ID = do.ProductID where datepart(year, CreatedAt) = datepart(year, @SelectedDate) group by p.ID, p.Name, p.Author, p.Quantity, p.Description, p.PurchasePrice, p.SellingPrice, p.CatID, p.UploadDate, p.ImagePath order by sum(do.Quantity) desc;";
 
             var sqlParameter = new SqlParameter();
             sqlParameter.ParameterName = "@SelectedDate";
@@ -365,7 +368,7 @@ namespace ProjectMyShop.DAO
             {
                 var ID = (int)reader["ID"];
                 var Name = (String)reader["Name"];
-                var Manufacturer = (String)reader["Manufacturer"];
+                var Author = (String)reader["Author"];
                 var SellingPrice = (int)(decimal)reader["SellingPrice"];
                 var PurchasePrice = (int)(decimal)reader["PurchasePrice"];
                 var Description = (String)reader["Description"];
@@ -402,6 +405,122 @@ namespace ProjectMyShop.DAO
                     list.Add(Product);
             }
             reader.Close();
+            return list;
+        }
+
+        #endregion
+
+        #region declare variables
+        bool _hasCategoryFilter = false;
+        bool _hasPriceFilter = false;
+        bool _hasPublishedYearFilter = false;
+
+        int categoryFilter = -1;
+        int yearFilter = -1;
+        int minPrice = -1;
+        int maxPrice = -1;
+        string _sortingCriteriaQuery = "";
+        string _keyword = "";
+        #endregion
+
+        #region setter  methods
+        public void setFilterCat(int id)
+        {
+            if (id != -1)
+            {
+                _hasCategoryFilter = true;
+                categoryFilter = id;
+            } else
+            {
+                _hasCategoryFilter = false;
+            }
+        }
+
+        public void setSearchKeyword(string keyword)
+        {
+            _keyword = keyword;
+        }
+
+        public void setFilterPrice(int min, int max)
+        {
+            _hasPriceFilter = true;
+            minPrice = min;
+            maxPrice = max;
+        }
+
+        public void removeFilterPrice()
+        {
+            _hasPriceFilter = false;
+        }
+        #endregion
+
+        public List<Product> loadAllProducts () {
+            List<Product> list = new List<Product>();
+
+            var sql = @"
+                select *, count(*) over() as Total from Product
+                where (LOWER(CONVERT(VARCHAR(100), Name)) LIKE LOWER(CONVERT(VARCHAR(100), @Keyword))
+                        OR LOWER(CONVERT(NVARCHAR(100), Author)) LIKE LOWER(CONVERT(NVARCHAR(100), @Keyword))) 
+                "
+                + (_hasCategoryFilter ? " AND CatID = @CatID " : " ")
+                + (_hasPublishedYearFilter ? " AND PublishedYear = @PublishedYear " : " ")
+                + (_hasPriceFilter ? " AND (SellingPrice BETWEEN @MinPrice AND @MaxPrice) " : " ")
+                + _sortingCriteriaQuery
+                ;
+        
+            // MessageBox.Show("Command: " + sql);
+            var command = new SqlCommand(sql, DB.Instance.Connection);
+            command.Parameters.Add("@Keyword", SqlDbType.NVarChar).Value = $"%{_keyword}%";
+
+            if (_hasCategoryFilter)
+            {
+                command.Parameters.Add("@CatID", SqlDbType.Int).Value = categoryFilter;
+            }
+            if (_hasPublishedYearFilter)
+            {
+                command.Parameters.Add("@PublishedYear", SqlDbType.Int).Value = yearFilter;
+            }
+            if (_hasPriceFilter)
+            {
+                command.Parameters.Add("@MinPrice", SqlDbType.Int).Value = minPrice;
+                command.Parameters.Add("@MaxPrice", SqlDbType.Int).Value = maxPrice;
+
+            }
+
+            using (var reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    // Create Product instances and populate properties
+                    int id = (int)reader["ID"];
+                    string name = (string)reader["Name"];
+                    int categoryId = (int)reader["CatID"];
+                    int quantity = (int)reader["Quantity"];
+                    string imagePath = (string)reader["ImagePath"];
+                    string author = (string)reader["Author"];
+                    int publishedYear = (int)reader["PublishedYear"];
+                    int sellingPrice =  Convert.ToInt32((decimal) reader["SellingPrice"]);
+                    int purchasePrice = Convert.ToInt32((decimal)reader["PurchasePrice"]);
+
+
+                    Product p = new Product
+                    {
+                        ID = id,
+                        Name = name,
+                        CatID = categoryId,
+                        Author = author,
+                        PublishedYear = publishedYear,
+                        SellingPrice = sellingPrice,
+                        PurchasePrice = purchasePrice,
+                        ImagePath = imagePath,
+                        Quantity = quantity
+
+                    };
+
+                    list.Add(p);
+
+                }
+            }
             return list;
         }
     }

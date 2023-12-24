@@ -1,14 +1,18 @@
 ﻿using Aspose.Cells;
 using Microsoft.Graph;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.Win32;
 using ProjectMyShop.BUS;
 using ProjectMyShop.Config;
 using ProjectMyShop.DTO;
+using ProjectMyShop.Helpers;
 using ProjectMyShop.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Data.Common;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -37,62 +41,29 @@ namespace ProjectMyShop.Views
 
 
         private ProductBUS _ProductBus = new ProductBUS();
-        ProductViewModel _vm = new ProductViewModel();
         List<Category>? _categories = null;
+        BindingList<Product> _products = new BindingList<Product>();
 
         int _totalItems = 0;
         int _currentPage = 1;
         int _totalPages = 0;
         int _rowsPerPage = int.Parse(AppConfig.GetValue(AppConfig.NumberProductPerPage));
-        int i = 0;
+
 
         #region Features: search product with criterias: 
         private void searchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             string search_text = searchTextBox.Text;
-            if(search_text.Length > 0)
-            {
-                _currentPage = 1;
-                previousButton.IsEnabled = false;
-
-                _vm.SelectedProducts.Clear();
-                BindingList<Product> Products = new BindingList<Product>();
-                foreach (Product Product in _vm.Products)
-                {
-                    if(Product.Name.ToLower().Contains(search_text.ToLower()))
-                    {
-                        Products.Add(Product);
-                    }
-                }
-
-                _vm.SelectedProducts = Products
-                .Skip((_currentPage - 1) * _rowsPerPage)
-                .Take(_rowsPerPage).ToList();
-
-                if(_vm.SelectedProducts.Count > 0)
-                {
-                    _currentPage = 1;
-                    _totalItems = Products.Count;
-                    _totalPages = Products.Count / _rowsPerPage +
-                    (Products.Count % _rowsPerPage == 0 ? 0 : 1);
-                    ProductsListView.ItemsSource = _vm.SelectedProducts;
-                    currentPagingTextBlock.Text = $"{_currentPage}/{_totalPages}";
-                }
-                if(_totalPages <= 1)
-                {
-                    nextButton.IsEnabled = false;
-                }
-            }
-            else
-            {
-                loadProducts();
-            }
+            _ProductBus.setSearchKeyword(search_text);
+            loadProducts();
         }
         #endregion
 
 
+        #region page loaded
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            //MessageBox.Show("Page Loaded - Manage Product");
             previousButton.IsEnabled = false;
             nextButton.IsEnabled = false;
             _currentPage = 0;
@@ -100,64 +71,77 @@ namespace ProjectMyShop.Views
             var catBUS = new CategoryBUS();
             var ProductBUS = new ProductBUS();
             _categories = catBUS.getCategoryList();
-            categoriesListView.ItemsSource = _categories;
+
+            categoriesComboBox.ItemsSource = _categories;
+            categoriesComboBox.SelectedIndex = _categories.Count - 1;
             
             if(_categories.Count > 0)
             {
+
                 loadProducts();
-            }
+            } 
 
             AppConfig.SetValue(AppConfig.LastWindow, "ManageProduct");
+
         }
+        #endregion
 
         private void filterRangeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
+
         }
+
+        #region load products
+
         void loadProducts()
         {
-            i = categoriesListView.SelectedIndex;
-            if(i < 0)
+            int count = _ProductBus.loadAllProducts().Count;
+
+            List<Product> listProducts = _ProductBus.loadAllProducts()
+                                                      .Skip((_currentPage - 1) * _rowsPerPage)
+                                                      .Take(_rowsPerPage).ToList();
+
+            BindingList<Product> bindingList = new BindingList<Product>(listProducts);
+
+            _products = bindingList;
+
+            ProductsListView.ItemsSource = _products;
+
+            if (count != _totalItems)
             {
-                i = 0;
+                _totalItems = count;
+                _totalPages = (_totalItems / _rowsPerPage) + (((_totalItems % _rowsPerPage) == 0) ? 0 : 1);
+
+                // tạo thông tin phân trang
+                var pageInfos = new List<object>();
+
+                for (int i = 1; i <= _totalPages; i++)
+                {
+                    pageInfos.Add(new
+                    {
+                        Page = i,
+                        Total = _totalPages
+                    });
+                };
+
+                pagingComboBox.ItemsSource = pageInfos;
+                pagingComboBox.SelectedIndex = 0;
+
             }
 
-
-            if(_categories == null)
-            {
-                return;
-            }
-            _currentPage = 1;
-            previousButton.IsEnabled = false;
-
-            _vm.SelectedProducts = _vm.Products
-                .Skip((_currentPage - 1) * _rowsPerPage)
-                .Take(_rowsPerPage).ToList();
-
-            _totalItems = _vm.Products.Count;
-            _totalPages = _vm.Products.Count / _rowsPerPage +
-                (_vm.Products.Count % _rowsPerPage == 0 ? 0 : 1);
-            _currentPage = _totalPages > 0 ? 1 : 0;
-            currentPagingTextBlock.Text = $"{_currentPage}/{_totalPages}";
-
-            if(_totalPages > 1)
+            if (_totalPages > 1)
             {
                 nextButton.IsEnabled = true;
             }
             else
             {
-                nextButton.IsEnabled=false;
+                nextButton.IsEnabled = false;
             }
 
-            ProductsListView.ItemsSource = _vm.SelectedProducts;
-            
         }
+        #endregion
 
-        private void categoriesListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            previousButton.IsEnabled = false;
-            loadProducts();
-        }
 
         private void editMenuItem_Click(object sender, RoutedEventArgs e)
         {
@@ -201,7 +185,7 @@ namespace ProjectMyShop.Views
             if (MessageBoxResult.Yes == result)
             {
                 //_Products.Remove(p);
-                _vm.Products.Remove(p);
+                //_vm.Products.Remove(p);
                 _ProductBus.removeProduct(p);
                 searchTextBox_TextChanged(sender, null);
                 //_vm.SelectedProducts.Remove(p);
@@ -230,39 +214,21 @@ namespace ProjectMyShop.Views
 
         private void previousButton_Click(object sender, RoutedEventArgs e)
         {
-            nextButton.IsEnabled = true;
-            _currentPage--;
-            _vm.SelectedProducts = _vm.Products
-                .Skip((_currentPage - 1) * _rowsPerPage)
-                .Take(_rowsPerPage)
-                .ToList();
-
-            // ép cập nhật giao diện
-            ProductsListView.ItemsSource = _vm.SelectedProducts;
-            currentPagingTextBlock.Text = $"{_currentPage}/{_totalPages}";
-            if (_currentPage - 1 < 1)
+            if (pagingComboBox.SelectedIndex > 0)
             {
-                previousButton.IsEnabled = false;
+                pagingComboBox.SelectedIndex--;
             }
+
+           
         }
 
         private void nextButton_Click(object sender, RoutedEventArgs e)
         {
-            previousButton.IsEnabled = true;
-            _currentPage++;
-            _vm.SelectedProducts = _vm.Products
-                    .Skip((_currentPage - 1) * _rowsPerPage)
-                    .Take(_rowsPerPage)
-                    .ToList();
-
-            // ép cập nhật giao diện
-            ProductsListView.ItemsSource = _vm.SelectedProducts;
-            currentPagingTextBlock.Text = $"{_currentPage}/{_totalPages}";
-
-            if (_currentPage + 1 > _totalPages)
+            if (pagingComboBox.SelectedIndex < _totalPages - 1)
             {
-                nextButton.IsEnabled = false;
+                pagingComboBox.SelectedIndex++;
             }
+
         }
 
         private void ImportButton_Click(object sender, RoutedEventArgs e)
@@ -307,7 +273,7 @@ namespace ProjectMyShop.Views
                 _categories = _cateBUS.getCategoryList();
                 Debug.WriteLine(_categories.Count);
 
-                categoriesListView.ItemsSource = _categories;
+                categoriesComboBox.ItemsSource = _categories;
 
                 #endregion
 
@@ -396,51 +362,83 @@ namespace ProjectMyShop.Views
 
         private void FilterButton_Click(object sender, RoutedEventArgs e)
         {
-            float fromPrice = float.Parse(fromTextbox.Text);
-            float toPrice = float.Parse(toTextbox.Text);
-            if (fromPrice >= 0 && toPrice > 0 && fromPrice < toPrice)
+            // validate input
+            //...
+
+            string min = minPriceTextbox.Text;
+            string max = maxPriceTextbox.Text;
+            if (min.IsNullOrEmpty() && max.IsNullOrEmpty())
             {
-                _currentPage = 1;
-                previousButton.IsEnabled = false;
+                _ProductBus.removeFilterPrice();
+                loadProducts();
+                return;
+            }
 
-                _vm.SelectedProducts.Clear();
-                BindingList<Product> Products = new BindingList<Product>();
-                foreach (Product Product in _vm.Products)
+
+            try
+            {
+                int minPrice = int.Parse(minPriceTextbox.Text);
+                int maxPrice = int.Parse(maxPriceTextbox.Text);
+                if (minPrice >= 0 && maxPrice > 0 && minPrice < maxPrice)
                 {
-                    if (Product.SellingPrice >= fromPrice && Product.SellingPrice <= toPrice)
-                    {
-                        Products.Add(Product);
-                    }
+                    _ProductBus.setFilterPrice(minPrice, maxPrice);
+                    loadProducts();
+
                 }
-
-                if(Products.Count <= 0)
+                else
                 {
-                    MessageBox.Show("Product not found!");
+                    MessageBox.Show("Invalid price input for filter !", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 
-                _vm.SelectedProducts = Products
-                .Skip((_currentPage - 1) * _rowsPerPage)
-                .Take(_rowsPerPage).ToList();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Invalid price input for filter !", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
 
-                if (_vm.SelectedProducts.Count > 0)
-                {
-                    _currentPage = 1;
-                    _totalItems = Products.Count;
-                    _totalPages = Products.Count / _rowsPerPage +
-                    (Products.Count % _rowsPerPage == 0 ? 0 : 1);
-                    ProductsListView.ItemsSource = _vm.SelectedProducts;
-                    currentPagingTextBlock.Text = $"{_currentPage}/{_totalPages}";
-                }
-                if (_totalPages <= 1)
-                {
-                    nextButton.IsEnabled = false;
-                }
+        private void categoriesComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            int id = categoriesComboBox.SelectedIndex;
+            // MessageBox.Show("Category choose: " + _categories[id].Name );
+            if (!_categories[id].Name.Equals("All"))
+            {
+                int catID = _categories[id].ID;
+                _ProductBus.setFilterCat(catID);
             }
             else
             {
-               
-                MessageBox.Show("Product not found!");
+                _ProductBus.setFilterCat(-1);
+            }
+            loadProducts();
+        }
+
+        private void pagingComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            dynamic info = pagingComboBox.SelectedItem;
+            if (info != null)
+            {
+                if (info?.Page != _currentPage)
+                {
+                    _currentPage = info?.Page;
+                    loadProducts();
+                }
+            }
+
+            if (_currentPage == _totalPages)
+            {
+                nextButton.IsEnabled = false;
+            } else
+            {
+                nextButton.IsEnabled = true;
+            }
+            if (_currentPage == 1 )
+            {
+                previousButton.IsEnabled = false;
+            } else
+            {
+                previousButton.IsEnabled = true;
             }
         }
     }

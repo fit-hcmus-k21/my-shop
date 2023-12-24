@@ -23,6 +23,7 @@ namespace ProjectMyShop.BUS
             }
         }
 
+        #region not updated yet
         public int GetTotalProduct()
         {
             return _ProductDAO.getTotalProduct();
@@ -93,5 +94,33 @@ namespace ProjectMyShop.BUS
         {
             return _ProductDAO.getProductByID(ProductID);
         }
+        #endregion
+
+        public List<Product> loadAllProducts()
+        {
+            return _ProductDAO.loadAllProducts();
+        }
+
+        public void setFilterCat(int id)
+        {
+            _ProductDAO.setFilterCat(id);
+        }
+
+        public void setSearchKeyword(string keyword)
+        {
+            _ProductDAO.setSearchKeyword(keyword);
+        }
+
+        public void setFilterPrice(int min, int max)
+        {
+            _ProductDAO.setFilterPrice(min, max);
+        }
+
+        public void removeFilterPrice()
+        {
+            _ProductDAO.removeFilterPrice();
+        }
+      
     }
+
 }

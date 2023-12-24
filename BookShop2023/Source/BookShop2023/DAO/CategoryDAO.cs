@@ -61,6 +61,13 @@ namespace ProjectMyShop.DAO
 
                 resultList.Add(category);
             }
+            // add all option for filter
+            resultList.Add(new Category()
+            {
+                ID = resultList[^1].ID + 1,
+                Name = "All"
+            });
+
             reader.Close();
             return resultList;
         }

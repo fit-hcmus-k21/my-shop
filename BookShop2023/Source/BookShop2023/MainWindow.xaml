@@ -7,8 +7,10 @@
         xmlns:local="clr-namespace:ProjectMyShop"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen" 
-        Title="Book Shop Management" Height="650" Width="1100"
+        Title="Book Shop Management" Height="800" Width="1200"
         Loaded="Window_Loaded">
+  
+
     <Grid x:Name="layoutContainer">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="4*"/>
@@ -24,7 +26,8 @@
         <!--Logo-->
         <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
             <!-- Đường dẫn tương đối đến tệp hình ảnh logo -->
-            <Image Source="/Assets/Icons/book.png" Width="100" Height="100" />
+            <!--<Image RenderOptions.BitmapScalingMode="HighQuality" Source="{Binding 'Assets/Icons/book.png', Converter={StaticResource absoluteConverter}}" Width="200" Height="100" />-->
+
 
         </StackPanel>
 
