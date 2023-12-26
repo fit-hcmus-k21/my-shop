@@ -520,6 +520,7 @@ namespace ProjectMyShop.Views
             }
         }
 
+        #region Xử lý giao diện khi người dùng tương tác
         private void pagingComboBox_DropDownOpened(object sender, EventArgs e)
         {
             // Thay đổi màu nền khi dropdown mở
@@ -532,15 +533,37 @@ namespace ProjectMyShop.Views
             pagingComboBox.Background = new SolidColorBrush(Colors.White);
         }
 
-        private void ComboBox_Click(object sender, RoutedEventArgs e)
-        {
-          
-                if (sender is System.Windows.Controls.Button button)
-                {
-                    // Toggle the IsDropDownOpen state
-                    pagingComboBox.IsDropDownOpen = !pagingComboBox.IsDropDownOpen;
-                }
 
+
+        private void categoriesComboBox_DropDownOpened(object sender, EventArgs e)
+        {
+            // Thay đổi màu nền khi dropdown mở
+            pagingComboBox.Background = new SolidColorBrush(Colors.LightBlue);
         }
+
+        private void categoriesComboBox_DropDownClosed(object sender, EventArgs e)
+        {
+            // Thay đổi màu nền khi dropdown đóng
+            pagingComboBox.Background = new SolidColorBrush(Colors.White);
+        }
+
+        private void pagingComboBox_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is System.Windows.Controls.Button button)
+            {
+                // Toggle the IsDropDownOpen state
+                pagingComboBox.IsDropDownOpen = !pagingComboBox.IsDropDownOpen;
+            }
+        }
+
+        private void categoriesComboBox_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is System.Windows.Controls.Button button)
+            {
+                // Toggle the IsDropDownOpen state
+                categoriesComboBox.IsDropDownOpen = !categoriesComboBox.IsDropDownOpen;
+            }
+        }
+        #endregion
     }
 }

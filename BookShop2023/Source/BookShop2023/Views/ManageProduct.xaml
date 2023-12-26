@@ -140,16 +140,66 @@
                 </Grid>
                 <!--Category comboBox-->
 
+                <ComboBox Name="categoriesComboBox" Width="200" Height="30" HorizontalAlignment="Left"
+                          Grid.Row="0" Grid.Column="1" 
+                              SelectionChanged="categoriesComboBox_SelectionChanged"
+                              DropDownOpened="categoriesComboBox_DropDownOpened" DropDownClosed="categoriesComboBox_DropDownClosed"
+                              VerticalAlignment="Center"
+                              >
+                    <ComboBox.Template>
+                        <ControlTemplate TargetType="ComboBox">
+                            <Grid>
+                                <Button
+            Name="Button"
+            Width="200"
+            Height="28"
+            BorderBrush="Gray"
+            Background="AliceBlue"
+            Foreground="Black"
+            BorderThickness="1"
+            Focusable="False"
+            ClickMode="Press"
+            Click="categoriesComboBox_Click"                            
+                                        >
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
+                                        <TextBlock Text="{Binding SelectedItem.Name, RelativeSource={RelativeSource AncestorType=ComboBox}}" />
+                                        <TextBlock Text="    ▼" Foreground="Indigo" FontSize="12"  />
+                                    </StackPanel>
+                                </Button>
+                                <Popup
+            Name="Popup"
+            Placement="Bottom"
+            IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+            AllowsTransparency="True"
+            Focusable="False"
+            PopupAnimation="Slide">
+                                    <Grid Name="DropDown" SnapsToDevicePixels="True">
+                                        <Border
+                    x:Name="DropDownBorder"
+                    Background="White"
+                    BorderThickness="1"
+                    BorderBrush="Gray" />
+                                        <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                            <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                        </ScrollViewer>
+                                    </Grid>
+                                </Popup>
+                            </Grid>
+                        </ControlTemplate>
 
-                <ComboBox   Name="categoriesComboBox" Grid.Row="0" Grid.Column="1" Width="200" Height="30"  HorizontalAlignment="Left"
-                      SelectionChanged="categoriesComboBox_SelectionChanged" 
-                      >
-
-                    <ComboBox.ItemTemplate>
+                    </ComboBox.Template>
+                    <ComboBox.ItemContainerStyle>
+                        <Style TargetType="ComboBoxItem" >
+                            <Setter Property="Width" Value="192"/>
+                            <Setter Property="Foreground" Value="Black" />
+                        </Style>
+                    </ComboBox.ItemContainerStyle>
+                    <ComboBox.ItemTemplate >
                         <DataTemplate>
-                            <TextBlock>
-                        <Run Text="{Binding Name}"/>
-                            </TextBlock>
+                            <StackPanel Orientation="Horizontal" >
+                                <TextBlock Text="{Binding Name}" />
+                                
+                            </StackPanel>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
@@ -273,13 +323,13 @@
             BorderThickness="1"
             Focusable="False"
             ClickMode="Press"
-            Click="ComboBox_Click"                            
+            Click="pagingComboBox_Click"                            
                                         >
-                                        <StackPanel Orientation="Horizontal">
+                                        <StackPanel Orientation="Horizontal" >
                                             <TextBlock Text="{Binding SelectedItem.Page, RelativeSource={RelativeSource AncestorType=ComboBox}}" />
                                             <TextBlock Text="/" />
                                             <TextBlock Text="{Binding SelectedItem.Total, RelativeSource={RelativeSource AncestorType=ComboBox}}" />
-                                            <TextBlock Text="    ▼" Foreground="Green" FontSize="14" />
+                                            <TextBlock Text="    ▼" Foreground="Green" FontSize="13"  />
                                         </StackPanel>
                                     </Button>
                                     <Popup
@@ -306,7 +356,7 @@
                         </ComboBox.Template>
                         <ComboBox.ItemContainerStyle>
                             <Style TargetType="ComboBoxItem" >
-                                <Setter Property="Width" Value="150"/>
+                                <Setter Property="Width" Value="142"/>
                                 <Setter Property="Foreground" Value="Black" />
                             </Style>
                         </ComboBox.ItemContainerStyle>
