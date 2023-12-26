@@ -51,10 +51,10 @@
                   CanUserDeleteRows="False" IsReadOnly="False"
                   CellEditEnding="dataGrid_CellEditEnding">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="ID" Binding="{Binding ID}" Width="100"/>
-                        <DataGridTextColumn Header="Thể loại" Binding="{Binding Name}" Width="300"/>
+                        <DataGridTextColumn Header="ID" Binding="{Binding ID}" Width="1*"/>
+                        <DataGridTextColumn Header="Thể loại" Binding="{Binding Name}" Width="4*"/>
 
-                        <DataGridTextColumn Header="Số sản phẩm" Binding="{Binding TotalProducts}" Width="120">
+                        <DataGridTextColumn Header="Số sản phẩm" Binding="{Binding TotalProducts}" Width="2*">
                             <DataGridTextColumn.ElementStyle>
                             <Style>
                                 <Setter Property="TextBlock.TextAlignment" Value="Center"/>
@@ -65,20 +65,22 @@
 
 
 
-                        <DataGridTemplateColumn Header="Thao tác">
+                        <DataGridTemplateColumn Header="Thao tác" Width="3*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <StackPanel Orientation="Horizontal" >
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
                                         <Button Content="Chỉnh sửa" Click="EditButton_Click" Margin="0 0 10 0" 
                                                 Height="28" Background="AliceBlue" Foreground="Black"/>
                                         <Button Content="Xóa" Click="DeleteButton_Click" 
                                                 Height="28" Background="Bisque" Foreground="Black"/>
                                     </StackPanel>
+                                  
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
+                           
                         </DataGridTemplateColumn>
 
-                        <DataGridTextColumn Header="Mô tả" Binding="{Binding Description}" Width="200">
+                        <DataGridTextColumn Header="Mô tả" Binding="{Binding Description}" Width="3*">
                             <DataGridTextColumn.ElementStyle>
                                 <Style>
                                     <Setter Property="TextBlock.TextAlignment" Value="Center"/>

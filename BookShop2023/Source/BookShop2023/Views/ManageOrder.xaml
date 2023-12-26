@@ -16,13 +16,11 @@
     <materialDesign:Card Background="White" UniformCornerRadius="10" materialDesign:ShadowAssist.ShadowEdges="All" Padding="20,20,20,30">
         <DockPanel LastChildFill="True">
             <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
-                <TextBlock Text="Order status" FontWeight="Normal" FontSize="16"/>
-                <TextBlock Text="Overview of Lastest Orders" FontWeight="DemiBold" Foreground="Gray" FontSize="12"/>
                 <DockPanel LastChildFill="True">
                     <StackPanel Orientation="Horizontal" Margin="0,20">
                         <Button Name="AddButton" Click="AddButton_Click" 
                             materialDesign:ButtonAssist.CornerRadius="5"
-                            Background="DeepPink"
+                            Background="Bisque" Foreground="Black"
                             materialDesign:ShadowAssist.ShadowEdges="All"
                             BorderBrush="DeepPink"
                             Margin="5">
@@ -36,7 +34,7 @@
 
                         <Button Name="UpdateButton" Click="UpdateButton_Click"
                             materialDesign:ButtonAssist.CornerRadius="5"
-                            Background="LightGray"
+                            Background="AliceBlue"
                             BorderBrush="LightGray"
                             materialDesign:ShadowAssist.ShadowEdges="All"
                             Foreground="Gray"
@@ -48,7 +46,7 @@
 
                         <Button Name="DeleteButton" Click="DeleteButton_Click"
                             materialDesign:ButtonAssist.CornerRadius="5"
-                            Background="LightGray"
+                            Background="LightBlue"
                             BorderBrush="LightGray"
                             materialDesign:ShadowAssist.ShadowEdges="All"
                             Foreground="Gray"
@@ -61,7 +59,7 @@
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right">
-                        <TextBlock Text="From" VerticalAlignment="Center" FontWeight="Bold" Foreground="MediumPurple" Margin="10,0"/>
+                        <TextBlock Text="Từ" VerticalAlignment="Center" FontWeight="Bold" Foreground="MediumPurple" Margin="10,0"/>
                         <DatePicker Name="FromDatePicker"  IsTodayHighlighted="True" AutomationProperties.IsOffscreenBehavior="Onscreen">
                             <DatePicker.CalendarStyle>
                                 <Style TargetType="Calendar" BasedOn="{StaticResource MaterialDesignCalendarPortrait}">
@@ -75,7 +73,7 @@
                                 </Style>
                             </DatePicker.CalendarStyle>
                         </DatePicker>
-                        <TextBlock Text="To" VerticalAlignment="Center" FontWeight="Bold" Foreground="MediumPurple" Margin="10,0"/>
+                        <TextBlock Text="Đến" VerticalAlignment="Center" FontWeight="Bold" Foreground="MediumPurple" Margin="10,0"/>
                         <DatePicker Name="ToDatePicker" IsTodayHighlighted="True">
                             <DatePicker.CalendarStyle>
                                 <Style TargetType="Calendar" BasedOn="{StaticResource MaterialDesignCalendarPortrait}">
@@ -106,9 +104,7 @@
                 </Grid.RowDefinitions>
                 <DataGrid Grid.Row="0" x:Name="OrderDataGrid" 
                     AutoGenerateColumns="False" ColumnHeaderHeight="30" HeadersVisibility="Column" 
-                    RowHeaderWidth="100" SelectionChanged="OrderDataGrid_SelectionChanged" 
-                    CanUserResizeColumns="False" 
-                    materialDesign:DataGridAssist.CornerRadius="20"
+                     SelectionChanged="OrderDataGrid_SelectionChanged" 
                     BorderBrush="Gray"
                     BorderThickness="1"
                     VerticalScrollBarVisibility="Hidden" 
@@ -143,7 +139,7 @@
                     </DataGrid.VerticalGridLinesBrush>
 
                     <DataGrid.Columns>
-                        <DataGridTemplateColumn Header="  #ID">
+                        <DataGridTemplateColumn Header="ID" Width="1*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -152,7 +148,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="     Customer Name">
+                        <DataGridTemplateColumn Header="Tên khách hàng" Width="4*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -161,7 +157,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="     CustomerAddress">
+                        <DataGridTemplateColumn Header="Địa chỉ" Width="4*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -170,7 +166,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="    Order Date">
+                        <DataGridTemplateColumn Header="Ngày đặt" Width="2*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -180,7 +176,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="            Status">
+                        <DataGridTemplateColumn Header="Trạng thái" Width="2*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button
@@ -199,7 +195,7 @@
                             </DataGridTemplateColumn.CellTemplate>
 
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="    Detail">
+                        <DataGridTemplateColumn Header="Chi tiết" Width="2*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel>
@@ -218,15 +214,21 @@
                        
                     </DataGrid.Columns>
                     <DataGrid.ColumnHeaderStyle>
-                        <Style>
+                        <!--<Style>
                             <Style.Setters>
                                 <Setter Property="Panel.Background" Value="Black"/>
                                 <Setter Property="TextBlock.Foreground" Value="White"/>
                                 <Setter Property="TextBlock.Height" Value="30"/>
                                 <Setter Property="TextBlock.FontWeight" Value="Bold"/>
                             </Style.Setters>
+                         
+                        </Style>-->
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
                         </Style>
+
                     </DataGrid.ColumnHeaderStyle>
+                    
                 </DataGrid>
                 <DockPanel Grid.Row="1" LastChildFill="True">
                     <StackPanel Orientation="Horizontal" DockPanel.Dock="Right"  Margin="20,10,0,10" HorizontalAlignment="Center">
