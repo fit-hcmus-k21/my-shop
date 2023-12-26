@@ -5,16 +5,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:ProjectMyShop"
+        xmlns:local1="clr-namespace:ProjectMyShop.Converter"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen" 
-        Title="Book Shop Management" Height="800" Width="1200"
+        Title="Book Shop Management" Height="800" Width="1320"
         Loaded="Window_Loaded">
-  
+    <Window.Resources>
+        <local1:CurrencyConverter x:Key="currencyConverter"/>
+        <local1:RelativeToAbsoluteConverter x:Key="absoluteConverter"/>
+    </Window.Resources>
 
     <Grid x:Name="layoutContainer">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="4*"/>
-            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="280"/>
+            <ColumnDefinition Width="10"/>
             <ColumnDefinition Width="12*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -25,8 +29,12 @@
 
         <!--Logo-->
         <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <!-- Đường dẫn tương đối đến tệp hình ảnh logo -->
-            <Image RenderOptions.BitmapScalingMode="HighQuality" Source="{Binding 'Assets/Icons/book.png'}" Width="200" Height="100" />
+             <!--Đường dẫn tương đối đến tệp hình ảnh logo--> 
+            <Image RenderOptions.BitmapScalingMode="HighQuality" 
+                   Source="{Binding Source=Assets/Logo/book.png , Converter = {StaticResource absoluteConverter}}" 
+             
+                   Width="200" Height="100" />
+            
 
 
         </StackPanel>
@@ -37,45 +45,46 @@
         <!--List of button-->
         <StackPanel Grid.Row="2" Margin="10,10,10,0">
             <Button x:Name="dashboardButton" Click="dashboardButton_Click"  Background="aliceBlue" 
-                    Height="60" Margin="0 0 0 10">
+                    Height="60" Margin="0 0 0 10" HorizontalAlignment="Left"  Padding="40 0 0 0"  >
                 <Button.Content>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                        <TextBlock VerticalAlignment="Center" FontSize="20" Foreground="Black">Home</TextBlock>
-                    </StackPanel>
-                </Button.Content>
-            </Button>
-            <Button x:Name="categoriesButton" Click="categoriesButton_Click"  Background="aliceBlue" 
-                    Height="60" Margin="0 0 0 10">
-                <Button.Content>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock VerticalAlignment="Center" FontSize="20" Foreground="Black">Manage categories</TextBlock>
+                    <StackPanel Orientation="Horizontal" Width="240"  >
+                        <TextBlock FontSize="20" Foreground="Black">Trang chủ</TextBlock>
                     </StackPanel>
                 </Button.Content>
             </Button>
             <Button x:Name="productButton" Click="productButton_Click"  Background="aliceBlue" 
-                    Height="60" Margin="0 0 0 10">
+                    Height="60" Margin="0 0 0 10" HorizontalAlignment="Left" Padding="40 0 0 0">
                 <Button.Content>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock VerticalAlignment="Center" FontSize="20" Foreground="Black">Manage products</TextBlock>
+                    <StackPanel Orientation="Horizontal" Width="240">
+                        <TextBlock VerticalAlignment="Center" FontSize="20" Foreground="Black">Quản lý sản phẩm</TextBlock>
                     </StackPanel>
                 </Button.Content>
             </Button>
+            <Button x:Name="categoriesButton" Click="categoriesButton_Click"  Background="aliceBlue" 
+                    Height="60" Margin="0 0 0 10" HorizontalAlignment="Left" Padding="40 0 0 0">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal" Width="240">
+                        <TextBlock VerticalAlignment="Center" FontSize="20" Foreground="Black">Phân loại sản phẩm</TextBlock>
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+
             <Button x:Name="orderButton" Click="orderButton_Click"  Background="aliceBlue" 
-                    Height="60" Margin="0 0 0 10">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock VerticalAlignment="Center" FontSize="20" Foreground="Black">Manage orders</TextBlock>
+                    Height="60" Margin="0 0 0 10" HorizontalAlignment="Left" Padding="40 0 0 0">
+                <StackPanel Orientation="Horizontal" Width="240">
+                    <TextBlock VerticalAlignment="Center" FontSize="20" Foreground="Black">Quản lý đơn hàng</TextBlock>
                 </StackPanel>
             </Button>
             <Button x:Name="statButton" Click="statButton_Click"  Background="aliceBlue" 
-                    Height="60" Margin="0 0 0 10">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock VerticalAlignment="Center" FontSize="20" Foreground="Black">Statistic</TextBlock>
+                    Height="60" Margin="0 0 0 10" HorizontalAlignment="Left" Padding="40 0 0 0">
+                <StackPanel Orientation="Horizontal" Width="240">
+                    <TextBlock VerticalAlignment="Center" FontSize="20" Foreground="Black">Thống kê </TextBlock>
                 </StackPanel>
             </Button>
             <Button x:Name="configButton" Click="configButton_Click" Background="aliceBlue" 
-                    Height="60" Margin="0 0 0 10">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock VerticalAlignment="Center" FontSize="20" Foreground="Black">Configuration</TextBlock>
+                    Height="60" Margin="0 0 0 10" HorizontalAlignment="Left" Padding="40 0 0 0">
+                <StackPanel Orientation="Horizontal" Width="240">
+                    <TextBlock VerticalAlignment="Center" FontSize="20" Foreground="Black">Cấu hình chung</TextBlock>
                 </StackPanel>
             </Button>
         </StackPanel>
@@ -86,7 +95,7 @@
        
                Grid.Column="2"
                Grid.RowSpan="2"
-               Grid.Row="1" Margin="0,0,10,10">
+               Grid.Row="1" Margin="0,0,10,10" Navigated="pageNavigation_Navigated">
 
         </Frame>
     </Grid>

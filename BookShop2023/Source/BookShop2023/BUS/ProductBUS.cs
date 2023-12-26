@@ -38,6 +38,11 @@ namespace ProjectMyShop.BUS
             return _ProductDAO.getProductsAccordingToSpecificCategory(srcCategoryID);
         }
 
+        public void updateProduct(Product p)
+        {
+            _ProductDAO.updateProduct(p.ID, p);
+        }
+
         public void addProduct(Product Product)
         {
             if (Product.Quantity < 0)
@@ -96,6 +101,7 @@ namespace ProjectMyShop.BUS
         }
         #endregion
 
+        #region Manage Product | support methods
         public List<Product> loadAllProducts()
         {
             return _ProductDAO.loadAllProducts();
@@ -120,7 +126,8 @@ namespace ProjectMyShop.BUS
         {
             _ProductDAO.removeFilterPrice();
         }
-      
+        #endregion
+
     }
 
 }

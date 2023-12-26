@@ -14,12 +14,27 @@ namespace ProjectMyShop.Converter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            string relativePath = value as string;
-            string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-
-            string fullPath = $"{baseDirectory}Assets\\Images\\{relativePath}";
-            Debug.WriteLine("Path: " + fullPath);
-            return fullPath;
+            try
+            {
+                if (value is string relativePath)
+                {
+                    string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                    string fullPath = System.IO.Path.Combine(baseDirectory, relativePath);
+                    Debug.WriteLine("Path: " + fullPath);
+                    return fullPath;
+                }
+                else
+                {
+                    MessageBox.Show("Invalid input value. Expected string.");
+                    return DependencyProperty.UnsetValue; // Return DependencyProperty.UnsetValue to indicate a failed conversion.
+                }
+            }
+            catch (Exception ex)
+            {
+                // Thông báo lỗi qua MessageBox
+                MessageBox.Show($"Error in RelativeToAbsoluteConverter:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return DependencyProperty.UnsetValue; // Return DependencyProperty.UnsetValue to indicate a failed conversion.
+            }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

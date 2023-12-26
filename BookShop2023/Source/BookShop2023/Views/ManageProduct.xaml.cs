@@ -14,6 +14,7 @@ using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -244,6 +245,7 @@ namespace ProjectMyShop.Views
                 var workbook = new Aspose.Cells.Workbook(filename);
                 var _ProductBUS = new ProductBUS();
                 var _cateBUS = new CategoryBUS();
+                var _productsTemp = new List<Product>();
 
                 var tabs = workbook.Worksheets;
 
@@ -324,15 +326,83 @@ namespace ProjectMyShop.Views
                         Description = description,
                     };
                     _ProductBUS.addProduct(product);
+                    _productsTemp.Add(product);
                     row++;
                     cell = productsTab.Cells[$"{col}{row}"];
                 }
 
                 #endregion
 
-                MessageBox.Show("Count Category: " + _categories.Count + " | Product count: " + _ProductBUS.GetTotalProduct());
+                //MessageBox.Show("Count Category: " + _categories.Count + " | Product count: " + _ProductBUS.GetTotalProduct());
+
+                #region Copy ảnh vào thư mục
+                // xác định thư mục chứa file excel
+                var excelBaseFolder = new FileInfo(filename);
+
+                // lấy thư mục chứa ảnh cùng với file excel
+                var productImagesFolder = excelBaseFolder.Directory + @"\Images";
+
+                // Nếu có thì import ảnh
+                if (System.IO.Directory.Exists(productImagesFolder))
+                {
+                    // Lấy thư mục ảnh hiện hành
+                    var exeFolder = AppDomain.CurrentDomain.BaseDirectory;
+                    var imgSubFolder = exeFolder + "Images";
+
+                    // tạo thư mục để chứa ảnh
+                    if (! System.IO.Directory.Exists(imgSubFolder))
+                    {
+                        System.IO.Directory.CreateDirectory(imgSubFolder);
+                    }
+
+                    foreach (var p in _productsTemp) 
+                    {
+                        var imagePath = p.ImagePath;
+                        if (! imagePath.IsNullOrEmpty())
+                        {
+                            var sourceImg = productImagesFolder + @"\" + imagePath;
+                            var sourceInfo = new FileInfo(sourceImg);
+                            var extension = sourceInfo.Extension;
+
+                            // phát sinh id duy nhất toàn hệ thống
+                            var newName = Guid.NewGuid() + extension;
+                            var destination = $"{imgSubFolder}\\{newName}";
+
+                            if (System.IO.File.Exists(sourceImg))
+                            {
+                                // Thực hiện sao chép và cập nhật
+                                System.IO.File.Copy(sourceImg, destination);
+
+                            }
+                            else
+                            {
+                                // Xử lý trường hợp tệp không tồn tại
+                                Debug.WriteLine($"Source image does not exist: {sourceImg}");
+                            }
+
+
+                            // cập nhật tên mới để lưu vào db, (Images/...jpg..)
+                            var relativePath = "Images" + @"\" + newName;
+
+                            p.ImagePath = relativePath;
+
+                            _ProductBUS.updateProduct(p);
+
+                        }
+                    }
+                }
+
+                #endregion
 
                 loadProducts();
+
+                //  select combobox all
+                if (_categories.Count > 0) 
+                {
+                    categoriesComboBox.ItemsSource = _categories;
+                    categoriesComboBox.SelectedIndex = _categories.Count - 1;
+                }
+
             }
         }
         
@@ -440,6 +510,11 @@ namespace ProjectMyShop.Views
             {
                 previousButton.IsEnabled = true;
             }
+        }
+
+        private void viewMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

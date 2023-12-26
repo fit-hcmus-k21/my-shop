@@ -61,12 +61,15 @@ namespace ProjectMyShop.DAO
 
                 resultList.Add(category);
             }
-            // add all option for filter
-            resultList.Add(new Category()
+            // add all option for filter and display if has data
+            if (resultList.Count > 0)   
             {
-                ID = resultList[^1].ID + 1,
-                Name = "All"
-            });
+                resultList.Add(new Category()
+                {
+                    ID = resultList[^1].ID + 1,
+                    Name = "All"
+                });
+            }
 
             reader.Close();
             return resultList;

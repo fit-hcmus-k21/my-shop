@@ -210,19 +210,28 @@ namespace ProjectMyShop.DAO
         public void updateProduct(int id, Product Product)
         {
             string sql;
-            if (Product.ImagePath != null)
-            {
-                sql = "update Product set Name = @Name, Author = @Author, Description = @Description, " +
-                "PurchasePrice = @PurchasePrice, Quantity = @Quantity, SellingPrice = @SellingPrice, ImagePath = @ImagePath where ID = @ID";
-            }
-            else
-            {
-                sql = "update Product set Name = @Name, Author = @Author, Description = @Description, " +
-                "PurchasePrice = @PurchasePrice, Quantity = @Quantity, SellingPrice = @SellingPrice where ID = @ID";
-            }
+                sql = "update Product " +
+                "set Name = @Name, " +
+                "CatID = @CatID, " +
+                "Author = @Author, " +
+                "PublishedYear = @PublishedYear, " +
+                "ImagePath = @ImagePath, " + 
+                "Description = @Description, " +
+                "PurchasePrice = @PurchasePrice, " +
+                "Quantity = @Quantity, " +
+                "SellingPrice = @SellingPrice " +
+                "where ID = @ID";
+            
             SqlCommand sqlCommand = new SqlCommand(sql, DB.Instance.Connection);
             sqlCommand.Parameters.AddWithValue("@ID", id);
             sqlCommand.Parameters.AddWithValue("@Name", Product.Name);
+
+            sqlCommand.Parameters.AddWithValue("@CatID", Product.CatID);
+            sqlCommand.Parameters.AddWithValue("@Author", Product.Author );
+            sqlCommand.Parameters.AddWithValue("@PublishedYear", Product.PublishedYear);
+            sqlCommand.Parameters.AddWithValue("@ImagePath", Product.ImagePath);
+
+
             sqlCommand.Parameters.AddWithValue("@PurchasePrice", Product.PurchasePrice);
             sqlCommand.Parameters.AddWithValue("@SellingPrice", Product.SellingPrice);
             sqlCommand.Parameters.AddWithValue("@Quantity", Product.Quantity);
@@ -237,7 +246,7 @@ namespace ProjectMyShop.DAO
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Updated {Product.ID} Fail: " + ex.Message);
+                System.Diagnostics.Debug.WriteLine($"Updated {Product.ID} Fail: " + ex.Message.ToString());
             }
         }
 

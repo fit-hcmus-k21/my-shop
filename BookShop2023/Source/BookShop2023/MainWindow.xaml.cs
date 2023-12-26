@@ -173,9 +173,9 @@ namespace ProjectMyShop
         {
             foreach (var button in buttons)
             {
-                button.Background = (Brush)Application.Current.Resources["MyPinkGradient"];
+                button.Background = Brushes.AliceBlue;
             }
-            b.Background = (Brush)Application.Current.Resources["MyRedGradient"];
+            b.Background = Brushes.Bisque;
         }
 
         private void dashboardButton_Click(object sender, RoutedEventArgs e)
@@ -218,5 +218,12 @@ namespace ProjectMyShop
             pageNavigation.NavigationService.Navigate(_manageCategory);
         }
         #endregion
+
+        private void pageNavigation_Navigated(object sender, NavigationEventArgs e)
+        {
+
+        }
+
+
     }
 }

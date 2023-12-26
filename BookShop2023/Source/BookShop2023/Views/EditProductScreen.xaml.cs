@@ -3,6 +3,7 @@ using ProjectMyShop.DTO;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,15 +42,40 @@ namespace ProjectMyShop.Views
         }
         public static readonly List<string> ImageExtensions = new List<string> { ".JPG", ".JPE", ".BMP", ".GIF", ".PNG" };
 
-        private void ImageButton_Click(object sender, RoutedEventArgs e)
+
+
+
+        private void chooseImageButton_Click(object sender, RoutedEventArgs e)
         {
             var screen = new OpenFileDialog();
             screen.Filter = "Image Files|*.jpg;*.jpeg;*.png;...";
             if (screen.ShowDialog() == true)
             {
-                //EditedProduct.Avatar = new BitmapImage(new Uri(screen.FileName, UriKind.Absolute));
-                //avatar.Source = EditedProduct.Avatar;
+                var fileName = screen.FileName;
+
+                var sourceInfo = new FileInfo(fileName);
+                var extension = sourceInfo.Extension;
+
+                // Lấy thư mục ảnh hiện hành
+                var exeFolder = AppDomain.CurrentDomain.BaseDirectory;
+                var imgSubFolder = exeFolder + "Images";
+
+                // phát sinh id duy nhất toàn hệ thống
+                var newName = Guid.NewGuid() + extension;
+                var destination = $"{imgSubFolder}\\{newName}";
+
+                System.IO.File.Copy(fileName, destination);
+
+                // cập nhật tên mới để lưu vào db, (Images/...jpg..)
+                var relativePath = "Images" + @"\" + newName;
+                EditedProduct.ImagePath = relativePath;
+                MessageBox.Show("Path: " + relativePath);
             }
+        }
+
+        private void categoryCombobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }
