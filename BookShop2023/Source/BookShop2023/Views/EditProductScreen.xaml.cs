@@ -29,11 +29,21 @@ namespace ProjectMyShop.Views
             InitializeComponent();
             EditedProduct = (Product)p.Clone();
             this.DataContext = EditedProduct;
-            categoryCombobox.ItemsSource = _listCat;
-            int catId = p.CatID;
-            for (int i = 0; i < _listCat.Count; i++)
+
+            // Tạo một bản sao của danh sách để thực hiện xóa
+            var catListCopy = new List<Category>(_listCat);
+
+            // if list cat has All opt, then remove, just for display in manage product
+            if (catListCopy[^1] != null && catListCopy[^1].Name.Equals("Tất cả") )
             {
-                if (catId == _listCat[i].ID)
+                catListCopy.Remove(catListCopy[^1]);
+            }
+
+            categoryCombobox.ItemsSource = catListCopy;
+            int catId = p.CatID;
+            for (int i = 0; i < catListCopy.Count; i++)
+            {
+                if (catId == catListCopy[i].ID)
                 {
                     categoryCombobox.SelectedIndex = i;
                     break;

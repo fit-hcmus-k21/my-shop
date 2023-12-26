@@ -31,7 +31,7 @@
         <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
              <!--Đường dẫn tương đối đến tệp hình ảnh logo--> 
             <Image RenderOptions.BitmapScalingMode="HighQuality" 
-                   Source="{Binding Source=Assets/Logo/book.png , Converter = {StaticResource absoluteConverter}}" 
+                   Source="{Binding Source=Assets/Logo/logo_edited.png , Converter = {StaticResource absoluteConverter}}" 
              
                    Width="200" Height="100" />
             

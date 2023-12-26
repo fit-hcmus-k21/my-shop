@@ -72,8 +72,9 @@
                             </Button>
                             <TextBox Name="searchTextBox"
                                  TextChanged="searchTextBox_TextChanged"
-                                 Padding="10"
-                                 FontSize="15"
+                                 Padding="5"
+                                     Height="32"
+                                 FontSize="13"
                                  Foreground="Black"
                                  materialDesign:HintAssist.Hint="Tìm sản phẩm theo tên, tác giả..."
                                  Grid.Column="1" 
@@ -102,45 +103,52 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="4*"/>
                         <ColumnDefinition Width="2*" />
-                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="10"/>
                     </Grid.ColumnDefinitions>
                    
 
                     <!-- Filter combo box-->
-                    <materialDesign:ColorZone Mode="Custom"
+                    <materialDesign:Card 
                                       Margin="0, 0, 0, 0"
-                                      Height="{Binding ActualHeight, ElementName=searchContainer}"
+                                      Height="{Binding ActualHeight, ElementName=filterContainer}"
                                       Grid.Column="2">
                        
 
 
-                        <materialDesign:Card Name="sortBoxContainer"
-                                 Height="45"
-                                 UniformCornerRadius="23"
-                                 Grid.Column="0" Margin="0,0,-110,0">
+                        <materialDesign:Card Name="filterBoxContainer"
+                                 Height="36"
+                                 Grid.Column="0" Margin="5 0 5 0" >
                             <StackPanel Orientation="Horizontal" >
-                                <TextBlock Text="From" 
+                              
+                                <TextBlock Text="Min:" 
                                            VerticalAlignment="Center" Foreground="Black" Margin="10,0"/>
-                                <TextBox Width="45" Name="minPriceTextbox" Height="30" Padding="0 6 0 0" Text="0" Foreground="Black" HorizontalAlignment="Center"/>
-                                <TextBlock Text="To" 
+                                <TextBox Width="50" Name="minPriceTextbox" Height="30" Padding="0 6 0 0" 
+                                         TextAlignment="Center"
+                                         Text="0" Foreground="Black" HorizontalAlignment="Center"/>
+                                <TextBlock Text="Max:" 
                                            VerticalAlignment="Center" Foreground="Black" Margin="10,0"/>
-                                <TextBox Width="45" Name="maxPriceTextbox" Height="30" Padding="0 6 0 0" Text="0" Foreground="Black" HorizontalAlignment="Center"/>
+                                <TextBox Width="50" Name="maxPriceTextbox" Height="30" Padding="0 6 0 0" 
+                                         TextAlignment="Center"
+                                         Text="0" Foreground="Black" HorizontalAlignment="Center"/>
 
-                                <Button Name="FilterButton" Click="FilterButton_Click" Margin="5 0 0 0"
-                        Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}">
+                                <Button Name="FilterButton" Click="FilterButton_Click" 
+                                        Height="36" Width="36"
+                                        Margin="5 0 0 0"
+                                        Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}"
+                        >
                                     <Button.Content>
-                                        <materialDesign:PackIcon Kind="Filter"/>
+                                        <materialDesign:PackIcon  Kind="Filter"/>
                                     </Button.Content>
                                 </Button>
                               
                             </StackPanel>
                         </materialDesign:Card>
-                    </materialDesign:ColorZone>
+                    </materialDesign:Card>
                 </Grid>
                 <!--Category comboBox-->
 
-                <ComboBox Name="categoriesComboBox" Width="200" Height="30" HorizontalAlignment="Left"
+                <ComboBox Name="categoriesComboBox" Width="200" Height="36" HorizontalAlignment="Left"
                           Grid.Row="0" Grid.Column="1" 
                               SelectionChanged="categoriesComboBox_SelectionChanged"
                               DropDownOpened="categoriesComboBox_DropDownOpened" DropDownClosed="categoriesComboBox_DropDownClosed"

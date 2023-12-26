@@ -4,7 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        xmlns:local="clr-namespace:ProjectMyShop.Views" xmlns:local1="clr-namespace:ProjectMyShop.Converter"
+        xmlns:local="clr-namespace:ProjectMyShop.Views" 
+        xmlns:local1="clr-namespace:ProjectMyShop.Converter"
         mc:Ignorable="d"
         Title="Chỉnh sửa sản phẩm" Height="650" Width="800">
     <Window.Resources>

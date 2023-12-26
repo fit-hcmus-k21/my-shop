@@ -42,7 +42,7 @@ namespace ProjectMyShop.Views
             InitializeComponent();
         }
 
-
+        #region Khai báo biến...
         private ProductBUS _ProductBus = new ProductBUS();
         List<Category>? _categories = null;
         BindingList<Product> _products = new BindingList<Product>();
@@ -51,7 +51,7 @@ namespace ProjectMyShop.Views
         int _currentPage = 1;
         int _totalPages = 0;
         int _rowsPerPage = int.Parse(AppConfig.GetValue(AppConfig.NumberProductPerPage));
-
+        #endregion
 
         #region Features: search product with criterias: 
         private void searchTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -75,6 +75,16 @@ namespace ProjectMyShop.Views
             var ProductBUS = new ProductBUS();
             _categories = catBUS.getCategoryList();
 
+            // add all option for filter and display if has data
+            if (_categories.Count > 0)
+            {
+                _categories.Add(new Category()
+                {
+                    ID = _categories[^1].ID + 1,
+                    Name = "Tất cả"
+                });
+            }
+
             categoriesComboBox.ItemsSource = _categories;
             categoriesComboBox.SelectedIndex = _categories.Count - 1;
             
@@ -89,11 +99,6 @@ namespace ProjectMyShop.Views
         }
         #endregion
 
-        private void filterRangeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-
-        }
 
         #region load products
 
@@ -115,7 +120,9 @@ namespace ProjectMyShop.Views
 
 
         }
+        #endregion
 
+        #region Tính toán phân trang
         public void devidePaging()
         {
             int count = _ProductBus.loadAllProducts().Count;
@@ -153,7 +160,7 @@ namespace ProjectMyShop.Views
         }
         #endregion
 
-        #region Xử lý sự kiện click menu item của sản phẩm trong listView
+        #region Xử lý sự kiện click menu item của sản phẩm trong listView | xem chi tiết, chỉnh sửa, xóa sản phẩm
         private void viewMenuItem_Click(object sender, RoutedEventArgs e)
         {
             var p = (Product)ProductsListView.SelectedItem;
@@ -219,6 +226,7 @@ namespace ProjectMyShop.Views
         }
         #endregion
 
+        #region Chuyển trang trước, trang sau khi click button
         private void previousButton_Click(object sender, RoutedEventArgs e)
         {
             if (pagingComboBox.SelectedIndex > 0)
@@ -237,6 +245,7 @@ namespace ProjectMyShop.Views
             }
 
         }
+        #endregion
 
         #region Import data
         private void ImportButton_Click(object sender, RoutedEventArgs e)
@@ -280,6 +289,16 @@ namespace ProjectMyShop.Views
                 }
 
                 _categories = _cateBUS.getCategoryList();
+                // add all option for filter and display if has data
+                if (_categories.Count > 0)
+                {
+                    _categories.Add(new Category()
+                    {
+                        ID = _categories[^1].ID + 1,
+                        Name = "Tất cả"
+                    });
+                }
+
                 Debug.WriteLine(_categories.Count);
 
                 categoriesComboBox.ItemsSource = _categories;
@@ -414,6 +433,7 @@ namespace ProjectMyShop.Views
         }
         #endregion
 
+        #region Thêm sản phẩm mới
         private void AddMenuItem_Click(object sender, RoutedEventArgs e)
         {
             var screen = new AddProductScreen(_categories!);
@@ -422,22 +442,23 @@ namespace ProjectMyShop.Views
             {
                 var newProduct = screen.newProduct;
                 Debug.WriteLine(newProduct.Name);
-                var catIndex = screen.catIndex;
-                if(catIndex >= 0)
-                {
+                
                     try
                     {
                     _ProductBus.addProduct(newProduct);
                     loadProducts();
-                    }
+                    MessageBox.Show($"Thêm sản phẩm thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
                     catch (Exception ex)
                     {
                         MessageBox.Show(screen, ex.Message);
                     }
-                }
+                
             }
         }
+        #endregion
 
+        #region Lọc giá sản phẩm
         private void FilterButton_Click(object sender, RoutedEventArgs e)
         {
             // validate input
@@ -475,12 +496,14 @@ namespace ProjectMyShop.Views
                 MessageBox.Show("Invalid price input for filter !", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+        #endregion
 
+        #region Xử lý lọc theo thể loại sản phẩm
         private void categoriesComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             int id = categoriesComboBox.SelectedIndex;
             // MessageBox.Show("Category choose: " + _categories[id].Name );
-            if (!_categories[id].Name.Equals("All"))
+            if (!_categories[id].Name.Equals("Tất cả"))
             {
                 int catID = _categories[id].ID;
                 _ProductBus.setFilterCat(catID);
@@ -491,7 +514,9 @@ namespace ProjectMyShop.Views
             }
             loadProducts();
         }
+        #endregion
 
+        #region Thay đổi trang xem : click pagingComboBox
         private void pagingComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             dynamic info = pagingComboBox.SelectedItem;
@@ -519,6 +544,7 @@ namespace ProjectMyShop.Views
                 previousButton.IsEnabled = true;
             }
         }
+        #endregion
 
         #region Xử lý giao diện khi người dùng tương tác
         private void pagingComboBox_DropDownOpened(object sender, EventArgs e)
