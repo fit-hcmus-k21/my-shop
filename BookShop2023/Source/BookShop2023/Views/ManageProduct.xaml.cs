@@ -1,6 +1,7 @@
 ﻿using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using BookShop2023.Views;
+using MaterialDesignThemes.Wpf;
 using Microsoft.Graph;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Win32;
@@ -11,6 +12,7 @@ using ProjectMyShop.Helpers;
 using ProjectMyShop.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
 using System.Data.Common;
@@ -37,12 +39,34 @@ namespace ProjectMyShop.Views
     /// </summary>
     public partial class ManageProduct : Page
     {
+
+        public ObservableCollection<ComboBoxItem> Items { get; set; }
+
+
+
         public ManageProduct()
         {
             InitializeComponent();
+
+            // Initialize and populate the Items collection
+            Items = new ObservableCollection<ComboBoxItem>
+            {
+            new ComboBoxItem { Content = "Mặc định (ID)", Tag = "ID" },
+            new ComboBoxItem { Content = "Theo thứ tự Alphabetical", Tag = "Name" },
+            new ComboBoxItem { Content = "Theo giá tăng dần", Tag = "PriceAsc" },
+            new ComboBoxItem { Content = "Theo giá giảm dần", Tag = "PriceDesc" },
+            new ComboBoxItem { Content = "Mới nhất trước tiên", Tag = "NewestFirst" },
+            new ComboBoxItem { Content = "Cũ nhất trước tiên", Tag = "OldestFirst" },
+            };
+
+            // Set the DataContext to this instance (or to a ViewModel)
+            sortingComboBox.ItemsSource = Items;
+            sortingComboBox.SelectedIndex = 0;
         }
 
         #region Khai báo biến...
+
+
         private ProductBUS _ProductBus = new ProductBUS();
         List<Category>? _categories = null;
         BindingList<Product> _products = new BindingList<Product>();
@@ -51,6 +75,8 @@ namespace ProjectMyShop.Views
         int _currentPage = 1;
         int _totalPages = 0;
         int _rowsPerPage = int.Parse(AppConfig.GetValue(AppConfig.NumberProductPerPage));
+
+
         #endregion
 
         #region Features: search product with criterias: 
@@ -95,6 +121,8 @@ namespace ProjectMyShop.Views
             } 
 
             AppConfig.SetValue(AppConfig.LastWindow, "ManageProduct");
+
+            sortingComboBox.SelectedIndex = 0;
 
         }
         #endregion
@@ -591,5 +619,109 @@ namespace ProjectMyShop.Views
             }
         }
         #endregion
+
+        private void SortingComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Get the selected item from the ComboBox
+            ComboBoxItem selectedItem = (ComboBoxItem)sortingComboBox.SelectedItem;
+
+            // Get the Tag value, which contains the sorting criteria
+            string sortingCriteria = selectedItem?.Tag?.ToString();
+
+            // Call a method to apply sorting based on the selected criteria
+            ApplySorting(sortingCriteria);
+            _ProductBus.setSortingCriteriaQuery(_sortingCriteriaQuery);
+
+            loadProducts();
+        }
+
+        int _sortingCriteria = 0;   // not used after apply _sortingCriteriaQuery
+        string _sortingCriteriaQuery = " ORDER BY ID ";
+        public enum SortingCriteria
+        {
+            Default,         // Default sorting (by ID)
+            Alphabetical,    // Sort by name alphabetically
+            PriceAscending,  // Sort by price ascending
+            PriceDescending, // Sort by price descending
+            NewestFirst,     // Sort by newest first
+            OldestFirst      // Sort by oldest first
+        }
+
+
+        private void ApplySorting(string sortingCriteria)
+        {
+            switch (sortingCriteria)
+            {
+                case "Name":
+                    // Sort by name alphabetically
+                    _sortingCriteria = (int)SortingCriteria.Alphabetical;
+                    _sortingCriteriaQuery = " ORDER BY Name ASC ";
+
+                    break;
+
+                case "PriceAsc":
+                    // Sort by price ascending
+                    _sortingCriteria = (int)SortingCriteria.PriceAscending;
+                    _sortingCriteriaQuery = " ORDER BY SellingPrice ASC ";
+
+
+                    break;
+
+                case "PriceDesc":
+                    // Sort by price descending
+                    _sortingCriteria = (int)SortingCriteria.PriceDescending;
+                    _sortingCriteriaQuery = " ORDER BY SellingPrice DESC ";
+
+
+                    break;
+
+                case "NewestFirst":
+                    // Sort by newest first
+                    _sortingCriteria = (int)SortingCriteria.NewestFirst;
+                    _sortingCriteriaQuery = " ORDER BY PublishedYear DESC ";
+
+
+                    break;
+
+                case "OldestFirst":
+                    // Sort by oldest first
+                    _sortingCriteria = (int)SortingCriteria.OldestFirst;
+                    _sortingCriteriaQuery = " ORDER BY PublishedYear ASC ";
+
+
+                    break;
+
+                default:
+                    // Default sorting by ID
+                    _sortingCriteria = (int)SortingCriteria.Default;
+                    _sortingCriteriaQuery = " ORDER BY ID ";
+
+
+                    break;
+            }
+
+          
+        }
+
+        private void sortingComboBox_DropDownOpened(object sender, EventArgs e)
+        {
+            // Thay đổi màu nền khi dropdown mở
+            pagingComboBox.Background = new SolidColorBrush(Colors.LightBlue);
+        }
+
+        private void sortingComboBox_DropDownClosed(object sender, EventArgs e)
+        {
+            // Thay đổi màu nền khi dropdown đóng
+            pagingComboBox.Background = new SolidColorBrush(Colors.White);
+        }
+
+        private void sortingComboBox_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is System.Windows.Controls.Button button)
+            {
+                // Toggle the IsDropDownOpen state
+                sortingComboBox.IsDropDownOpen = !sortingComboBox.IsDropDownOpen;
+            }
+        }
     }
 }

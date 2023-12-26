@@ -428,7 +428,7 @@ namespace ProjectMyShop.DAO
         int yearFilter = -1;
         int minPrice = -1;
         int maxPrice = -1;
-        string _sortingCriteriaQuery = "";
+        string _sortingCriteriaQuery = " ORDER BY ID ";
         string _keyword = "";
         #endregion
 
@@ -460,6 +460,11 @@ namespace ProjectMyShop.DAO
         public void removeFilterPrice()
         {
             _hasPriceFilter = false;
+        }
+
+        public void setSortingCriteriaQuery(String query)
+        {
+            _sortingCriteriaQuery = query;
         }
         #endregion
 

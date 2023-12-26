@@ -126,6 +126,11 @@ namespace ProjectMyShop.BUS
         {
             _ProductDAO.removeFilterPrice();
         }
+
+        public void setSortingCriteriaQuery(String query)
+        {
+            _ProductDAO.setSortingCriteriaQuery(query);
+        }
         #endregion
 
     }

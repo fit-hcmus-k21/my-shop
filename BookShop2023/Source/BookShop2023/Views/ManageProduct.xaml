@@ -101,10 +101,9 @@
               Grid.Row="0">
 
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="220"/>
                         <ColumnDefinition Width="2*" />
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="270"/>
                     </Grid.ColumnDefinitions>
                    
 
@@ -134,7 +133,7 @@
 
                                 <Button Name="FilterButton" Click="FilterButton_Click" 
                                         Height="36" Width="36"
-                                        Margin="5 0 0 0"
+                                        Margin="15 0 0 0"
                                         Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}"
                         >
                                     <Button.Content>
@@ -211,6 +210,100 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
+
+                <!--Sorting-->
+                <Grid Grid.Row="1" Grid.Column="1" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200" />
+                        
+                        <ColumnDefinition Width="*" />
+
+
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Row="1" Grid.Column="0" 
+                                Orientation="Horizontal" 
+                                >
+                        <StackPanel  
+                             Width="200"
+                                Height="28"
+                            Margin="0 0 10 0"
+                                
+                                >
+
+                            <ComboBox Name="sortingComboBox"
+          HorizontalAlignment="Left"
+          VerticalAlignment="Center"
+          SelectionChanged="SortingComboBox_SelectionChanged"
+          DropDownOpened="sortingComboBox_DropDownOpened"
+          DropDownClosed="sortingComboBox_DropDownClosed">
+
+                                    <ComboBox.Template>
+                                        <ControlTemplate TargetType="ComboBox">
+                                            <Grid>
+                                                <Button Name="Button"
+                        Width="200"
+                        Height="28"
+                        BorderBrush="Gray"
+                        Background="AliceBlue"
+                        Foreground="Black"
+                        BorderThickness="1"
+                        Focusable="False"
+                        ClickMode="Press"
+                        Click="sortingComboBox_Click">
+                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                                                        <TextBlock Text="{Binding SelectedItem.Content, RelativeSource={RelativeSource AncestorType=ComboBox}}" />
+                                                        <TextBlock Text="    ▼" Foreground="Indigo" FontSize="12" />
+                                                    </StackPanel>
+                                                </Button>
+                                                <Popup Name="Popup"
+                       Placement="Bottom"
+                       IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                       AllowsTransparency="True"
+                       Focusable="False"
+                       PopupAnimation="Slide">
+                                                    <Grid Name="DropDown" SnapsToDevicePixels="True">
+                                                        <Border x:Name="DropDownBorder"
+                                Background="White"
+                                BorderThickness="1"
+                                BorderBrush="Gray" />
+                                                        <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                                            <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                                        </ScrollViewer>
+                                                    </Grid>
+                                                </Popup>
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </ComboBox.Template>
+
+                                    <ComboBox.ItemContainerStyle>
+                                        <Style TargetType="ComboBoxItem">
+                                            <Setter Property="Width" Value="172" />
+                                            <Setter Property="Foreground" Value="Black" />
+                                        </Style>
+                                    </ComboBox.ItemContainerStyle>
+
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="{Binding Content}" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+
+                                   
+
+                                </ComboBox>
+
+
+
+
+
+                        </StackPanel>
+                    </StackPanel>
+
+                </Grid>
+               
+
 
 
                 <!--Product list view-->
