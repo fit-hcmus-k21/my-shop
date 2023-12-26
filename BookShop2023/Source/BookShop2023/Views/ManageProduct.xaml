@@ -255,10 +255,64 @@
 
                     </Grid.ColumnDefinitions>
 
-                    <ComboBox Name="pagingComboBox" Width="150" Height="28" Grid.Column="2" SelectionChanged="pagingComboBox_SelectionChanged">
-                        <ComboBox.ItemTemplate>
+                    <ComboBox Name="pagingComboBox" Width="150" Height="28" Grid.Column="2" 
+                              SelectionChanged="pagingComboBox_SelectionChanged"
+                              DropDownOpened="pagingComboBox_DropDownOpened" DropDownClosed="pagingComboBox_DropDownClosed"
+                              VerticalAlignment="Center"
+                              >
+                        <ComboBox.Template>
+                            <ControlTemplate TargetType="ComboBox">
+                                <Grid>
+                                    <Button
+            Name="Button"
+            Width="150"
+            Height="28"
+            BorderBrush="Gray"
+            Background="AliceBlue"
+            Foreground="Black"
+            BorderThickness="1"
+            Focusable="False"
+            ClickMode="Press"
+            Click="ComboBox_Click"                            
+                                        >
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding SelectedItem.Page, RelativeSource={RelativeSource AncestorType=ComboBox}}" />
+                                            <TextBlock Text="/" />
+                                            <TextBlock Text="{Binding SelectedItem.Total, RelativeSource={RelativeSource AncestorType=ComboBox}}" />
+                                            <TextBlock Text="    ▼" Foreground="Green" FontSize="14" />
+                                        </StackPanel>
+                                    </Button>
+                                    <Popup
+            Name="Popup"
+            Placement="Bottom"
+            IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+            AllowsTransparency="True"
+            Focusable="False"
+            PopupAnimation="Slide">
+                                        <Grid Name="DropDown" SnapsToDevicePixels="True">
+                                            <Border
+                    x:Name="DropDownBorder"
+                    Background="White"
+                    BorderThickness="1"
+                    BorderBrush="Gray" />
+                                            <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                                <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                            </ScrollViewer>
+                                        </Grid>
+                                    </Popup>
+                                </Grid>
+                            </ControlTemplate>
+
+                        </ComboBox.Template>
+                        <ComboBox.ItemContainerStyle>
+                            <Style TargetType="ComboBoxItem" >
+                                <Setter Property="Width" Value="150"/>
+                                <Setter Property="Foreground" Value="Black" />
+                            </Style>
+                        </ComboBox.ItemContainerStyle>
+                        <ComboBox.ItemTemplate >
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                     <TextBlock Text="{Binding Page}" />
                                     <TextBlock Text="/" />
                                     <TextBlock Text="{Binding Total}" />
@@ -266,6 +320,10 @@
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
+         
+
+                    
+
 
                     <Button x:Name="previousButton" Width="46" Height="28" Content="&lt;" 
                             HorizontalAlignment="Right"

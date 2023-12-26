@@ -41,16 +41,14 @@
         <ComboBox Style="{Binding MaterialDesign}" BorderThickness="1" BorderBrush="MediumPurple" Name="categoryCombobox" Width="180" Height="35" SelectionChanged="categoryCombobox_SelectionChanged" Grid.Column="1" Grid.ColumnSpan="2">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Padding="5" Text="{Binding CatName}"/>
+                    <TextBlock Padding="5" Text="{Binding Name}"/>
                 </DataTemplate>
             </ComboBox.ItemTemplate>
-            <ComboBoxItem IsSelected="True">
-                <TextBlock Padding="5" Text="Loại sản phẩm" />
-            </ComboBoxItem>
+          
         </ComboBox>
 
         <Button x:Name="chooseImageButton" Background="Transparent" Click="chooseImageButton_Click" Width="300" Height="300" Grid.Row="1" Grid.Column="1" Grid.RowSpan="4">
-            <Image x:Name="ImagePath" RenderOptions.BitmapScalingMode="HighQuality" Source="{Binding ImagePath, Converter={StaticResource absoluteConverter}}" />
+            <Image x:Name="imagePath" RenderOptions.BitmapScalingMode="HighQuality" Source="{Binding ImagePath, Converter={StaticResource absoluteConverter}}" />
         </Button>
         <TextBox BorderThickness="1" BorderBrush="Purple" Padding="5" Height="50" Text="{Binding Name}" x:Name="NameBox" Grid.Column="2" Grid.Row="1" Margin="10" materialDesign:HintAssist.Hint="Tên sản phẩm" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         <TextBox BorderThickness="1" BorderBrush="Purple" Padding="5" Height="50" Text="{Binding Author}" x:Name="authorBox" Grid.Column="2" Grid.Row="2" Margin="10" materialDesign:HintAssist.Hint="Tác giả" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>

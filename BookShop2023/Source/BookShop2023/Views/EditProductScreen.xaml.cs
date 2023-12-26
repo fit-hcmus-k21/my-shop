@@ -24,11 +24,22 @@ namespace ProjectMyShop.Views
     public partial class EditProductScreen : Window
     {
         public Product EditedProduct { get; set; }
-        public EditProductScreen(Product p)
+        public EditProductScreen(Product p, List<Category> _listCat)
         {
             InitializeComponent();
             EditedProduct = (Product)p.Clone();
             this.DataContext = EditedProduct;
+            categoryCombobox.ItemsSource = _listCat;
+            int catId = p.CatID;
+            for (int i = 0; i < _listCat.Count; i++)
+            {
+                if (catId == _listCat[i].ID)
+                {
+                    categoryCombobox.SelectedIndex = i;
+                    break;
+                }
+            }
+
         }
 
         private void editButton_Click(object sender, RoutedEventArgs e)
@@ -45,6 +56,7 @@ namespace ProjectMyShop.Views
 
 
 
+        #region Cập nhật ảnh sản phẩm 
         private void chooseImageButton_Click(object sender, RoutedEventArgs e)
         {
             var screen = new OpenFileDialog();
@@ -67,14 +79,39 @@ namespace ProjectMyShop.Views
                 System.IO.File.Copy(fileName, destination);
 
                 // cập nhật tên mới để lưu vào db, (Images/...jpg..)
-                var relativePath = "Images" + @"\" + newName;
+                string relativePath = "Images" + @"\" + newName;
+
                 EditedProduct.ImagePath = relativePath;
-                MessageBox.Show("Path: " + relativePath);
+
+                string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                string fullPath = System.IO.Path.Combine(baseDirectory, relativePath);
+
+
+                // Tạo một đối tượng BitmapImage
+                BitmapImage bitmapImage = new BitmapImage(new Uri(fullPath));
+
+                // Gán BitmapImage vào thuộc tính Source của đối tượng Image
+                imagePath.Source = bitmapImage;
+
+
+                //MessageBox.Show("Path: " + relativePath);
             }
         }
+        #endregion
 
         private void categoryCombobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            int id = categoryCombobox.SelectedIndex;
+            try
+            {
+                int catID = ((Category)categoryCombobox.SelectedItem).ID;
+
+                EditedProduct.CatID = catID;
+            }
+            catch (Exception ex) 
+            {
+                Debug.WriteLine("Error: " + ex.Message.ToString());
+            }
 
         }
     }

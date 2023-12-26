@@ -1,4 +1,6 @@
 ﻿using Aspose.Cells;
+using Aspose.Cells.Drawing;
+using BookShop2023.Views;
 using Microsoft.Graph;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Win32;
@@ -97,7 +99,6 @@ namespace ProjectMyShop.Views
 
         void loadProducts()
         {
-            int count = _ProductBus.loadAllProducts().Count;
 
             List<Product> listProducts = _ProductBus.loadAllProducts()
                                                       .Skip((_currentPage - 1) * _rowsPerPage)
@@ -108,6 +109,16 @@ namespace ProjectMyShop.Views
             _products = bindingList;
 
             ProductsListView.ItemsSource = _products;
+
+            devidePaging();
+
+
+
+        }
+
+        public void devidePaging()
+        {
+            int count = _ProductBus.loadAllProducts().Count;
 
             if (count != _totalItems)
             {
@@ -139,20 +150,39 @@ namespace ProjectMyShop.Views
             {
                 nextButton.IsEnabled = false;
             }
-
         }
         #endregion
 
+        #region Xử lý sự kiện click menu item của sản phẩm trong listView
+        private void viewMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            var p = (Product)ProductsListView.SelectedItem;
+            var catName = "";
+            foreach (var cat in _categories)
+            {
+                if (cat.ID == p.CatID)
+                {
+                    catName = cat.Name;
+                    break;
+                }
+            }
+
+            var screen = new ViewDetailProduct(p, catName);
+            screen.ShowDialog();
+        }
 
         private void editMenuItem_Click(object sender, RoutedEventArgs e)
         {
             var p = (Product)ProductsListView.SelectedItem;
-            var screen = new EditProductScreen(p);
+            var screen = new EditProductScreen(p, _categories);
             var result = screen.ShowDialog();
             if (result == true)
             {
                 var info = screen.EditedProduct;
                 p.Name = info.Name;
+                p.CatID = info.CatID;
+                p.Author = info.Author;
+                p.PublishedYear = info.PublishedYear;
                 p.SellingPrice = info.SellingPrice;
                 p.PurchasePrice = info.PurchasePrice;
                 p.Description = info.Description;
@@ -161,7 +191,8 @@ namespace ProjectMyShop.Views
                 try
                 {
                     _ProductBus.updateProduct(p.ID, p);
-                    searchTextBox_TextChanged(sender, null);
+                    loadProducts();
+                    MessageBox.Show($"Đã cập nhật sản phẩm thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (Exception ex)
                 {
@@ -169,12 +200,6 @@ namespace ProjectMyShop.Views
                     MessageBox.Show(screen, ex.Message);
                 }
 
-                //_vm.Products = _categories[i].Products;
-                //_vm.SelectedProducts = _vm.Products
-                //    .Skip((_currentPage - 1) * _rowsPerPage)
-                //    .Take(_rowsPerPage).ToList();
-
-                //ProductsListView.ItemsSource = _vm.SelectedProducts;
             }
         }
 
@@ -185,33 +210,14 @@ namespace ProjectMyShop.Views
                 "Xác nhận xóa", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (MessageBoxResult.Yes == result)
             {
-                //_Products.Remove(p);
-                //_vm.Products.Remove(p);
+                
                 _ProductBus.removeProduct(p);
-                searchTextBox_TextChanged(sender, null);
-                //_vm.SelectedProducts.Remove(p);
-
-                //_vm.SelectedProducts = _vm.Products
-                //    .Skip((_currentPage - 1) * _rowsPerPage)
-                //    .Take(_rowsPerPage).ToList();
-
-
-
-
-                //// Tính toán lại thông số phân trang
-                //_totalItems = _vm.Products.Count;
-                //_totalPages = _vm.Products.Count / _rowsPerPage +
-                //    (_vm.Products.Count % _rowsPerPage == 0 ? 0 : 1);
-
-                //currentPagingTextBlock.Text = $"{_currentPage}/{_totalPages}";
-                //if (_currentPage + 1 > _totalPages)
-                //{
-                //    nextButton.IsEnabled = false;
-                //}
-
-                //ProductsListView.ItemsSource = _vm.SelectedProducts;
+                loadProducts();
+                
+                MessageBox.Show($"Đã xóa sản phẩm {p.Name} thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
+        #endregion
 
         private void previousButton_Click(object sender, RoutedEventArgs e)
         {
@@ -232,6 +238,7 @@ namespace ProjectMyShop.Views
 
         }
 
+        #region Import data
         private void ImportButton_Click(object sender, RoutedEventArgs e)
         {
             _categories = new List<Category>();
@@ -405,7 +412,8 @@ namespace ProjectMyShop.Views
 
             }
         }
-        
+        #endregion
+
         private void AddMenuItem_Click(object sender, RoutedEventArgs e)
         {
             var screen = new AddProductScreen(_categories!);
@@ -512,8 +520,26 @@ namespace ProjectMyShop.Views
             }
         }
 
-        private void viewMenuItem_Click(object sender, RoutedEventArgs e)
+        private void pagingComboBox_DropDownOpened(object sender, EventArgs e)
         {
+            // Thay đổi màu nền khi dropdown mở
+            pagingComboBox.Background = new SolidColorBrush(Colors.LightBlue);
+        }
+
+        private void pagingComboBox_DropDownClosed(object sender, EventArgs e)
+        {
+            // Thay đổi màu nền khi dropdown đóng
+            pagingComboBox.Background = new SolidColorBrush(Colors.White);
+        }
+
+        private void ComboBox_Click(object sender, RoutedEventArgs e)
+        {
+          
+                if (sender is System.Windows.Controls.Button button)
+                {
+                    // Toggle the IsDropDownOpen state
+                    pagingComboBox.IsDropDownOpen = !pagingComboBox.IsDropDownOpen;
+                }
 
         }
     }
