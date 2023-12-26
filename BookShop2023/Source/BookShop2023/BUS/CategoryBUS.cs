@@ -61,5 +61,10 @@ namespace ProjectMyShop.BUS
                 _categoryDAO.updateCategory(ID, category);
             
         }
+
+        public int getTotalProductsOfCat(int ID)
+        {
+            return _categoryDAO.getTotalProductsOfCat(ID);
+        }
     }
 }

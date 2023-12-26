@@ -48,7 +48,7 @@ namespace ProjectMyShop.Views
         {
             InitializeComponent();
 
-            // Initialize and populate the Items collection
+            #region Initialize and populate the Items collection
             Items = new ObservableCollection<ComboBoxItem>
             {
             new ComboBoxItem { Content = "Mặc định (ID)", Tag = "ID" },
@@ -62,6 +62,7 @@ namespace ProjectMyShop.Views
             // Set the DataContext to this instance (or to a ViewModel)
             sortingComboBox.ItemsSource = Items;
             sortingComboBox.SelectedIndex = 0;
+            #endregion
         }
 
         #region Khai báo biến...
@@ -620,6 +621,8 @@ namespace ProjectMyShop.Views
         }
         #endregion
 
+
+        #region Xử lý các phương thức sắp xếp
         private void SortingComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // Get the selected item from the ComboBox
@@ -635,7 +638,6 @@ namespace ProjectMyShop.Views
             loadProducts();
         }
 
-        int _sortingCriteria = 0;   // not used after apply _sortingCriteriaQuery
         string _sortingCriteriaQuery = " ORDER BY ID ";
         public enum SortingCriteria
         {
@@ -654,14 +656,12 @@ namespace ProjectMyShop.Views
             {
                 case "Name":
                     // Sort by name alphabetically
-                    _sortingCriteria = (int)SortingCriteria.Alphabetical;
                     _sortingCriteriaQuery = " ORDER BY Name ASC ";
 
                     break;
 
                 case "PriceAsc":
                     // Sort by price ascending
-                    _sortingCriteria = (int)SortingCriteria.PriceAscending;
                     _sortingCriteriaQuery = " ORDER BY SellingPrice ASC ";
 
 
@@ -669,7 +669,6 @@ namespace ProjectMyShop.Views
 
                 case "PriceDesc":
                     // Sort by price descending
-                    _sortingCriteria = (int)SortingCriteria.PriceDescending;
                     _sortingCriteriaQuery = " ORDER BY SellingPrice DESC ";
 
 
@@ -677,7 +676,6 @@ namespace ProjectMyShop.Views
 
                 case "NewestFirst":
                     // Sort by newest first
-                    _sortingCriteria = (int)SortingCriteria.NewestFirst;
                     _sortingCriteriaQuery = " ORDER BY PublishedYear DESC ";
 
 
@@ -685,7 +683,6 @@ namespace ProjectMyShop.Views
 
                 case "OldestFirst":
                     // Sort by oldest first
-                    _sortingCriteria = (int)SortingCriteria.OldestFirst;
                     _sortingCriteriaQuery = " ORDER BY PublishedYear ASC ";
 
 
@@ -693,7 +690,6 @@ namespace ProjectMyShop.Views
 
                 default:
                     // Default sorting by ID
-                    _sortingCriteria = (int)SortingCriteria.Default;
                     _sortingCriteriaQuery = " ORDER BY ID ";
 
 
@@ -723,5 +719,6 @@ namespace ProjectMyShop.Views
                 sortingComboBox.IsDropDownOpen = !sortingComboBox.IsDropDownOpen;
             }
         }
+        #endregion
     }
 }

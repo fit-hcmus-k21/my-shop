@@ -468,13 +468,16 @@ namespace ProjectMyShop.DAO
         }
         #endregion
 
+        #region load all products
         public List<Product> loadAllProducts () {
             List<Product> list = new List<Product>();
 
             var sql = @"
                 select *, count(*) over() as Total from Product
                 where (LOWER(CONVERT(VARCHAR(100), Name)) LIKE LOWER(CONVERT(VARCHAR(100), @Keyword))
-                        OR LOWER(CONVERT(NVARCHAR(100), Author)) LIKE LOWER(CONVERT(NVARCHAR(100), @Keyword))) 
+                        OR LOWER(CONVERT(NVARCHAR(100), Author)) LIKE LOWER(CONVERT(NVARCHAR(100), @Keyword))
+                        OR CAST(PublishedYear AS NVARCHAR(10)) LIKE @Keyword 
+                        ) 
                 "
                 + (_hasCategoryFilter ? " AND CatID = @CatID " : " ")
                 + (_hasPublishedYearFilter ? " AND PublishedYear = @PublishedYear " : " ")
@@ -537,5 +540,6 @@ namespace ProjectMyShop.DAO
             }
             return list;
         }
+        #endregion
     }
 }

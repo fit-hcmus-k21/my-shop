@@ -33,15 +33,6 @@ namespace ProjectMyShop.Views
         public int catIndex { get; set; } = -1;
         CategoryBUS _categoryBUS { get; set; }
 
-        private void chooseImageButton_Click(object sender, RoutedEventArgs e)
-        {
-            var screen = new OpenFileDialog();
-            if (screen.ShowDialog() == true)
-            {
-                //newCategory.ImagePath = new BitmapImage(new Uri(screen.FileName, UriKind.Absolute));
-                //avatar.Source = newCategory.ImagePath;
-            }
-        }
 
         private void cancelButton_Click(object sender, RoutedEventArgs e)
         {

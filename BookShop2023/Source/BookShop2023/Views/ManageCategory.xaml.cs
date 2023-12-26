@@ -30,8 +30,17 @@ namespace ProjectMyShop.Views
     {
 
         List<Category>? _categories = null;        
-        CategoryViewModel CategoryViewModel = new CategoryViewModel();
         private CategoryBUS _categoryBUS = new CategoryBUS();
+        public BindingList<CategoryUpdated> _listCat = new BindingList<CategoryUpdated> { };
+
+        public class CategoryUpdated
+        {
+            public int ID { get; set; }
+            public string Name { get; set; }
+            public string Description { get; set; }
+            public int TotalProducts { get; set; }
+
+        }
         
 
         public ManageCategory()
@@ -40,7 +49,6 @@ namespace ProjectMyShop.Views
 
             InitializeComponent();
             CategoryBUS catBUS = new CategoryBUS();
-            CategoryViewModel.Categories = new BindingList<Category>(catBUS.getCategoryList());
 
 
         }
@@ -72,22 +80,50 @@ namespace ProjectMyShop.Views
         void loadCategory()
         {
             _categories = _categoryBUS.getCategoryList();
-            categoriesListView.ItemsSource = _categories;
+            _listCat.Clear();
+
+            foreach (var category in _categories)
+            {
+                _listCat.Add(new CategoryUpdated
+                {
+                    ID = category.ID,
+                    Name = category.Name,
+                    TotalProducts = _categoryBUS.getTotalProductsOfCat(category.ID)
+
+                });
+            }
 
         }
 
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
-            var p = (Category)categoriesListView.SelectedItem;
-            var screen = new EditCategoryScreen(p);
+            // Lấy nút được click
+            Button button = sender as Button;
+
+            // Lấy dòng (DataRow) chứa nút
+            DataGridRow dataGridRow = FindAncestor<DataGridRow>(button);
+
+            // Lấy đối tượng dữ liệu từ dòng hiện tại
+            CategoryUpdated rowData = dataGridRow.DataContext as CategoryUpdated;
+
+            // Sử dụng rowData 
+
+            var cat = new Category
+            {
+                ID = rowData.ID,
+                Name = rowData.Name,
+            };
+            var screen = new EditCategoryScreen(cat);
             var result = screen.ShowDialog();
             if (result == true)
             {
                 var info = screen.EditedCategory;
-                p.Name = info.Name;
+                cat.Name = info.Name;
                 try
                 {
-                    _categoryBUS.updateCategory(p.ID, p);
+                    _categoryBUS.updateCategory(cat.ID, cat);
+                    MessageBox.Show($"Cập nhật thể loại thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+
                     loadCategory();
 
                 }
@@ -99,15 +135,47 @@ namespace ProjectMyShop.Views
             }
         }
 
+        // Hàm hỗ trợ tìm đối tượng chủ của kiểu T trong Visual Tree
+        private T FindAncestor<T>(DependencyObject current) where T : DependencyObject
+        {
+            do
+            {
+                if (current is T ancestor)
+                {
+                    return ancestor;
+                }
+                current = VisualTreeHelper.GetParent(current);
+            }
+            while (current != null);
+            return null;
+        }
+
+
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            var p = (Category)categoriesListView.SelectedItem;
-            var result = MessageBox.Show($"Bạn thật sự muốn xóa hãng điện thoại {p.Name}?",
+            // Lấy nút được click
+            Button button = sender as Button;
+
+            // Lấy dòng (DataRow) chứa nút
+            DataGridRow dataGridRow = FindAncestor<DataGridRow>(button);
+
+            // Lấy đối tượng dữ liệu từ dòng hiện tại
+            CategoryUpdated rowData = dataGridRow.DataContext as CategoryUpdated;
+
+            // Sử dụng rowData 
+
+            var cat = new Category
+            {
+                ID = rowData.ID,
+                Name = rowData.Name,
+            };
+
+            var result = MessageBox.Show($"Bạn thật sự muốn xóa thể loại {cat.Name}?",
                 "Xác nhận xóa", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (MessageBoxResult.Yes == result)
             {
 
-                _categoryBUS.removeCategory(p);
+                _categoryBUS.removeCategory(cat);
                 loadCategory();
 
             }
@@ -118,35 +186,15 @@ namespace ProjectMyShop.Views
 
             AppConfig.SetValue(AppConfig.LastWindow, "ManageCategory");
             loadCategory();
+            categoriesDataGrid.ItemsSource = _listCat;
+
 
 
         }
 
-        private void nextButton_Click(object sender, RoutedEventArgs e)
+        private void dataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
 
         }
-
-        private void deleteMenuItemClick(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void editMenuItemClick(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void previousButton_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void categoriesListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
-
- 
     }
 }

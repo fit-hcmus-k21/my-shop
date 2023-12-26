@@ -31,7 +31,7 @@ namespace ProjectMyShop.Views
         public Category EditedCategory { get; set; }
 
 
-        private void editButton_Click(object sender, RoutedEventArgs e)
+        private void updateButton_Click(object sender, RoutedEventArgs e)
         {
             DialogResult = true;
         }
@@ -40,17 +40,7 @@ namespace ProjectMyShop.Views
         {
             DialogResult = false;
         }
-        public static readonly List<string> ImageExtensions = new List<string> { ".JPG", ".JPE", ".BMP", ".GIF", ".PNG" };
 
-        private void ImageButton_Click(object sender, RoutedEventArgs e)
-        {
-            var screen = new OpenFileDialog();
-            screen.Filter = "Image Files|*.jpg;*.jpeg;*.png;...";
-            if (screen.ShowDialog() == true)
-            {
-                //EditedCategory.Avatar = new BitmapImage(new Uri(screen.FileName, UriKind.Absolute));
-                //avatar.Source = EditedCategory.Avatar;
-            }
-        }
+
     }
 }

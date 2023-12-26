@@ -1,4 +1,5 @@
-﻿using ProjectMyShop.DTO;
+﻿using Microsoft.Graph;
+using ProjectMyShop.DTO;
 using ProjectMyShop.Helpers;
 using System;
 using System.Collections.Generic;
@@ -161,6 +162,34 @@ namespace ProjectMyShop.DAO
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Deleted {ID} Fail: " + ex.Message);
+            }
+        }
+
+        public int getTotalProductsOfCat(int ID)
+        {
+            var sql = "";
+
+            sql = "select count(*) from Product where CatID = @ID";
+
+            SqlCommand sqlCommand = new SqlCommand(sql, DB.Instance.Connection);
+
+            sqlCommand.Parameters.AddWithValue("@ID", ID);
+
+
+            try
+            {
+                // Sử dụng ExecuteScalar để nhận giá trị đếm
+                int totalProducts = (int)sqlCommand.ExecuteScalar();
+                System.Diagnostics.Debug.WriteLine($"Total: {totalProducts} OK");
+                return totalProducts;
+
+
+            }
+            catch (Exception ex)
+            {
+
+                System.Diagnostics.Debug.WriteLine($" Fail: " + ex.Message);
+                return 0;
             }
         }
     }
