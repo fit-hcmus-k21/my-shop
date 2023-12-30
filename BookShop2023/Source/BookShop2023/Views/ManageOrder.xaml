@@ -326,35 +326,7 @@
                             Click="nextButton_Click"/>
                 </Grid>
                 
-                <!--<DockPanel Grid.Row="1" LastChildFill="True">
-                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right"  Margin="20,10,0,10" HorizontalAlignment="Center">
-
-
-                        <Button x:Name="FirstButton" Content="&lt;&lt;" Margin="0,0,10,0"
-                                Style="{StaticResource MaterialDesignRaisedSecondaryDarkButton}"
-                                Click="FirstButton_Click"/>
-
-                        <Button x:Name="PreviousButton" 
-                                Content="&lt;"
-                                Style="{StaticResource MaterialDesignRaisedSecondaryDarkButton}"
-                                Click="PreviousButton_Click"
-                    />
-
-                        <TextBlock x:Name="CurrentPageText" Text="1" VerticalAlignment="Center" FontWeight="Bold" Foreground="Gray" Padding="10,0,0,0"></TextBlock>
-                        <TextBlock Text=" of " VerticalAlignment="Center" FontWeight="Bold" Foreground="Gray" ></TextBlock>
-                        <TextBlock x:Name="TotalPageText" Text="20" VerticalAlignment="Center" FontWeight="Bold" Foreground="Gray" Padding="0,0,10,0"></TextBlock>
-
-                        <Button x:Name="NextButton" Content="&gt;"
-                                Style="{StaticResource MaterialDesignRaisedSecondaryDarkButton}"
-                                Click="NextButton_Click"/>
-
-                        <Button x:Name="LastButton" Content="&gt;&gt;" Margin="10,0,0,0"
-                                Click="LastButton_Click"
-                                Style="{StaticResource MaterialDesignRaisedSecondaryDarkButton}"
-                                />
-
-                    </StackPanel>
-                </DockPanel>-->
+              
             </Grid>
 
         </DockPanel>

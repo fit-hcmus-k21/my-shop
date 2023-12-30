@@ -43,5 +43,15 @@ namespace BookShop2023.BUS
         {
             _orderDetailDAO.DeleteOrderDetail(detail);
         }
+
+        public List<OrderDetail> GetListByOrderID(int orderID)
+        {
+            return _orderDetailDAO.GetListByOrderID(orderID);
+        }
+
+        public void DeleteOrderDetailList(int orderID)
+        {
+            _orderDetailDAO.DeleteOrderDetailList(orderID);
+        }
     }
 }

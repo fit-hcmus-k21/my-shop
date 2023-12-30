@@ -160,7 +160,7 @@ namespace ProjectMyShop.Views
             {
                 Order order = _orders[index];
                 Customer customer = _customerBUS.GetCustomerByID(order.CustomerID);
-                var screen = new ManageOrderDetail(order, customer);
+                var screen = new ManageOrderDetail(order, customer, "update");
                 screen.Owner = this.Parent as Window;
                 var result = screen.ShowDialog();
 
@@ -186,7 +186,7 @@ namespace ProjectMyShop.Views
             Order order = new Order { FinalTotal = 0, Status = OrderStatusEnumBUS.GetValueKeyNew()};
             order.ID = _orderBUS.GetLatestInsertID() + 1;
             Customer customer = new Customer();
-            var screen = new ManageOrderDetail(order, customer);
+            var screen = new ManageOrderDetail(order, customer, "add");
             if (screen.ShowDialog() == true)
             {
                 List<OrderDetail> listOrderDetail = new List<OrderDetail>(screen.orderDetailList);
@@ -226,23 +226,13 @@ namespace ProjectMyShop.Views
             if (i != - 1)
             {
                 Order order = _orders[i];
-                var res = MessageBox.Show($"Are you sure to delete this order ?", "Delete order", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                var res = MessageBox.Show($"Bạn có chắc chắn muốn xóa đơn hàng này không ?", "Delete order", MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if (res == MessageBoxResult.Yes)
                 {
+                    _orderDetailBUS.DeleteOrderDetailList(order.ID);
                     _orderBUS.DeleteOrder(order.ID);
                     Reload();
-                    if (_orders.Count == 0)
-                    {
-                        if (_currentPage > 1)
-                        {
-                            _currentPage--;
-                            Reload();
-                        }
-                        else
-                        {
-                            // Empty Orders List -> Do nothing
-                        }
-                    }
+               
                 }
             }
             else
@@ -270,7 +260,7 @@ namespace ProjectMyShop.Views
             {
                 Order order = _orders[index];
                 Customer customer = _customerBUS.GetCustomerByID(order.CustomerID);
-                var screen = new ManageOrderDetail(order, customer);
+                var screen = new ManageOrderDetail(order, customer, "view");
                 screen.Owner = this.Parent as Window;
                 var result = screen.ShowDialog();
 

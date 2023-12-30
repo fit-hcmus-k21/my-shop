@@ -147,13 +147,17 @@ namespace BookShop2023.DAO
                     PhoneNumber = (string)reader["PhoneNumber"],
                 };
 
+                reader.Close();
                 return customer;
             }
+
+            reader.Close();
 
             return new Customer() 
             { 
                 ID = id
             };
+
         }
     }
 }

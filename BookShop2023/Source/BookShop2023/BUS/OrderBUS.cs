@@ -35,20 +35,6 @@ namespace ProjectMyShop.BUS
             return _orderDAO.GetOrders(offset, size);
         }
 
-        public static string StatusOpen = "Open";
-        public static string StatusClose = "Close";
-        public static string StatusProgess = "Progress";
-
-
-        public static string GetStatus(int status)
-        {
-            switch (status)
-            {
-                case 0: return OrderBUS.StatusOpen;
-                case 1: return OrderBUS.StatusClose;
-                default: return OrderBUS.StatusProgess;
-            }
-        }
 
         public void InsertOrder(Order order)
         {

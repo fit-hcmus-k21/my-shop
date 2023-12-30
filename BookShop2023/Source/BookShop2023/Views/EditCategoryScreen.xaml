@@ -6,7 +6,9 @@
         xmlns:local="clr-namespace:ProjectMyShop.Views"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="Chỉnh sửa thể loại" Height="350" Width="600">
+        Title="Chỉnh sửa thể loại" Height="350" Width="600"
+        WindowStartupLocation="CenterScreen"
+        >
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="10*"/>

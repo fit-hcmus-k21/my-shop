@@ -52,6 +52,7 @@
                   CellEditEnding="dataGrid_CellEditEnding"
                           BorderBrush="Gray"
                     BorderThickness="1"
+                          Background="White"
                           >
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="ID" Binding="{Binding ID}" Width="1*"/>
@@ -104,58 +105,7 @@
                 </DataGrid>
 
 
-                <!--<ListView Name="categoriesListView" Grid.Row="1" Grid.Column="1" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                    <ListView.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel/>
-                        </ItemsPanelTemplate>
-                    </ListView.ItemsPanel>
-                    <ListView.Resources>
-                        <ContextMenu x:Key="categoryContextMenu" Background="White">
-                            <MenuItem Header="Delete" Click="DeleteButton_Click">
-                                <MenuItem.Icon>
-                                    <materialDesign:PackIcon Kind="TrashCan"/>
-                                </MenuItem.Icon>
-                            </MenuItem>
-                            <MenuItem Header="Edit" Click="EditButton_Click" >
-                                <MenuItem.Icon>
-                                    <materialDesign:PackIcon Kind="Pencil"/>
-                                </MenuItem.Icon>
-                            </MenuItem>
-                        </ContextMenu>
-                    </ListView.Resources>
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="{x:Type ListViewItem}" >
-                            <Setter Property="ContextMenu" Value="{StaticResource categoryContextMenu}" />
-                        </Style>
-                    </ListView.ItemContainerStyle>
-
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel  Orientation="Vertical">
-                                <TextBlock>
-                                        <Run Text="{Binding ID}" />
-                                        <Run Text=" - " />
-                                    
-                                       <Run Text="{Binding Name}" />
-
-                                </TextBlock>
-
-
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>-->
-
-
-
-                <!-- Next, Pre Button-->
-                <!--         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="3" Grid.Column="1">
-                <Button x:Name="previousButton" Width="80" Height="35" Content="&lt;" Click="previousButton_Click"  IsEnabled="False" />
-                <TextBlock Name="currentPagingTextBlock" Width="80" Text="0" TextAlignment="Center" VerticalAlignment="Center"/>
-                <Button x:Name="nextButton" Width="80" Height="35" Content="&gt;" Click="nextButton_Click"/>
-            </StackPanel>  -->
-                <!-- End Next, Pre Button-->
+  
             </Grid>
         </DockPanel>
 

@@ -29,18 +29,73 @@ namespace ProjectMyShop.Views
     {
         public Order order { get; set; }
 
-        public BindingList<OrderDetail> orderDetailList { get; set; }
+        public List<OrderDetail> orderDetailList { get; set; }
 
         public Customer customer { get; set; }
         public BindingList<ProductDataGridItemSource> ListBinding { get; set; }
 
+        private OrderDetailBUS _orderDetailBus;
 
-        public ManageOrderDetail(Order order, Customer customer)
+
+        public ManageOrderDetail(Order order, Customer customer, string type)
         {
             InitializeComponent();
 
             this.order = order;
             this.customer = customer;
+
+            _orderDetailBus = new OrderDetailBUS();
+            ListBinding = new BindingList<ProductDataGridItemSource>();
+
+            ProductDataGrid.ItemsSource = ListBinding;
+
+            // type: view, update, add
+            // nếu là type view thì hide btn save, btn add, remove, disable edit text
+            if (type.Equals("view"))
+            {
+                DoReadOnly();
+                BindingData();
+            }
+        }
+
+        private void DoReadOnly()
+        {
+            SaveButton.Visibility = Visibility.Hidden;
+            ActionBar.Visibility = Visibility.Collapsed;
+
+            // Tìm cột DeleteProductButton
+            DataGridColumn deleteColumn = ProductDataGrid.Columns[3];
+
+            // Ẩn cột
+            deleteColumn.Visibility = Visibility.Collapsed;
+
+            CustomerNameText.IsReadOnly = true;
+            CustomerAddressText.IsReadOnly = true;
+            CustomerPhoneNumberText.IsReadOnly = true;
+            CreatedAtPicker.IsEnabled = false;
+            Voucher.IsReadOnly = true;
+        }
+
+        private void BindingData()
+        {
+            // customer info
+            CustomerNameText.Text = customer.Name;
+            CustomerAddressText.Text = customer.Address;
+            CustomerPhoneNumberText.Text = customer.PhoneNumber;
+
+            CreatedAtPicker.SelectedDate = order.CreatedAt.ToDateTime(new TimeOnly());
+            if (order.VoucherID != null)
+            {
+                Voucher.Text = order.VoucherID.ToString();
+            }
+
+            // data list product
+            if (order != null)
+            {
+                orderDetailList = _orderDetailBus.GetListByOrderID(order.ID);
+                Reload();
+            }
+
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -50,10 +105,9 @@ namespace ProjectMyShop.Views
 
             if (orderDetailList == null)
             {
-                orderDetailList = new BindingList<OrderDetail>();
+                orderDetailList = new List<OrderDetail>();
             }
-            ListBinding = new BindingList<ProductDataGridItemSource>();
-            ProductDataGrid.ItemsSource = ListBinding;
+
 
             Reload();
 
@@ -137,21 +191,21 @@ namespace ProjectMyShop.Views
             {
                 var screen = new AddProductOrder();
                 screen.OrderDetail = (OrderDetail) orderDetailList[i];
-                //if (screen.ShowDialog() == true)
-                //{
-                //    if (orderDetailList == null)
-                //        orderDetailList = new List<OrderDetail>();
-                //    if (orderDetailList[i].Product.ID == screen.OrderDetail.Product.ID || !isInProductList(screen.OrderDetail.Product))
-                //    {
-                //        _orderBUS.UpdateOrderDetail(orderDetailList[i].Product.ID, screen.OrderDetail);
-                //        orderDetailList[i] = (OrderDetail)screen.OrderDetail.Clone();
-                //    }
-                //    else
-                //    {
-                //        MessageBox.Show($"{screen.OrderDetail.Product.Name}'s already exists in detail order.\nPlease choose another Product", "Duplicate Product", MessageBoxButton.OK, MessageBoxImage.Error);
-                //    }
-                //    Reload();
-                //}
+                if (screen.ShowDialog() == true)
+                {
+                    if (orderDetailList == null)
+                        orderDetailList = new List<OrderDetail>();
+                    if (orderDetailList[i].ProductID == screen.OrderDetail.ProductID || !isInProductList(screen.OrderDetail.ProductID))
+                    {
+                        _orderDetailBus.UpdateOrderDetail(orderDetailList[i].ProductID, screen.OrderDetail);
+                        orderDetailList[i] = (OrderDetail)screen.OrderDetail.Clone();
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Sản phẩm đã tồn tại trong danh sách.\nHãy chọn sản phẩm khác.", "Duplicate Product", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    Reload();
+                }
             }
         }
 

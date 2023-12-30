@@ -18,39 +18,6 @@ namespace ProjectMyShop.DAO
     {
   
 
-    List<OrderDetail> GetOrderDetail(int orderID)
-        {
-            string sql = "select * from OrderDetail WHERE OrderID = @orderID";
-
-            var command = new SqlCommand(sql, DB.Instance.Connection);
-            command.Parameters.AddWithValue("@orderID", orderID);
-            
-            var reader = command.ExecuteReader();
-
-            var result = new List<OrderDetail>();
-
-            var _ProductBUS = new ProductBUS();
-            while (reader.Read())
-            {
-                var OrderID = reader.GetInt32("OrderID");
-                var ProductID = reader.GetInt32("ProductID");
-                var Quantity = reader.GetInt32("Quantity");
-
-                var Product = _ProductBUS.getProductByID(ProductID);
-
-                OrderDetail _order = new OrderDetail()
-                {
-                    OrderID = OrderID,
-                    ProductID = ProductID,
-                    Quantity = Quantity
-                };
-
-                result.Add(_order);
-            }
-
-            reader.Close();
-            return result;
-        }
 
         Order ORMapping(SqlDataReader reader)
         {

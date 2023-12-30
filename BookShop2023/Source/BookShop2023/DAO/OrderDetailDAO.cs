@@ -1,8 +1,10 @@
 ﻿using BookShop2023.DTO;
+using ProjectMyShop.BUS;
 using ProjectMyShop.DTO;
 using ProjectMyShop.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -54,12 +56,11 @@ namespace BookShop2023.DAO
         }
         public void DeleteOrderDetail(OrderDetail detail)
         {
-            var sql = "delete from OrderDetail where OrderID = @OrderID and ProductID = @ProductID and Quantity = @Quantity";
+            var sql = "delete from OrderDetail where OrderID = @OrderID and ProductID = @ProductID ";
             SqlCommand sqlCommand = new SqlCommand(sql, DB.Instance.Connection);
 
             sqlCommand.Parameters.AddWithValue("@OrderID", detail.OrderID);
             sqlCommand.Parameters.AddWithValue("@ProductID", detail.ProductID);
-            sqlCommand.Parameters.AddWithValue("@Quantity", detail.Quantity);
 
             try
             {
@@ -69,6 +70,24 @@ namespace BookShop2023.DAO
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Deleted {detail.OrderID} Fail: " + ex.Message);
+            }
+        }
+
+        public void DeleteOrderDetailList(int orderID)
+        {
+            var sql = "delete from OrderDetail where OrderID = @OrderID ";
+            SqlCommand sqlCommand = new SqlCommand(sql, DB.Instance.Connection);
+
+            sqlCommand.Parameters.AddWithValue("@OrderID", orderID);
+
+            try
+            {
+                sqlCommand.ExecuteNonQuery();
+                System.Diagnostics.Debug.WriteLine($"Deleted {orderID} OK");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Deleted {orderID} Fail: " + ex.Message);
             }
         }
 
@@ -112,6 +131,44 @@ namespace BookShop2023.DAO
                 }
             }
 
+        }
+
+        public List<OrderDetail> GetListByOrderID(int orderID)
+        {
+            string sql = "select * from OrderDetail WHERE OrderID = @orderID";
+
+            var command = new SqlCommand(sql, DB.Instance.Connection);
+            command.Parameters.AddWithValue("@orderID", orderID);
+
+            var reader = command.ExecuteReader();
+
+            var result = new List<OrderDetail>();
+
+            while (reader.Read())
+            {
+                var OrderID = reader.GetInt32("OrderID");
+                var ProductID = reader.GetInt32("ProductID");
+                var Quantity = reader.GetInt32("Quantity");
+                var Price = Convert.ToInt32( reader["Price"]);
+                var Total = Convert.ToInt32(reader["Total"]);
+
+
+
+
+                OrderDetail _order = new OrderDetail()
+                {
+                    OrderID = OrderID,
+                    ProductID = ProductID,
+                    Quantity = Quantity,
+                    Price = Price,
+                    Total = Total
+                };
+
+                result.Add(_order);
+            }
+
+            reader.Close();
+            return result;
         }
     }
 }
