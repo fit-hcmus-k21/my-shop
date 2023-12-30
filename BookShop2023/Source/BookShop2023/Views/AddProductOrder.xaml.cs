@@ -26,24 +26,34 @@ namespace ProjectMyShop.Views
         CategoryBUS _categoryBus;
         List<Category> _categories;
         List<Product> _selectedProducts;
-        public OrderDetail OrderDetail;
+        public OrderDetail OrderDetail { get; set; }
+
+        private Boolean didSelectProduct = false;
+        private int productStock = 0;
 
 
-        public AddProductOrder(OrderDetail OrderDetail)
+        public AddProductOrder()
         {
             InitializeComponent();
-            this.OrderDetail = (OrderDetail)OrderDetail.Clone();
+            OrderDetail = new OrderDetail();
         }
 
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            int i = ProductListView.SelectedIndex;
-            if (i != -1)
+            #region validate and check input here
+
+            if (! didSelectProduct)
             {
-                //OrderDetail.Product = _selectedProducts[i];
+                MessageBox.Show("Hãy chọn sản phẩm cho đơn hàng!", "Chưa chọn sản phẩm", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
             }
             OrderDetail.Quantity = int.Parse(QuantityTextBox.Text);
+            OrderDetail.Total = OrderDetail.Price * OrderDetail.Quantity;
+
+            #endregion
+
+
             DialogResult = true;
         }
 
@@ -58,23 +68,28 @@ namespace ProjectMyShop.Views
             _categoryBus = new CategoryBUS();
 
             _categories = _categoryBus.getCategoryList();
+            _categories.Add(new Category
+            {
+                ID = _categories[^1].ID + 1,
+                Name = "Tất cả"
+            });
 
             categoryCombobox.ItemsSource = _categories;
 
-            categoryCombobox.SelectedIndex = 0;
+            categoryCombobox.SelectedIndex = _categories.Count - 1;
 
-            if (categoryCombobox.SelectedIndex >= 0)
-            {
-                _selectedProducts = _ProductBus.getProductsAccordingToSpecificCategory(_categories[categoryCombobox.SelectedIndex].ID);
-                ProductListView.ItemsSource = _selectedProducts;
-            }
+            _selectedProducts = _ProductBus.loadAllProductsWithQuantity();
+            ProductListView.ItemsSource = _selectedProducts;
+
 
             DataContext = OrderDetail;
         }
 
         private void categoryCombobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (categoryCombobox.SelectedIndex >= 0)
+            Category selected = categoryCombobox.SelectedItem as Category;
+            
+            if (selected != null && selected.ID >= 0 && ! selected.Name.Equals("Tất cả" ))
             {
                 _selectedProducts = _ProductBus.getProductsAccordingToSpecificCategory(_categories[categoryCombobox.SelectedIndex].ID);
                 ProductListView.ItemsSource = _selectedProducts;
@@ -87,21 +102,14 @@ namespace ProjectMyShop.Views
 
             var QuantityTextBox = e.OriginalSource as TextBox;
 
-            if (QuantityTextBox != null)
+            if (QuantityTextBox != null && ! QuantityTextBox.Text.Equals(""))
             {
-                if (QuantityTextBox.Text == "")
+                int quantity = int.Parse(QuantityTextBox.Text);
+              if (quantity == 0 || quantity > productStock )
                 {
-                    QuantityTextBox.Text = "0";
+                    MessageBox.Show("Số lượng sản phẩm vượt quá số lượng tồn kho !", "Số lượng sản phẩm", MessageBoxButton.OK, MessageBoxImage.Error);
+                    QuantityTextBox.Text = "1";
                 }
-                //else if ((int.Parse(QuantityTextBox.Text)
-                //    > OrderDetail.Product.Quantity))
-                //{
-                //    QuantityTextBox.Text = QuantityTextBox.Text.Remove(QuantityTextBox.Text.Length - 1);
-
-                //    if (int.Parse(QuantityTextBox.Text)
-                //        > OrderDetail.Product.Quantity)
-                //        QuantityTextBox.Text = OrderDetail.Product.Quantity.ToString();
-                //}
             }
 
         }
@@ -122,11 +130,16 @@ namespace ProjectMyShop.Views
             int i = ProductListView.SelectedIndex;
             if (i != -1)
             {
-                //OrderDetail.ProductID = _selectedProducts[(int)i];
-                OrderDetail.Quantity = 0;
+                OrderDetail.ProductID = _selectedProducts[(int)i].ID;
+                OrderDetail.Quantity = 1;   // default 
+                OrderDetail.Price = _selectedProducts[(int)i].PurchasePrice;
+                productStock = _selectedProducts[(int)i].Quantity;
 
-                //ProductTextBox.Text = OrderDetail.ProductName;
-                QuantityTextBox.Text = OrderDetail.Quantity.ToString();
+                didSelectProduct = true;
+
+
+                ProductTextBox.Text = _selectedProducts[(int)i].Name;
+                QuantityTextBox.Text = "1";
             }
         }
     }

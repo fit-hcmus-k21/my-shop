@@ -1,4 +1,5 @@
-﻿using ProjectMyShop.DAO;
+﻿using BookShop2023.DTO;
+using ProjectMyShop.DAO;
 using ProjectMyShop.DTO;
 using System;
 using System.Collections.Generic;
@@ -49,11 +50,17 @@ namespace ProjectMyShop.BUS
             }
         }
 
-        public void AddOrder(Order order)
+        public void InsertOrder(Order order)
         {
             _orderDAO.AddOrder(order);
-            order.ID = _orderDAO.GetLastestInsertID();
         }
+
+        public int GetLatestInsertID()
+        {
+            return _orderDAO.GetLastestInsertID();
+        }
+
+       
         public void UpdateOrder(int orderID, Order order)
         {
             _orderDAO.UpdateOrder(orderID, order);
@@ -79,25 +86,6 @@ namespace ProjectMyShop.BUS
             return _orderDAO.CountOrderByMonth();
         }
 
-        public void AddOrderDetail(OrderDetail detail)
-        {
-            _orderDAO.AddOrderDetail(detail);
-        }
 
-        public void UpdateOrderDetail(int oldProductID, OrderDetail detail)
-        {
-            if(detail.Quantity >= 0)
-            {
-                _orderDAO.UpdateOrderDetail(oldProductID, detail);
-            }
-            else
-            {
-                throw new Exception("Invalid Quantity");
-            }
-        }
-        public void DeleteOrderDetail(OrderDetail detail)
-        {
-            _orderDAO.DeleteOrderDetail(detail);
-        }
     }
 }

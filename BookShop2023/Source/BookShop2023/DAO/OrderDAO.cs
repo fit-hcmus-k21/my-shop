@@ -1,4 +1,6 @@
-﻿using ProjectMyShop.BUS;
+﻿using BookShop2023.BUS;
+using BookShop2023.DTO;
+using ProjectMyShop.BUS;
 using ProjectMyShop.DTO;
 using ProjectMyShop.Helpers;
 using System;
@@ -14,7 +16,9 @@ namespace ProjectMyShop.DAO
 {
     internal class OrderDAO: DB
     {
-        List<OrderDetail> GetOrderDetail(int orderID)
+  
+
+    List<OrderDetail> GetOrderDetail(int orderID)
         {
             string sql = "select * from OrderDetail WHERE OrderID = @orderID";
 
@@ -51,20 +55,16 @@ namespace ProjectMyShop.DAO
         Order ORMapping(SqlDataReader reader)
         {
             var ID = (int)reader["ID"];
-            var CustomerName = (String)reader["CustomerName"];
             var CreatedAt = DateOnly.Parse(DateTime.Parse(reader["CreatedAt"].ToString()).Date.ToShortDateString());
-            var Status = (System.Int16)reader["Status"];
-            var CustomerAddress = (String)reader["CustomerAddress"];
+            var Status = (System.Int32)reader["Status"];
             // var VoucherID = (Voucher)reader["VoucherID"];
 
 
             Order order = new Order()
             {
                 ID = ID,
-                CustomerName = CustomerName,
                 CreatedAt = CreatedAt,
                 Status = Status,
-                CustomerAddress = CustomerAddress,
             };
             return order;
         }
@@ -141,78 +141,22 @@ namespace ProjectMyShop.DAO
             return Select(command);
         }
 
-        public void AddOrderDetail(OrderDetail detail)
-        {
-            var sql = "insert into OrderDetail(OrderID, ProductID, Quantity) " +
-                "values (@OrderID, @ProductID, @Quantity)";
-            SqlCommand sqlCommand = new SqlCommand(sql, DB.Instance.Connection);
-
-            sqlCommand.Parameters.AddWithValue("@OrderID", detail.OrderID);
-            sqlCommand.Parameters.AddWithValue("@ProductID", detail.ProductID);
-            sqlCommand.Parameters.AddWithValue("@Quantity", detail.Quantity);
-
-            try
-            {
-                sqlCommand.ExecuteNonQuery();
-                System.Diagnostics.Debug.WriteLine($"Inserted {detail.OrderID} OK");
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Inserted {detail.OrderID} Fail: " + ex.Message);
-            }
-        }
-        public void UpdateOrderDetail(int oldProductID, OrderDetail detail)
-        {
-            var sql = "update OrderDetail set Quantity = @Quantity, ProductID = @ProductID where OrderID = @OrderID and ProductID = @oldProductID";
-            SqlCommand sqlCommand = new SqlCommand(sql, DB.Instance.Connection);
-
-            sqlCommand.Parameters.AddWithValue("@OrderID", detail.OrderID);
-            sqlCommand.Parameters.AddWithValue("@ProductID", detail.ProductID);
-            sqlCommand.Parameters.AddWithValue("@oldProductID", oldProductID);
-            sqlCommand.Parameters.AddWithValue("@Quantity", detail.Quantity);
-
-            try
-            {
-                sqlCommand.ExecuteNonQuery();
-                System.Diagnostics.Debug.WriteLine($"Updated {detail.OrderID} OK");
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Updated {detail.OrderID} Fail: " + ex.Message);
-            }
-        }
-        public void DeleteOrderDetail(OrderDetail detail)
-        {
-            var sql = "delete from OrderDetail where OrderID = @OrderID and ProductID = @ProductID and Quantity = @Quantity";
-            SqlCommand sqlCommand = new SqlCommand(sql, DB.Instance.Connection);
-
-            sqlCommand.Parameters.AddWithValue("@OrderID", detail.OrderID);
-            sqlCommand.Parameters.AddWithValue("@ProductID", detail.ProductID);
-            sqlCommand.Parameters.AddWithValue("@Quantity", detail.Quantity);
-
-            try
-            {
-                sqlCommand.ExecuteNonQuery();
-                System.Diagnostics.Debug.WriteLine($"Deleted {detail.OrderID} OK");
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Deleted {detail.OrderID} Fail: " + ex.Message);
-            }
-        }
-        
+ 
         public void AddOrder(Order order)
         {
+
             // ID Auto Increment
-            var sql = "insert into Orders(CustomerName, CreatedAt, Status, CustomerAddress) " +
-                "values (@CustomerName, @CreatedAt, @Status, @CustomerAddress)"; // Them VoucherID sau
+            var sql = "insert into Orders(CustomerID, CreatedAt, Status, FinalTotal) " +
+                "values (@CustomerID, @CreatedAt, @Status, @FinalTotal)"; 
             SqlCommand sqlCommand = new SqlCommand(sql, DB.Instance.Connection);
 
-            sqlCommand.Parameters.AddWithValue("@CustomerName", order.CustomerName);
+            sqlCommand.Parameters.AddWithValue("@CustomerID", order.CustomerID);
             sqlCommand.Parameters.AddWithValue("@CreatedAt", DateTime.Parse(order.CreatedAt.ToString()));
-            sqlCommand.Parameters.AddWithValue("@Status", order.Status);
-            sqlCommand.Parameters.AddWithValue("@CustomerAddress", order.CustomerAddress);
-            
+            sqlCommand.Parameters.AddWithValue("@Status", OrderStatusEnumBUS.GetValueKeyNew());
+            //sqlCommand.Parameters.AddWithValue("@Voucher", order.VoucherID);
+            sqlCommand.Parameters.AddWithValue("@FinalTotal", order.FinalTotal);
+
+
             try
             {
                 sqlCommand.ExecuteNonQuery();
@@ -239,15 +183,16 @@ namespace ProjectMyShop.DAO
         public void UpdateOrder(int orderID,Order order)
         {
             var sql = "update Orders " +
-                "SET CustomerName = @CustomerName, CreatedAt = @CreatedAt, Status =  @Status, CustomerAddress = @CustomerAddress " +
+                "SET CustomerID = @CustomerID, CreatedAt = @CreatedAt, Status =  @Status, VoucherID = @VoucherID, FinalTotal = @FinalTotal " +
                 "where ID = @OrderID";
             SqlCommand sqlCommand = new SqlCommand(sql, DB.Instance.Connection);
 
             sqlCommand.Parameters.AddWithValue("@OrderID", orderID);
-            sqlCommand.Parameters.AddWithValue("@CustomerName", order.CustomerName);
+            sqlCommand.Parameters.AddWithValue("@CustomerID", order.CustomerID);
             sqlCommand.Parameters.AddWithValue("@CreatedAt", DateTime.Parse(order.CreatedAt.ToString()));
             sqlCommand.Parameters.AddWithValue("@Status", order.Status);
-            sqlCommand.Parameters.AddWithValue("@CustomerAddress", order.CustomerAddress);
+            sqlCommand.Parameters.AddWithValue("@VoucherID", order.VoucherID);
+            sqlCommand.Parameters.AddWithValue("@FinalTotal", order.FinalTotal);
 
 
             try

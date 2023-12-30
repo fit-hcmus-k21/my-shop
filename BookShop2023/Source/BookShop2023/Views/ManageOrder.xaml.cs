@@ -1,4 +1,6 @@
-﻿using ProjectMyShop.BUS;
+﻿using BookShop2023.BUS;
+using BookShop2023.DTO;
+using ProjectMyShop.BUS;
 using ProjectMyShop.Config;
 using ProjectMyShop.DTO;
 using ProjectMyShop.ViewModels;
@@ -25,29 +27,36 @@ namespace ProjectMyShop.Views
     public partial class ManageOrder : Page
     {
         private OrderBUS _orderBUS;
+        private CustomerBUS _customerBUS;
+        private OrderDetailBUS _orderDetailBUS;
 
-        OrderViewModel _vm;
+        BindingList<Order> _orders = new BindingList<Order>();
+
         DateTime FromDate;
         DateTime ToDate;
 
         public ManageOrder()
         {
             InitializeComponent();
+            this._customerBUS = new CustomerBUS();
+            this._orderBUS = new OrderBUS();
+            this._orderDetailBUS = new OrderDetailBUS();
         }
 
+        #region Load page 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            _vm = new OrderViewModel();
             _orderBUS = new OrderBUS();
 
             FromDate = DateTime.Parse("1/1/1970");
             ToDate = DateTime.MaxValue;
             
             Reload();
-            OrderDataGrid.ItemsSource = _vm.SelectedOrders;
+            OrderDataGrid.ItemsSource = _orders;
 
             AppConfig.SetValue(AppConfig.LastWindow, "ManageOrder");
         }
+        #endregion
 
 
         private void OrderDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -61,40 +70,73 @@ namespace ProjectMyShop.Views
 
         void Reload()
         {
-            _vm.Orders = new BindingList<Order>(_orderBUS.GetAllOrdersByDate(FromDate, ToDate));
-            _vm.SelectedOrders = _vm.Orders.Skip((_currentPage - 1) * _rowsPerPage)
-                .Take(_rowsPerPage).ToList();
+            List<Order> listOrders = _orderBUS.GetAllOrdersByDate(FromDate, ToDate)
+                                                      .Skip((_currentPage - 1) * _rowsPerPage)
+                                                      .Take(_rowsPerPage).ToList();
 
-            _totalItems = _vm.Orders.Count();
-            _totalPages = _totalItems / _rowsPerPage +
-                (_totalItems % _rowsPerPage == 0 ? 0 : 1);
-           
-            if (_totalPages <= 0) _totalPages = 1;
-            if (_currentPage > _totalPages) _currentPage = _totalPages;
+            BindingList<Order> bindingList = new BindingList<Order>(listOrders);
 
-            // control prev & next buttons
-            PreviousButton.IsEnabled = FirstButton.IsEnabled = _currentPage > 1;
-            NextButton.IsEnabled = LastButton.IsEnabled = _currentPage < _totalPages;
+            _orders = bindingList;
 
-            CurrentPageText.Text = _currentPage.ToString();
-            TotalPageText.Text = _totalPages.ToString();
+            OrderDataGrid.ItemsSource = _orders;
 
-            OrderDataGrid.ItemsSource = _vm.SelectedOrders;
+            devidePaging();
+
+            
         }
+
+        #region Tính toán phân trang
+        public void devidePaging()
+        {
+            int count = _orders.Count();
+
+            if (count != _totalItems)
+            {
+                _totalItems = count;
+                _totalPages = (_totalItems / _rowsPerPage) + (((_totalItems % _rowsPerPage) == 0) ? 0 : 1);
+
+                // tạo thông tin phân trang
+                var pageInfos = new List<object>();
+
+                for (int i = 1; i <= _totalPages; i++)
+                {
+                    pageInfos.Add(new
+                    {
+                        Page = i,
+                        Total = _totalPages
+                    });
+                };
+
+                pagingComboBox.ItemsSource = pageInfos;
+                pagingComboBox.SelectedIndex = 0;
+
+            }
+
+            if (_totalPages > 1)
+            {
+                nextButton.IsEnabled = true;
+            }
+            else
+            {
+                nextButton.IsEnabled = false;
+            }
+        }
+        #endregion
 
         private void UpdateButton_Click(object sender, RoutedEventArgs e)
         {
             int index = OrderDataGrid.SelectedIndex;
             if (index != -1)
             {
-                Order order = _vm.SelectedOrders[index];
-                var screen = new ManageOrderDetail(order);
+                Order order = _orders[index];
+                Customer customer = _customerBUS.GetCustomerByID(order.CustomerID);
+                var screen = new ManageOrderDetail(order, customer);
                 screen.Owner = this.Parent as Window;
                 var result = screen.ShowDialog();
 
                 if (result == true)
                 {
-                    _orderBUS.UpdateOrder(_vm.SelectedOrders[index].ID, order);
+                    _orderBUS.UpdateOrder(_orders[index].ID, order);
                     Reload();
                 }
                 else
@@ -108,13 +150,35 @@ namespace ProjectMyShop.Views
             }
         }
 
+        #region Thêm đơn hàng mới
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
-            Order order = new Order();
-            var screen = new ManageOrderDetail(order);
+            Order order = new Order { FinalTotal = 0};
+            order.ID = _orderBUS.GetLatestInsertID() + 1;
+            Customer customer = new Customer();
+            var screen = new ManageOrderDetail(order, customer);
             if (screen.ShowDialog() == true)
             {
-                _orderBUS.AddOrder(order);
+                List<OrderDetail> listOrderDetail = new List<OrderDetail>(screen.orderDetailList);
+
+                #region insert thông tin khách hàng, insert Order, insert list OrderDetail
+
+                // insert customer info
+                //MessageBox.Show("Name: " + customer.Name + ", Address: " + customer.Address, "Thông tin khách hàng", MessageBoxButton.OK);
+
+                _customerBUS.Insert(customer);
+                int customerId = _customerBUS.GetLatestInsertID();
+
+                // insert order info               
+                order.CustomerID = customerId;
+                _orderBUS.InsertOrder(order);
+
+
+                // insert order detail
+                _orderDetailBUS.InsertList(listOrderDetail);
+
+                #endregion
+
                 Reload();
             }
             else
@@ -122,6 +186,8 @@ namespace ProjectMyShop.Views
                 // do nothing
             }
         }
+        #endregion 
+
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
@@ -129,13 +195,13 @@ namespace ProjectMyShop.Views
 
             if (i != - 1)
             {
-                Order order = _vm.SelectedOrders[i];
-                var res = MessageBox.Show($"Are you sure to delete this order: {order.ID} - {order.CustomerName}?", "Delete order", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                Order order = _orders[i];
+                var res = MessageBox.Show($"Are you sure to delete this order ?", "Delete order", MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if (res == MessageBoxResult.Yes)
                 {
                     _orderBUS.DeleteOrder(order.ID);
                     Reload();
-                    if (_vm.SelectedOrders.Count == 0)
+                    if (_orders.Count == 0)
                     {
                         if (_currentPage > 1)
                         {
@@ -172,15 +238,16 @@ namespace ProjectMyShop.Views
             int index = OrderDataGrid.Items.IndexOf(row.Item);
             if (index != -1)
             {
-                Order order = _vm.SelectedOrders[index];
-                var screen = new ManageOrderDetail(order);
+                Order order = _orders[index];
+                Customer customer = _customerBUS.GetCustomerByID(order.CustomerID);
+                var screen = new ManageOrderDetail(order, customer);
                 screen.Owner = this.Parent as Window;
                 var result = screen.ShowDialog();
 
 
                 if (result == true)
                 {
-                    _orderBUS.UpdateOrder(_vm.SelectedOrders[index].ID, order);
+                    _orderBUS.UpdateOrder(_orders[index].ID, order);
                     Reload();
                 }
                 else
@@ -193,18 +260,29 @@ namespace ProjectMyShop.Views
             }
         }
 
-        private void NextButton_Click(object sender, RoutedEventArgs e)
+        #region Chuyển trang trước, trang sau khi click button
+        private void previousButton_Click(object sender, RoutedEventArgs e)
         {
-            _currentPage++;
-            Reload();
+            if (pagingComboBox.SelectedIndex > 0)
+            {
+                pagingComboBox.SelectedIndex--;
+            }
+
+
         }
 
-        private void PreviousButton_Click(object sender, RoutedEventArgs e)
+        private void nextButton_Click(object sender, RoutedEventArgs e)
         {
-            _currentPage -= 1;
-            Reload();
-        }
+            if (pagingComboBox.SelectedIndex < _totalPages - 1)
+            {
+                pagingComboBox.SelectedIndex++;
+            }
 
+        }
+        #endregion
+
+
+        #region Filter orders từ ngày đến ngày
         private void FilterButton_Click(object sender, RoutedEventArgs e)
         {
             if (FromDatePicker.SelectedDate != null)
@@ -234,17 +312,62 @@ namespace ProjectMyShop.Views
                 MessageBox.Show("Start Date cannot after End Date", "Date Filter", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
+        #endregion
 
-        private void FirstButton_Click(object sender, RoutedEventArgs e)
+
+
+        #region Thay đổi trang xem : click pagingComboBox
+        private void pagingComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            _currentPage = 1;
-            Reload();
+            dynamic info = pagingComboBox.SelectedItem;
+            if (info != null)
+            {
+                if (info?.Page != _currentPage)
+                {
+                    _currentPage = info?.Page;
+                    Reload();
+                }
+            }
+
+            if (_currentPage == _totalPages)
+            {
+                nextButton.IsEnabled = false;
+            }
+            else
+            {
+                nextButton.IsEnabled = true;
+            }
+            if (_currentPage == 1)
+            {
+                previousButton.IsEnabled = false;
+            }
+            else
+            {
+                previousButton.IsEnabled = true;
+            }
         }
 
-        private void LastButton_Click(object sender, RoutedEventArgs e)
+        private void pagingComboBox_DropDownOpened(object sender, EventArgs e)
         {
-            _currentPage = _totalPages;
-            Reload();
+            // Thay đổi màu nền khi dropdown mở
+            pagingComboBox.Background = new SolidColorBrush(Colors.LightBlue);
         }
+
+        private void pagingComboBox_DropDownClosed(object sender, EventArgs e)
+        {
+            // Thay đổi màu nền khi dropdown đóng
+            pagingComboBox.Background = new SolidColorBrush(Colors.White);
+        }
+
+        private void pagingComboBox_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is System.Windows.Controls.Button button)
+            {
+                // Toggle the IsDropDownOpen state
+                pagingComboBox.IsDropDownOpen = !pagingComboBox.IsDropDownOpen;
+            }
+        }
+        #endregion
+
     }
 }

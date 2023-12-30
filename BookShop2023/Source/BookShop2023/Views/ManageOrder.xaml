@@ -211,7 +211,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                       
+
                     </DataGrid.Columns>
                     <DataGrid.ColumnHeaderStyle>
                         <!--<Style>
@@ -228,9 +228,105 @@
                         </Style>
 
                     </DataGrid.ColumnHeaderStyle>
-                    
+
                 </DataGrid>
-                <DockPanel Grid.Row="1" LastChildFill="True">
+                
+                <!--phân trang-->
+                <Grid Grid.Row="1" >
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="40" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="40" />
+
+
+                    </Grid.ColumnDefinitions>
+
+                    <ComboBox Name="pagingComboBox" Width="150" Height="28" Grid.Column="2" 
+                              SelectionChanged="pagingComboBox_SelectionChanged"
+                              DropDownOpened="pagingComboBox_DropDownOpened" DropDownClosed="pagingComboBox_DropDownClosed"
+                              VerticalAlignment="Center"
+                              >
+                        <ComboBox.Template>
+                            <ControlTemplate TargetType="ComboBox">
+                                <Grid>
+                                    <Button
+            Name="Button"
+            Width="150"
+            Height="28"
+            BorderBrush="Gray"
+            Background="AliceBlue"
+            Foreground="Black"
+            BorderThickness="1"
+            Focusable="False"
+            ClickMode="Press"
+            Click="pagingComboBox_Click"                            
+                                        >
+                                        <StackPanel Orientation="Horizontal" >
+                                            <TextBlock Text="{Binding SelectedItem.Page, RelativeSource={RelativeSource AncestorType=ComboBox}}" />
+                                            <TextBlock Text="/" />
+                                            <TextBlock Text="{Binding SelectedItem.Total, RelativeSource={RelativeSource AncestorType=ComboBox}}" />
+                                            <TextBlock Text="    ▼" Foreground="Green" FontSize="13"  />
+                                        </StackPanel>
+                                    </Button>
+                                    <Popup
+            Name="Popup"
+            Placement="Bottom"
+            IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+            AllowsTransparency="True"
+            Focusable="False"
+            PopupAnimation="Slide">
+                                        <Grid Name="DropDown" SnapsToDevicePixels="True">
+                                            <Border
+                    x:Name="DropDownBorder"
+                    Background="White"
+                    BorderThickness="1"
+                    BorderBrush="Gray" />
+                                            <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                                <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                            </ScrollViewer>
+                                        </Grid>
+                                    </Popup>
+                                </Grid>
+                            </ControlTemplate>
+
+                        </ComboBox.Template>
+                        <ComboBox.ItemContainerStyle>
+                            <Style TargetType="ComboBoxItem" >
+                                <Setter Property="Width" Value="142"/>
+                                <Setter Property="Foreground" Value="Black" />
+                            </Style>
+                        </ComboBox.ItemContainerStyle>
+                        <ComboBox.ItemTemplate >
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <TextBlock Text="{Binding Page}" />
+                                    <TextBlock Text="/" />
+                                    <TextBlock Text="{Binding Total}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+
+
+
+
+                    <Button x:Name="previousButton" Width="46" Height="28" Content="&lt;" 
+                            HorizontalAlignment="Right"
+                            Click="previousButton_Click" Grid.Column="1" Background="Bisque"
+                            Foreground="Black"
+                            IsEnabled="False" />
+                    <Button x:Name="nextButton" Width="46" Height="28"
+                            HorizontalAlignment="Left"
+                            Content="&gt;" Grid.Column="3" Background="Bisque"
+                            Foreground="Black"
+                            Click="nextButton_Click"/>
+                </Grid>
+                
+                <!--<DockPanel Grid.Row="1" LastChildFill="True">
                     <StackPanel Orientation="Horizontal" DockPanel.Dock="Right"  Margin="20,10,0,10" HorizontalAlignment="Center">
 
 
@@ -258,7 +354,7 @@
                                 />
 
                     </StackPanel>
-                </DockPanel>
+                </DockPanel>-->
             </Grid>
 
         </DockPanel>
@@ -266,27 +362,3 @@
 
 
 </Page>
-<!-- TEST BUTTONS 
-<Button x:Name="FirstButton"
-                    Content="1"
-                    Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
-                    Background="DeepPink"
-                    BorderBrush="DeepPink"/>
-<Button x:Name="SecondButton"
-                    Content="2"
-                    Style="{StaticResource MaterialDesignFlatSecondaryButton}"/>
-<Button x:Name="ThirdButton"
-                    Content="3"
-                    Style="{StaticResource MaterialDesignFlatSecondaryButton}"/>
-<Button x:Name="ForthButton"
-                    Content="4"
-                    Style="{StaticResource MaterialDesignFlatSecondaryButton}"/>
-
-                    <ListView x:Name="PageButtons">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <Button></Button>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
--->

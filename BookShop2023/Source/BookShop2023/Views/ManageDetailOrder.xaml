@@ -4,23 +4,24 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
       xmlns:local="clr-namespace:ProjectMyShop.Views" xmlns:local1="clr-namespace:ProjectMyShop.Converter"
       mc:Ignorable="d" 
-      d:DesignHeight="800" d:DesignWidth="550"
+      d:DesignHeight="800" d:DesignWidth="600"
       WindowStyle="None"
       Width="550"
         Height="700"
       WindowStartupLocation="CenterScreen" 
       Loaded="Window_Loaded">
     <Window.Resources>
-        <local1:StatusConverter x:Key="statusConverter"></local1:StatusConverter>
+        <local1:CurrencyConverter x:Key="currencyConverter" />
     </Window.Resources>
 
     <materialDesign:Card Background="White" UniformCornerRadius="10" materialDesign:ShadowAssist.ShadowEdges="All" Padding="20,20,20,30">
         <DockPanel LastChildFill="True">
             
             <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
-                <TextBlock Text="Detail Order" FontWeight="Normal" FontSize="16"/>
+                <TextBlock Text="Chi tiết đơn hàng" FontWeight="Normal" FontSize="16"/>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Order #" FontWeight="DemiBold" Foreground="Gray" FontSize="12"/>
                     <TextBlock x:Name="OrderIDText" Text="{Binding ID}" FontWeight="DemiBold" Foreground="Gray" FontSize="12"/>
@@ -41,26 +42,29 @@
                     <DockPanel LastChildFill="True">
 
                         <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
-                            <TextBlock Text="Order Overview" FontWeight="DemiBold" Foreground="Gray" FontSize="14" Margin="5,0,0,5"/>
+                            <TextBlock Text="Thông tin khách hàng" FontWeight="DemiBold" Foreground="Black" FontSize="14" Margin="5,0,0,5"/>
                             <DockPanel LastChildFill="True">
-                                <StackPanel Orientation="Vertical" DockPanel.Dock="Left" Width="250">
-                                    <StackPanel Width="Auto" Orientation="Horizontal"  HorizontalAlignment="Left">
-                                        <Label Content="Customer name " FontWeight="Light"/>
-                                        <TextBox x:Name="CustomerNameText" TextWrapping="Wrap" Text="{Binding CustomerName}" Width="120" TextChanged="TextBox_TextChanged"/>
+                                <StackPanel Width="Auto" Orientation="Vertical" DockPanel.Dock="Left">
+                                    <StackPanel Width="Auto" Orientation="Horizontal" HorizontalAlignment="Left">
+                                        <Label Content="Họ tên: " FontWeight="Light" Width="60"/>
+                                        <TextBox x:Name="CustomerNameText" TextWrapping="Wrap"  Width="150"/>
+                                    </StackPanel>
+                                    <StackPanel Width="Auto" Orientation="Horizontal" >
+                                        <Label Content="Địa chỉ" FontWeight="Light" Width="60"/>
+                                        <TextBox x:Name="CustomerAddressText" TextWrapping="Wrap"  Width="150"/>
                                     </StackPanel>
                                     <StackPanel Width="Auto" Orientation="Horizontal" HorizontalAlignment="Left">
-                                        <Label Content="CustomerAddress" Width="92" FontWeight="Light"/>
-                                        <TextBox x:Name="CustomerAddressText" TextWrapping="Wrap" Text="{Binding CustomerAddress}" Width="120"/>
-                                    </StackPanel>
-                                    <StackPanel Width="Auto" Orientation="Horizontal" HorizontalAlignment="Left">
-                                        <Label Content="Voucher" Width="92" FontWeight="Light"/>
-                                        <TextBox x:Name="Voucher" TextWrapping="Wrap" Text="None" Width="120" IsReadOnly="True"/>
+                                        <Label Content="SĐT: " FontWeight="Light" Width="60"/>
+                                        <TextBox x:Name="CustomerPhoneNumberText" TextWrapping="Wrap"  Width="150"/>
                                     </StackPanel>
                                 </StackPanel>
-                                <StackPanel Width="Auto" Orientation="Vertical" DockPanel.Dock="Right">
+
+
+                                <StackPanel Width="Auto" Orientation="Vertical" DockPanel.Dock="Right" Margin="10 5 0 0">
                                     <StackPanel Width="Auto" Orientation="Horizontal" HorizontalAlignment="Left">
-                                        <Label Content="Order date " FontWeight="Light"/>
+                                        <Label Content="Ngày đặt:  " Width="92" FontWeight="Light"/>
                                         <DatePicker Name="CreatedAtPicker"  IsTodayHighlighted="True"
+                                                    SelectedDate="{x:Static sys:DateTime.Now}"
                                                     >
                                             <DatePicker.CalendarStyle>
                                                 <Style TargetType="Calendar" BasedOn="{StaticResource MaterialDesignCalendarPortrait}">
@@ -76,9 +80,8 @@
                                         </DatePicker>
                                     </StackPanel>
                                     <StackPanel Width="Auto" Orientation="Horizontal" HorizontalAlignment="Left">
-                                        <Label Width="68" Content="Status " FontWeight="Light"/>
-                                        <ComboBox x:Name="StatusComboBox" SelectedItem="{Binding Status, BindsDirectlyToSource=True, Converter={StaticResource statusConverter}, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}" >
-                                        </ComboBox>
+                                        <Label Content="Mã khuyến mãi:" Width="92" FontWeight="Light"/>
+                                        <TextBox x:Name="Voucher" TextWrapping="Wrap" Text="" Width="80" IsReadOnly="True"/>
                                     </StackPanel>
                                 </StackPanel>
 
@@ -91,13 +94,14 @@
                     <DockPanel LastChildFill="True">
 
                         <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
-                            <TextBlock Text="Product List" FontWeight="DemiBold" Foreground="Gray" FontSize="14" Margin="5,0,0,5"/>
+                            <TextBlock Text="Danh sách sản phẩm" FontWeight="DemiBold" Foreground="Black" FontSize="14" Margin="5,0,0,5"/>
                             <StackPanel Orientation="Horizontal" Margin="0,10" HorizontalAlignment="Left">
                            
 
                                 <Button Name="ChooseProductButton" Click="ChooseProductButton_Click" 
                             materialDesign:ButtonAssist.CornerRadius="5"
-                            Background="DeepPink"
+                            Background="BlanchedAlmond"
+                                        Foreground="black"
                             materialDesign:ShadowAssist.ShadowEdges="All"
                             BorderBrush="DeepPink"
                             Margin="5">
@@ -111,7 +115,7 @@
 
                                 <Button Name="UpdateButton" Click="UpdateButton_Click"
                             materialDesign:ButtonAssist.CornerRadius="5"
-                            Background="LightGray"
+                            Background="AliceBlue"
                             BorderBrush="LightGray"
                             materialDesign:ShadowAssist.ShadowEdges="All"
                             Foreground="Gray"
@@ -123,7 +127,7 @@
 
                                 <Button Name="DeleteButton" Click="DeleteButton_Click"
                             materialDesign:ButtonAssist.CornerRadius="5"
-                            Background="LightGray"
+                            Background="Beige"
                             BorderBrush="LightGray"
                             materialDesign:ShadowAssist.ShadowEdges="All"
                             Foreground="Gray"
@@ -156,45 +160,45 @@
                                     <Style TargetType="{x:Type DataGridRow}">
                                         <Style.Triggers>
                                             <Trigger Property="IsSelected" Value="True">
-                                                <Setter Property="Background" Value="DeepPink"/>
-                                                <Setter Property="Foreground" Value="White"/>
+                                                <Setter Property="Background" Value="AliceBlue"/>
+                                                <Setter Property="Foreground" Value="Black"/>
                                             </Trigger>
                                         </Style.Triggers>
                                     </Style>
                                 </DataGrid.RowStyle>
 
                                 <DataGrid.Columns>
-                                    <DataGridTemplateColumn Header="Product">
+                                    <DataGridTemplateColumn Header="Tên sản phẩm" Width="*">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                                    <TextBlock Text="{Binding Path=Product.Name}" Margin="5,0,0,0"/>
+                                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                                    <TextBlock Text="{Binding Path=ProductID}" Margin="0,0,0,0"/>
                                                 </StackPanel>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
-                                   <DataGridTemplateColumn Header="Price" IsReadOnly="True">
+                                    <DataGridTemplateColumn Header="Giá" IsReadOnly="True" Width="100">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                                <TextBlock Text="{Binding Path=Product.SellingPrice}" Margin="5,0,0,0"></TextBlock>
+                                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                                <TextBlock Text="{Binding Path=Price, Converter={StaticResource currencyConverter}}" Margin="0,0,0,0"></TextBlock>
                                                 </StackPanel>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
-                                    <DataGridTemplateColumn x:Name="Quantity" Header="Quantity">
+                                    <DataGridTemplateColumn x:Name="Quantity" Header="SL" Width="80">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
                                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" >
-                                                    <TextBlock x:Name="QuantityTextBox" Text="{Binding Quantity}" Margin="5,0,0,0" />
+                                                    <TextBlock x:Name="QuantityTextBox" Text="{Binding Quantity}" Margin="0,0,0,0" />
                                                 </StackPanel>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
-                                        <DataGridTemplateColumn Header="      #">
+                                    <DataGridTemplateColumn Header="#" Width="60">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <StackPanel Orientation="Horizontal">
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
                                                     <Button x:Name="DeleteButton" Click="DeleteButton_Click" >
                                                         <Button.Content>
                                                             <materialDesign:PackIcon Kind="Trash"/>
@@ -204,7 +208,13 @@
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
+                                    
                                 </DataGrid.Columns>
+                                <DataGrid.ColumnHeaderStyle>
+                                    <Style TargetType="DataGridColumnHeader">
+                                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGrid.ColumnHeaderStyle>
                             </DataGrid>
                         </Grid>
 
@@ -214,7 +224,8 @@
                 <StackPanel Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Right"  Margin="0,5,0,0">
                     <Button Name="SaveButton" Click="SaveButton_Click" 
                             materialDesign:ButtonAssist.CornerRadius="5"
-                            Background="DeepPink"
+                            Background="LightGreen"
+                            Foreground="Black"
                             materialDesign:ShadowAssist.ShadowEdges="All"
                             BorderBrush="DeepPink"
                             >

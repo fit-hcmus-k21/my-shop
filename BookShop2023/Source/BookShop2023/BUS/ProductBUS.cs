@@ -107,6 +107,19 @@ namespace ProjectMyShop.BUS
             return _ProductDAO.loadAllProducts();
         }
 
+        public List<Product> loadAllProductsWithQuantity()
+        {
+            List<Product> list = new List<Product>(_ProductDAO.loadAllProducts());
+            foreach (Product p in list)
+            {
+                if (p.Quantity == 0)
+                {
+                    list.Remove(p);
+                }
+            }
+            return list;
+        }
+
         public void setFilterCat(int id)
         {
             _ProductDAO.setFilterCat(id);

@@ -1,4 +1,6 @@
-﻿using ProjectMyShop.BUS;
+﻿using BookShop2023.BUS;
+using BookShop2023.DTO;
+using ProjectMyShop.BUS;
 using ProjectMyShop.DTO;
 using ProjectMyShop.ViewModels;
 using System;
@@ -25,45 +27,33 @@ namespace ProjectMyShop.Views
     /// </summary>
     public partial class ManageOrderDetail : Window
     {
-        public Order order;
-        private OrderBUS _orderBUS;
+        public Order order { get; set; }
 
-        OrderDetailViewModel _vm;
+        public BindingList<OrderDetail> orderDetailList { get; set; }
 
-        OrderDetail OrderDetail;
+        public Customer customer { get; set; }
 
-        public ManageOrderDetail(Order order)
+
+        public ManageOrderDetail(Order order, Customer customer)
         {
             InitializeComponent();
 
             this.order = order;
+            this.customer = customer;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            if (order.CreatedAt.Equals(DateOnly.Parse(DateTime.MinValue.Date.ToShortDateString()))) 
-                order.CreatedAt = DateOnly.Parse(DateTime.Now.Date.ToShortDateString());
-            CreatedAtPicker.SelectedDate = DateTime.Parse(order.CreatedAt.ToString());
-            //StatusComboBox.ItemsSource = Order.GetAllStatusValues();
+           
             DataContext = order;
 
-            if (order.ID == 0)
+            if (orderDetailList == null)
             {
-                ChooseProductButton.IsEnabled = false;
-                UpdateButton.IsEnabled = false;
-                DeleteButton.IsEnabled = false;
+                orderDetailList = new BindingList<OrderDetail>();
             }
+            ProductDataGrid.ItemsSource = orderDetailList;
 
-            _vm = new OrderDetailViewModel();
-            //if (order.OrderDetailList != null)
-            //{
-            //    _vm.OrderDetails = new BindingList<OrderDetail>(order.OrderDetailList);
-            //    ProductDataGrid.ItemsSource = order.OrderDetailList;
-            //}
 
-            _orderBUS = new OrderBUS();
-            OrderDetail = new OrderDetail();
-            OrderDetail.OrderID = order.ID;
         }
 
         private void ReturnButton_Click(object sender, RoutedEventArgs e)
@@ -76,6 +66,14 @@ namespace ProjectMyShop.Views
             // date only cannot bound so have to do this 
             if (CreatedAtPicker.SelectedDate != null)
                 order.CreatedAt = DateOnly.Parse(CreatedAtPicker.SelectedDate.Value.Date.ToShortDateString());
+
+            string name = CustomerNameText.Text;
+            string address = CustomerAddressText.Text;
+            string phoneNum = CustomerPhoneNumberText.Text;
+            customer.Name = name;
+            customer.Address = address;
+            customer.PhoneNumber = phoneNum;
+
             DialogResult = true;
         }
 
@@ -84,49 +82,48 @@ namespace ProjectMyShop.Views
             return DateOnly.Parse(dateTime.Date.ToShortDateString());
         }
 
-        bool isInProductList(Product Product)
+        bool isInProductList(int ProductID)
         {
             bool result = false;
-            //if (order.OrderDetailList != null)
-            //{
-            //    foreach (OrderDetail detail in order.OrderDetailList) {
-            //        if (detail.Product.ID == Product.ID)
-            //        {
-            //            result = true;
-            //            break;
-            //        }
-            //        else
-            //        {
-            //            // do nothing
-            //        }
-            //    }
+            if (orderDetailList != null)
+            {
+                foreach (OrderDetail detail in orderDetailList)
+                {
+                    if (detail.ProductID == ProductID)
+                    {
+                        result = true;
+                        break;
+                    }
+                    else
+                    {
+                        // do nothing
+                    }
+                }
 
-            //}
+            }
 
             return result;
         }
 
         private void ChooseProductButton_Click(object sender, RoutedEventArgs e)
         {
-            //OrderDetail.Product = new Product();
-            //OrderDetail.Product.Name = "Choose a Product";
-            //OrderDetail.Quantity = 0;
-            //var screen = new AddProductOrder(OrderDetail);
-            //if (screen.ShowDialog() == true)
-            //{
-            //    if (order.OrderDetailList == null)
-            //        order.OrderDetailList = new List<OrderDetail>();
-            //    if (!isInProductList(screen.OrderDetail.Product))
-            //    {
-            //        _orderBUS.AddOrderDetail(screen.OrderDetail);
-            //        order.OrderDetailList.Add(screen.OrderDetail);
-            //    }
-            //    else
-            //    {
-            //        MessageBox.Show($"{screen.OrderDetail.Product.Name}'s already exists in detail order.\nChoose 'Update' instead", "Duplicate Product", MessageBoxButton.OK, MessageBoxImage.Error);
-            //    }
-            //    Reload();
-            //}
+            
+            var screen = new AddProductOrder();
+            if (screen.ShowDialog() == true)
+            {
+              
+                if (!isInProductList(screen.OrderDetail.ProductID))
+                {
+                    screen.OrderDetail.OrderID = order.ID;
+                    orderDetailList.Add(screen.OrderDetail);
+                    order.FinalTotal += screen.OrderDetail.Total;
+                }
+                else
+                {
+                    MessageBox.Show($"Sản phẩm đã tồn tại trong đơn hàng.", "Duplicate Product", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                Reload();
+            }
         }
 
         private void UpdateButton_Click(object sender, RoutedEventArgs e)
@@ -135,19 +132,16 @@ namespace ProjectMyShop.Views
 
             if (i != -1)
             {
-
-                //OrderDetail.Product = new Product();
-                //OrderDetail.Product = (Product)order.OrderDetailList[i].Product.Clone();
-                //OrderDetail.Quantity = order.OrderDetailList[i].Quantity;
-                //var screen = new AddProductOrder(OrderDetail);
+                var screen = new AddProductOrder();
+                screen.OrderDetail = (OrderDetail) orderDetailList[i];
                 //if (screen.ShowDialog() == true)
                 //{
-                //    if (order.OrderDetailList == null)
-                //        order.OrderDetailList = new List<OrderDetail>();
-                //    if (order.OrderDetailList[i].Product.ID == screen.OrderDetail.Product.ID || !isInProductList(screen.OrderDetail.Product))
+                //    if (orderDetailList == null)
+                //        orderDetailList = new List<OrderDetail>();
+                //    if (orderDetailList[i].Product.ID == screen.OrderDetail.Product.ID || !isInProductList(screen.OrderDetail.Product))
                 //    {
-                //        _orderBUS.UpdateOrderDetail(order.OrderDetailList[i].Product.ID, screen.OrderDetail);
-                //        order.OrderDetailList[i] = (OrderDetail)screen.OrderDetail.Clone();
+                //        _orderBUS.UpdateOrderDetail(orderDetailList[i].Product.ID, screen.OrderDetail);
+                //        orderDetailList[i] = (OrderDetail)screen.OrderDetail.Clone();
                 //    }
                 //    else
                 //    {
@@ -164,13 +158,12 @@ namespace ProjectMyShop.Views
 
             if (i != -1)
             {
-                //var res = MessageBox.Show($"Are you sure to discard this Product: {order.OrderDetailList[i].Product.Name}?", "Delete Product from order", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                //if (res == MessageBoxResult.Yes)
-                //{
-                //    _orderBUS.DeleteOrderDetail(order.OrderDetailList[i]);
-                //    order.OrderDetailList.RemoveAt(i);
-                //    Reload();
-                //}
+                var res = MessageBox.Show($"Bạn có chắc chắn loại bỏ sản phẩm này ?", "Xóa sản phẩm", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (res == MessageBoxResult.Yes)
+                {
+                    orderDetailList.RemoveAt(i);
+                    Reload();
+                }
             }
             else
             {
@@ -181,11 +174,7 @@ namespace ProjectMyShop.Views
         void Reload()
         {
 
-            //if (order.OrderDetailList != null)
-            //{
-            //    _vm.OrderDetails = new BindingList<OrderDetail>(order.OrderDetailList);
-            //    ProductDataGrid.ItemsSource = _vm.OrderDetails;
-            //}
+           
         }
 
 
@@ -203,15 +192,15 @@ namespace ProjectMyShop.Views
                     {
                         QuantityTextBox.Text = "0";
                     }
-                    //else if ((order.OrderDetailList !=  null && (int.Parse(QuantityTextBox.Text)
-                    //    > order.OrderDetailList[i].Product.Quantity)))
-                    //{
-                    //    QuantityTextBox.Text = QuantityTextBox.Text.Remove(QuantityTextBox.Text.Length - 1);
+                    else if ((orderDetailList != null && (int.Parse(QuantityTextBox.Text)
+                        > orderDetailList[i].Quantity)))
+                    {
+                        QuantityTextBox.Text = QuantityTextBox.Text.Remove(QuantityTextBox.Text.Length - 1);
 
-                    //    if ((order.OrderDetailList != null && (int.Parse(QuantityTextBox.Text)
-                    //        > order.OrderDetailList[i].Product.Quantity)))
-                    //        QuantityTextBox.Text = order.OrderDetailList[i].Product.Quantity.ToString();
-                    //}
+                        if ((orderDetailList != null && (int.Parse(QuantityTextBox.Text)
+                            > orderDetailList[i].Quantity)))
+                            QuantityTextBox.Text = orderDetailList[i].Quantity.ToString();
+                    }
                 }
 
             }

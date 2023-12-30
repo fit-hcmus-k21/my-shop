@@ -4,7 +4,8 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-      xmlns:local="clr-namespace:ProjectMyShop.Views" xmlns:local1="clr-namespace:ProjectMyShop.Converter"
+      xmlns:local="clr-namespace:ProjectMyShop.Views" 
+      xmlns:local1="clr-namespace:ProjectMyShop.Converter"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="650"
       Title="ManageProduct"
@@ -362,6 +363,8 @@
                                             <RowDefinition Height="*" />
                                             <RowDefinition Height="*" />
                                             <RowDefinition Height="*" />
+                                            <RowDefinition Height="*" />
+
 
                                         </Grid.RowDefinitions>
 
@@ -374,15 +377,19 @@
                                          <Run Text="{Binding Name}"  Foreground="Red"/>
                                         </TextBlock>
                                         <TextBlock Grid.Row="2">
-                            <Run Text="Author: " FontWeight="Bold"/>
+                            <Run Text="Tác giả: " FontWeight="Bold"/>
                             <Run Text="{Binding Author}" />
                                         </TextBlock>
                                         <TextBlock Grid.Row="3">
-                            <Run Text="Published: " FontWeight="Bold"/>
+                            <Run Text="Năm xuất bản: " FontWeight="Bold"/>
                             <Run Text="{Binding PublishedYear}" />
                                         </TextBlock >
                                         <TextBlock Grid.Row="4">
-                            <Run Text="Price: " FontWeight="Bold"/>
+                            <Run Text="Số lượng: " FontWeight="Bold"/>
+                            <Run Text="{Binding Quantity}" />
+                                        </TextBlock >
+                                        <TextBlock Grid.Row="5">
+                            <Run Text="Giá bán: " FontWeight="Bold"/>
                             <Run Text="{Binding SellingPrice, Converter={StaticResource currencyConverter }}" />
                                         </TextBlock>
                                     </Grid>

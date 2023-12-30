@@ -10,15 +10,12 @@ namespace ProjectMyShop.DTO
     {
 
         public int ID { get; set; }
-        public string CustomerName { get; set; }
-        public DateOnly CreatedAt { get; set; }
         public int Status { get; set; }
-        public string CustomerAddress { get; set; }
+        public int CustomerID { get; set; }
+      
         public int? VoucherID { get; set; }
         public float? FinalTotal { get; set; }
-
-        //public List<OrderDetail> OrderDetailList { get; set; }
-
+        public DateOnly CreatedAt { get; set; }
 
     }
 

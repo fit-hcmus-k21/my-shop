@@ -8,40 +8,53 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen" 
         Loaded="Window_Loaded"
+        xmlns:local1="clr-namespace:ProjectMyShop.Converter"
         
-        Title="Detail Order" Height="500" Width="450">
+        
+        Title="Chi tiết đơn hàng - Chọn sản phẩm" Height="550" Width="550">
+    <Window.Resources>
+        <local1:CurrencyConverter x:Key="currencyConverter" />
+        <local1:RelativeToAbsoluteConverter x:Key="absoluteConverter" />
+    </Window.Resources>
     <StackPanel Orientation="Horizontal">
         <StackPanel Orientation="Vertical">
             <ComboBox Style="{Binding MaterialDesign}" BorderThickness="1" BorderBrush="MediumPurple" Name="categoryCombobox" Width="100" Height="35" SelectionChanged="categoryCombobox_SelectionChanged" Grid.Column="1" Grid.ColumnSpan="2">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Padding="5" Text="{Binding CatName}"/>
+                        <TextBlock Padding="5" Text="{Binding Name}"/>
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
-            <ListView x:Name="ProductListView" SelectionChanged="ProductListView_SelectionChanged" Height="400" Margin="10,5" Width="250">
+            <ListView x:Name="ProductListView" SelectionChanged="ProductListView_SelectionChanged" Height="500" Margin="10,5" Width="320">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock>
-                        <Run Text="{Binding Name}" FontWeight="DemiBold"/>
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel HorizontalAlignment="Center" Width="100" Height="100">
+                                <Image Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" Margin="5, 5, 5, 5" 
+                                    Source="{Binding ImagePath, Converter={StaticResource absoluteConverter}}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock>
+                        <Run Text="{Binding Name}"  FontWeight="DemiBold"/>
                         <LineBreak/>
                         <Run Text="Quantity:"/>
                         <Run Text="{Binding Quantity}" FontWeight="DemiBold"/>
                         <LineBreak/>
-                        <Run Text="{Binding SellingPrice}" FontStyle="Italic"/>
-                        <Run Text="VND"></Run>
+                        <Run Text="{Binding SellingPrice,Converter={StaticResource currencyConverter}}" FontStyle="Italic"/>
                         <LineBreak/>
-                        </TextBlock>
+                                </TextBlock>
+                            </StackPanel>
+                        </StackPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
         </StackPanel>
 
         <StackPanel Orientation="Vertical">
-            <TextBox x:Name="ProductTextBox" Margin="10,10" materialDesign:HintAssist.Hint="Product Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" IsReadOnly="True"
-                 Text="{Binding Path=Product.Name}"/>
-            <TextBox x:Name="QuantityTextBox" Margin="10,10" materialDesign:HintAssist.Hint="Quantity" Style="{StaticResource MaterialDesignFloatingHintTextBox}" PreviewTextInput="PreviewTextInput" TextChanged="TextBox_TextChanged"
-                 Text="{Binding Quantity}"/>
+            <TextBox x:Name="ProductTextBox" Margin="10,10" materialDesign:HintAssist.Hint="Tên sản phẩm" Style="{StaticResource MaterialDesignFloatingHintTextBox}" IsReadOnly="True"
+                 />
+            <TextBox x:Name="QuantityTextBox" Margin="10,10" materialDesign:HintAssist.Hint="Số lượng: " Style="{StaticResource MaterialDesignFloatingHintTextBox}" PreviewTextInput="PreviewTextInput" TextChanged="TextBox_TextChanged"
+                 />
             <Button x:Name="SaveButton" Content="Save" Margin="10,10" Click="SaveButton_Click" Width="90"/>
             <Button x:Name="CancelButton" Content="Cancel" Margin="10,10" Click="CancelButton_Click" Width="90"/>
         </StackPanel>
