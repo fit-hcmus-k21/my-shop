@@ -13,7 +13,6 @@ namespace ProjectMyShop.BUS
     internal class ProductBUS
     {
         private ProductDAO _ProductDAO;
-        private Dictionary<int, Product> _ProductDictionary = new Dictionary<int, Product>();
 
         public ProductBUS()
         {
@@ -28,6 +27,8 @@ namespace ProjectMyShop.BUS
         public Dictionary<int, Product> ProductDictionary()
         {
             List<Product> products = loadAllProducts();
+            Dictionary<int, Product> _ProductDictionary = new Dictionary<int, Product>();
+
             foreach (Product p in products)
             {
                 _ProductDictionary.Add(p.ID, p);

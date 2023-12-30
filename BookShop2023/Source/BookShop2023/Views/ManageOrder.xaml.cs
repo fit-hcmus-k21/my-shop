@@ -37,6 +37,11 @@ namespace ProjectMyShop.Views
         DateTime FromDate;
         DateTime ToDate;
 
+        int _totalItems = 0;
+        int _currentPage = 0;
+        int _totalPages = 0;
+        int _rowsPerPage = int.Parse(AppConfig.GetValue(AppConfig.NumberProductPerPage));
+
         public ManageOrder()
         {
             InitializeComponent();
@@ -48,6 +53,11 @@ namespace ProjectMyShop.Views
         #region Load page 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            _currentPage = 0;
+            _totalPages = 0;
+            _totalItems = 0;
+            _rowsPerPage = int.Parse(AppConfig.GetValue(AppConfig.NumberProductPerPage));
+
             _orderBUS = new OrderBUS();
 
             FromDate = DateTime.Parse("1/1/1970");
@@ -67,10 +77,7 @@ namespace ProjectMyShop.Views
         {
 
         }
-        int _totalItems = 0;
-        int _currentPage = 1;
-        int _totalPages = 1;
-        int _rowsPerPage = 8;
+
 
         void Reload()
         {
@@ -103,15 +110,15 @@ namespace ProjectMyShop.Views
                 }
             }
 
-            devidePaging();
+            dividePaging();
 
             
         }
 
         #region Tính toán phân trang
-        public void devidePaging()
+        public void dividePaging()
         {
-            int count = _orders.Count();
+            int count = _orderBUS.GetAllOrdersByDate(FromDate, ToDate).Count();
 
             if (count != _totalItems)
             {

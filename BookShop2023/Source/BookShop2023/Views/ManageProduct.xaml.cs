@@ -143,7 +143,7 @@ namespace ProjectMyShop.Views
 
             ProductsListView.ItemsSource = _products;
 
-            devidePaging();
+            dividePaging();
 
 
 
@@ -151,7 +151,7 @@ namespace ProjectMyShop.Views
         #endregion
 
         #region Tính toán phân trang
-        public void devidePaging()
+        public void dividePaging()
         {
             int count = _ProductBus.loadAllProducts().Count;
 
