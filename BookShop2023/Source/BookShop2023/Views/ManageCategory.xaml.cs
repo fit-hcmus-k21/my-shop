@@ -8,7 +8,6 @@ using Aspose.Cells;
 using Microsoft.Win32;
 using ProjectMyShop.BUS;
 using ProjectMyShop.DTO;
-using ProjectMyShop.ViewModels;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Controls;

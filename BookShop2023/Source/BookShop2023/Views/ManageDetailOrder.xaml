@@ -172,7 +172,7 @@
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
                                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                                    <TextBlock Text="{Binding Path=ProductID}" Margin="0,0,0,0"/>
+                                                    <TextBlock Text="{Binding ProductName}" Margin="0,0,0,0"/>
                                                 </StackPanel>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>

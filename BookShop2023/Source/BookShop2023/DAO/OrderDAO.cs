@@ -55,17 +55,24 @@ namespace ProjectMyShop.DAO
         Order ORMapping(SqlDataReader reader)
         {
             var ID = (int)reader["ID"];
+            var FinalTotal = Convert.ToInt32((Decimal)reader["FinalTotal"]);
             var CreatedAt = DateOnly.Parse(DateTime.Parse(reader["CreatedAt"].ToString()).Date.ToShortDateString());
             var Status = (System.Int32)reader["Status"];
-            // var VoucherID = (Voucher)reader["VoucherID"];
-
+            var VoucherID = reader["VoucherID"];
+            var CustomerID = (int)reader["CustomerID"];
 
             Order order = new Order()
             {
                 ID = ID,
                 CreatedAt = CreatedAt,
                 Status = Status,
+                CustomerID = CustomerID,
+                FinalTotal = FinalTotal,
             };
+            if (VoucherID != DBNull.Value)
+            {
+                order.VoucherID = (int) (VoucherID);
+            }
             return order;
         }
 

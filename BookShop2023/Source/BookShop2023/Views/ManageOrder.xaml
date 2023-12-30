@@ -120,8 +120,8 @@
                         <Style TargetType="{x:Type DataGridRow}">
                             <Style.Triggers>
                                 <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Background" Value="DeepPink"/>
-                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="Background" Value="AliceBlue"/>
+                                    <Setter Property="Foreground" Value="Black"/>
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
@@ -151,7 +151,7 @@
                         <DataGridTemplateColumn Header="Tên khách hàng" Width="4*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                                         <TextBlock Text="{Binding CustomerName}"></TextBlock>
                                     </StackPanel>
                                 </DataTemplate>
@@ -160,7 +160,7 @@
                         <DataGridTemplateColumn Header="Địa chỉ" Width="4*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                                         <TextBlock Text="{Binding CustomerAddress}"></TextBlock>
                                     </StackPanel>
                                 </DataTemplate>
@@ -184,10 +184,10 @@
                                 Background="Pink"
                                 materialDesign:ShadowAssist.ShadowEdges="All"
                                 BorderBrush="Pink"
-                                Margin="5">
-                                        <Button.Content>
+                                Margin="2">
+                                        <Button.Content >
                                             <StackPanel Orientation="Horizontal">
-                                                <TextBlock Margin="10,0" Text="{Binding Status, Converter={StaticResource statusConverter}}" Foreground="White" FontWeight="DemiBold"/>
+                                                <TextBlock  Text="{Binding Status}" FontSize="13" Foreground="Black" />
                                             </StackPanel>
                                         </Button.Content>
                                     </Button>
@@ -198,7 +198,7 @@
                         <DataGridTemplateColumn Header="Chi tiết" Width="2*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <StackPanel>
+                                    <StackPanel HorizontalAlignment="Center">
                                         <materialDesign:Badged>
                                             <Button x:Name="DetailButton" Click="DetailButton_Click" 
                                              Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryButton}">

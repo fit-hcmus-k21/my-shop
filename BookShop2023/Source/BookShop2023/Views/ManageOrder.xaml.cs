@@ -1,9 +1,9 @@
 ﻿using BookShop2023.BUS;
 using BookShop2023.DTO;
+using BookShop2023.Models;
 using ProjectMyShop.BUS;
 using ProjectMyShop.Config;
 using ProjectMyShop.DTO;
-using ProjectMyShop.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -31,6 +31,8 @@ namespace ProjectMyShop.Views
         private OrderDetailBUS _orderDetailBUS;
 
         BindingList<Order> _orders = new BindingList<Order>();
+        BindingList<OrderDataGridItemSource> DataGridBinding = new BindingList<OrderDataGridItemSource>();
+
 
         DateTime FromDate;
         DateTime ToDate;
@@ -51,10 +53,12 @@ namespace ProjectMyShop.Views
             FromDate = DateTime.Parse("1/1/1970");
             ToDate = DateTime.MaxValue;
             
-            Reload();
-            OrderDataGrid.ItemsSource = _orders;
+            OrderDataGrid.ItemsSource = DataGridBinding;
 
             AppConfig.SetValue(AppConfig.LastWindow, "ManageOrder");
+            Reload();
+
+
         }
         #endregion
 
@@ -78,7 +82,26 @@ namespace ProjectMyShop.Views
 
             _orders = bindingList;
 
-            OrderDataGrid.ItemsSource = _orders;
+
+            if (_orders.Count > 0)
+            {
+                DataGridBinding.Clear();
+                Dictionary<int, Customer> CustomerDictionary = _customerBUS.CustomerDictionary();
+                Dictionary<int, string> StatusDitionary = new OrderStatusEnumBUS().StatusDictionary();
+                foreach (var order in _orders) 
+                {
+                    DataGridBinding.Add(new OrderDataGridItemSource
+                    {
+                        ID = order.ID,
+                        CustomerName = CustomerDictionary[order.CustomerID].Name,
+                        CustomerAddress = CustomerDictionary[order.CustomerID].Address,
+                        CreatedAt = order.CreatedAt,
+                        Status = StatusDitionary[order.Status]
+
+                    });
+
+                }
+            }
 
             devidePaging();
 
@@ -153,7 +176,7 @@ namespace ProjectMyShop.Views
         #region Thêm đơn hàng mới
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
-            Order order = new Order { FinalTotal = 0};
+            Order order = new Order { FinalTotal = 0, Status = OrderStatusEnumBUS.GetValueKeyNew()};
             order.ID = _orderBUS.GetLatestInsertID() + 1;
             Customer customer = new Customer();
             var screen = new ManageOrderDetail(order, customer);

@@ -9,7 +9,6 @@ using ProjectMyShop.BUS;
 using ProjectMyShop.Config;
 using ProjectMyShop.DTO;
 using ProjectMyShop.Helpers;
-using ProjectMyShop.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

@@ -23,6 +23,20 @@ namespace BookShop2023.BUS
             return _enums;
         }
 
+        public Dictionary<int, string> StatusDictionary()
+        {
+            List<OrderStatusEnum> ListEnum = new List<OrderStatusEnum>();
+            ListEnum = OrderStatusEnumDAO.loadAll();
+
+            Dictionary<int, string> keyValuePairs= new Dictionary<int, string>();
+
+            foreach (var status in ListEnum)
+            {
+                keyValuePairs[status.Value] = status.DisplayText;
+            }
+            return keyValuePairs;
+        }
+
         public static int GetValueKeyNew()
         {
             if (_enums == null)

@@ -1,8 +1,8 @@
 ﻿using BookShop2023.BUS;
 using BookShop2023.DTO;
+using BookShop2023.Models;
 using ProjectMyShop.BUS;
 using ProjectMyShop.DTO;
-using ProjectMyShop.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -32,6 +32,7 @@ namespace ProjectMyShop.Views
         public BindingList<OrderDetail> orderDetailList { get; set; }
 
         public Customer customer { get; set; }
+        public BindingList<ProductDataGridItemSource> ListBinding { get; set; }
 
 
         public ManageOrderDetail(Order order, Customer customer)
@@ -51,8 +52,10 @@ namespace ProjectMyShop.Views
             {
                 orderDetailList = new BindingList<OrderDetail>();
             }
-            ProductDataGrid.ItemsSource = orderDetailList;
+            ListBinding = new BindingList<ProductDataGridItemSource>();
+            ProductDataGrid.ItemsSource = ListBinding;
 
+            Reload();
 
         }
 
@@ -173,7 +176,19 @@ namespace ProjectMyShop.Views
 
         void Reload()
         {
+           Dictionary<int, Product> map = new Dictionary<int, Product>();
+            map = new ProductBUS().ProductDictionary();
 
+            ListBinding.Clear();
+            foreach (var orderDetail in orderDetailList)
+            {
+                ListBinding.Add(new ProductDataGridItemSource
+                {
+                    ProductName = map[orderDetail.ProductID].Name,
+                    Price = orderDetail.Price,
+                    Quantity = orderDetail.Quantity,
+                });
+            }
            
         }
 
