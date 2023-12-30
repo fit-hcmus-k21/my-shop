@@ -126,7 +126,7 @@ namespace ProjectMyShop.DAO
 
             sqlCommand.Parameters.AddWithValue("@CustomerID", order.CustomerID);
             sqlCommand.Parameters.AddWithValue("@CreatedAt", DateTime.Parse(order.CreatedAt.ToString()));
-            sqlCommand.Parameters.AddWithValue("@Status", OrderStatusEnumBUS.GetValueKeyNew());
+            sqlCommand.Parameters.AddWithValue("@Status", order.Status);
             //sqlCommand.Parameters.AddWithValue("@Voucher", order.VoucherID);
             sqlCommand.Parameters.AddWithValue("@FinalTotal", order.FinalTotal);
 
@@ -156,8 +156,11 @@ namespace ProjectMyShop.DAO
         }
         public void UpdateOrder(int orderID,Order order)
         {
+
             var sql = "update Orders " +
-                "SET CustomerID = @CustomerID, CreatedAt = @CreatedAt, Status =  @Status, VoucherID = @VoucherID, FinalTotal = @FinalTotal " +
+                "SET CustomerID = @CustomerID, CreatedAt = @CreatedAt, Status =  @Status, " +
+                (order.VoucherID != null ? "VoucherID = @VoucherID, " : " ") +
+                "FinalTotal = @FinalTotal " +
                 "where ID = @OrderID";
             SqlCommand sqlCommand = new SqlCommand(sql, DB.Instance.Connection);
 
@@ -165,7 +168,11 @@ namespace ProjectMyShop.DAO
             sqlCommand.Parameters.AddWithValue("@CustomerID", order.CustomerID);
             sqlCommand.Parameters.AddWithValue("@CreatedAt", DateTime.Parse(order.CreatedAt.ToString()));
             sqlCommand.Parameters.AddWithValue("@Status", order.Status);
-            sqlCommand.Parameters.AddWithValue("@VoucherID", order.VoucherID);
+            if (order.VoucherID != null)
+            {
+                sqlCommand.Parameters.AddWithValue("@VoucherID", order.VoucherID);
+
+            }
             sqlCommand.Parameters.AddWithValue("@FinalTotal", order.FinalTotal);
 
 

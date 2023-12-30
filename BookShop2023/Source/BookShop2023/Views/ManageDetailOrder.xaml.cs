@@ -36,6 +36,8 @@ namespace ProjectMyShop.Views
 
         private OrderDetailBUS _orderDetailBus;
 
+        public List<OrderStatusEnum> Statuses = OrderStatusEnumBUS.Instance();
+
 
         public ManageOrderDetail(Order order, Customer customer, string type)
         {
@@ -48,6 +50,7 @@ namespace ProjectMyShop.Views
             ListBinding = new BindingList<ProductDataGridItemSource>();
 
             ProductDataGrid.ItemsSource = ListBinding;
+            StatusComboBox.ItemsSource = Statuses;
 
             // type: view, update, add
             // nếu là type view thì hide btn save, btn add, remove, disable edit text
@@ -55,6 +58,26 @@ namespace ProjectMyShop.Views
             {
                 DoReadOnly();
                 BindingData();
+            }
+
+            if (type.Equals("update"))
+            {
+                BindingData();
+            }
+
+            if (order != null)
+            {
+                foreach (var item in Statuses)
+                {
+                    if (item.Value == order.Status)
+                    {
+                        StatusComboBox.SelectedItem = item;
+                        break;
+                    }
+                }
+            } else
+            {
+                StatusComboBox.SelectedItem = null;
             }
         }
 
@@ -74,6 +97,8 @@ namespace ProjectMyShop.Views
             CustomerPhoneNumberText.IsReadOnly = true;
             CreatedAtPicker.IsEnabled = false;
             Voucher.IsReadOnly = true;
+
+            StatusComboBox.IsEditable = false;
         }
 
         private void BindingData()
@@ -130,6 +155,12 @@ namespace ProjectMyShop.Views
             customer.Name = name;
             customer.Address = address;
             customer.PhoneNumber = phoneNum;
+
+            var status = StatusComboBox.SelectedItem as OrderStatusEnum;
+            if (status != null)
+            {
+                order.Status = status.Value;
+            }
 
             DialogResult = true;
         }

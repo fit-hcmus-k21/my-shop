@@ -27,7 +27,7 @@
                             <Button.Content>
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon Kind="AddCircle"/>
-                                    <TextBlock Margin="10,0" Text="Add"></TextBlock>
+                                    <TextBlock Margin="10,0" Text="Thêm"></TextBlock>
                                 </StackPanel>
                             </Button.Content>
                         </Button>
@@ -39,9 +39,10 @@
                             materialDesign:ShadowAssist.ShadowEdges="All"
                             Foreground="Gray"
                             Margin="5">
-                            <Button.Content>
-                                <materialDesign:PackIcon Kind="Update"/>
-                            </Button.Content>
+                            <StackPanel Orientation="Horizontal" >
+                                <materialDesign:PackIcon Kind="Update" />
+                                <TextBlock Text="Cập nhật" Margin="10,0,0,0" VerticalAlignment="Center" />
+                            </StackPanel>
                         </Button>
 
                         <Button Name="DeleteButton" Click="DeleteButton_Click"
@@ -51,9 +52,10 @@
                             materialDesign:ShadowAssist.ShadowEdges="All"
                             Foreground="Gray"
                             Margin="5">
-                            <Button.Content>
-                                <materialDesign:PackIcon Kind="Delete"/>
-                            </Button.Content>
+                            <StackPanel Orientation="Horizontal" >
+                                <materialDesign:PackIcon Kind="Delete" />
+                                <TextBlock Text="Xóa" Margin="10,0,0,0" VerticalAlignment="Center" />
+                            </StackPanel>
                         </Button>
 
                     </StackPanel>
@@ -166,17 +168,17 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="Ngày đặt" Width="2*">
+                        <DataGridTemplateColumn Header="Ngày đặt" Width="3*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                                         <materialDesign:PackIcon Kind="Calendar" Margin="0,2,0,0"/>
                                         <TextBlock Text="{Binding CreatedAt}" Margin="5,0,0,0"></TextBlock>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="Trạng thái" Width="2*">
+                        <DataGridTemplateColumn Header="Trạng thái" Width="3*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button

@@ -83,6 +83,20 @@
                                         <Label Content="Mã khuyến mãi:" Width="92" FontWeight="Light"/>
                                         <TextBox x:Name="Voucher" TextWrapping="Wrap" Text="" Width="80" IsReadOnly="True"/>
                                     </StackPanel>
+                                    <StackPanel Width="Auto" Orientation="Horizontal" HorizontalAlignment="Left">
+                                        <Label Content="Trạng thái:" Width="92" FontWeight="Light"/>
+                                        <ComboBox Name="StatusComboBox" 
+                                                  >
+                                            <ComboBox.ItemTemplate >
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                        <TextBlock Text="{Binding DisplayText}" />
+                                                        
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
+                                    </StackPanel>
                                 </StackPanel>
 
                             </DockPanel>

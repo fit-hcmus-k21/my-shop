@@ -167,6 +167,14 @@ namespace ProjectMyShop.Views
                 if (result == true)
                 {
                     _orderBUS.UpdateOrder(_orders[index].ID, order);
+
+                    // delete old order detail list
+                    _orderDetailBUS.DeleteOrderDetailList(order.ID);
+
+                    // insert new order detail list
+                    List<OrderDetail> listOrderDetail = new List<OrderDetail>(screen.orderDetailList);
+                    _orderDetailBUS.InsertList(listOrderDetail);
+
                     Reload();
                 }
                 else
