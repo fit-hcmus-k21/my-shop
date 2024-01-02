@@ -8,7 +8,8 @@
         xmlns:local1="clr-namespace:ProjectMyShop.Converter"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen" 
-        Title="Book Shop Management" Height="800" Width="1320"
+        Title="Book Shop Management" Height="850" Width="1320"
+        ResizeMode="NoResize"
         Loaded="Window_Loaded">
     <Window.Resources>
         <local1:CurrencyConverter x:Key="currencyConverter"/>
@@ -20,21 +21,31 @@
             <ColumnDefinition Width="280"/>
             <ColumnDefinition Width="10"/>
             <ColumnDefinition Width="12*"/>
+            
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="10"/>
-            <RowDefinition Height="2*"/>
+            <RowDefinition Height="160"/>
             <RowDefinition Height="12*"/>
+            <RowDefinition Height="80" />
         </Grid.RowDefinitions>
 
         <!--Logo-->
-        <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+        <StackPanel Grid.Row="1" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
              <!--Đường dẫn tương đối đến tệp hình ảnh logo--> 
             <Image RenderOptions.BitmapScalingMode="HighQuality" 
                    Source="{Binding Source=Assets/Logo/logo_edited.png , Converter = {StaticResource absoluteConverter}}" 
              
                    Width="200" Height="100" />
+            <TextBlock Text="Dashboard " 
+                       Name="dashboardText"
+                       HorizontalAlignment="Center"
+                       Foreground="Brown"
+                       FontSize="20"
+                       Height="30"
+                       />
             
+
 
 
         </StackPanel>
@@ -75,16 +86,41 @@
                     <TextBlock VerticalAlignment="Center" FontSize="20" Foreground="Black">Quản lý đơn hàng</TextBlock>
                 </StackPanel>
             </Button>
+            <Button x:Name="customerButton" Click="statButton_Click"  Background="aliceBlue" 
+                    Height="60" Margin="0 0 0 10" HorizontalAlignment="Left" Padding="40 0 0 0">
+                <StackPanel Orientation="Horizontal" Width="240">
+                    <TextBlock VerticalAlignment="Center" FontSize="20" Foreground="Black">Quản lý khách hàng</TextBlock>
+                </StackPanel>
+            </Button>
+            <Button x:Name="voucherButton" Click="statButton_Click"  Background="aliceBlue" 
+                    Height="60" Margin="0 0 0 10" HorizontalAlignment="Left" Padding="40 0 0 0">
+                <StackPanel Orientation="Horizontal" Width="240">
+                    <TextBlock VerticalAlignment="Center" FontSize="20" Foreground="Black">Quản lý voucher</TextBlock>
+                </StackPanel>
+            </Button>
             <Button x:Name="statButton" Click="statButton_Click"  Background="aliceBlue" 
                     Height="60" Margin="0 0 0 10" HorizontalAlignment="Left" Padding="40 0 0 0">
                 <StackPanel Orientation="Horizontal" Width="240">
                     <TextBlock VerticalAlignment="Center" FontSize="20" Foreground="Black">Thống kê </TextBlock>
                 </StackPanel>
             </Button>
+         
             <Button x:Name="configButton" Click="configButton_Click" Background="aliceBlue" 
                     Height="60" Margin="0 0 0 10" HorizontalAlignment="Left" Padding="40 0 0 0">
                 <StackPanel Orientation="Horizontal" Width="240">
-                    <TextBlock VerticalAlignment="Center" FontSize="20" Foreground="Black">Cấu hình chung</TextBlock>
+                    <TextBlock VerticalAlignment="Center" FontSize="20" Foreground="Black">Cài đặt</TextBlock>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+
+        <StackPanel Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button x:Name="loggoutButton" Click="loggoutButton_Click" Background="Beige" 
+                    Height="48" Margin="0 0 0 10" HorizontalAlignment="Left" Padding="20 0 0 0">
+                <StackPanel Orientation="Horizontal" Width="160" HorizontalAlignment="Center">
+                    <materialDesign:PackIcon Kind="Logout" Foreground="DarkCyan" Width="28" Height="28"
+                                             Margin="0 0 10 0"
+                                             />
+                    <TextBlock VerticalAlignment="Center" FontSize="20" Foreground="Black">Đăng xuất</TextBlock>
                 </StackPanel>
             </Button>
         </StackPanel>
@@ -94,7 +130,7 @@
                NavigationUIVisibility="Hidden"
        
                Grid.Column="2"
-               Grid.RowSpan="2"
+               Grid.RowSpan="3"
                Grid.Row="1" Margin="0,0,10,10" Navigated="pageNavigation_Navigated">
 
         </Frame>

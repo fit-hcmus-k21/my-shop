@@ -38,6 +38,9 @@ namespace ProjectMyShop
         Configuration _configPage;
         Login login;
         Button[] buttons;
+
+        string username = "";
+        string greeting = "";
         #endregion
 
         #region Kiểm tra user đăng nhập mode staff hay admin để chuyển giao diện dashboard
@@ -63,15 +66,25 @@ namespace ProjectMyShop
             if (loginMode != null && loginMode.Equals("admin"))
             {
                 // role admin
+                greeting = "Admin | ";
+                username = AccountBUS.Instance().GetName();
+
                 openDashBoardAdmin();
 
-            } else
+
+
+            }
+            else
             {
                 // role staff
+                greeting = "Hello, ";
+                username = AccountBUS.Instance().GetName();
+
                 openDashBoardStaff();
 
-            }              
-          
+
+            }
+
         }
         #endregion
 
@@ -81,6 +94,8 @@ namespace ProjectMyShop
             dashboard = new Dashboard();
             _manageOrderPage = new ManageOrder();
             _manageCategory = new ManageCategory();
+
+            dashboardText.Text = greeting + username;
 
             Button[] buttons1 = new Button[] { dashboardButton, categoriesButton, productButton, orderButton, statButton, configButton };
             buttons = buttons1;
@@ -129,6 +144,9 @@ namespace ProjectMyShop
             dashboard = new Dashboard();
             _manageOrderPage = new ManageOrder();
             _manageCategory = new ManageCategory();
+
+            dashboardText.Text = greeting + username;
+
 
             // hide statistics
             statButton.Visibility = Visibility.Collapsed;
@@ -224,6 +242,15 @@ namespace ProjectMyShop
 
         }
 
+        private void loggoutButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
 
+            AppConfig.SetValue(AppConfig.LoginStatus, ((int)AppConfig.LoginStatusEnum.LoggedOut).ToString());
+            AppConfig.SetValue(AppConfig.LastWindow, "0");
+
+            var loginScreen = new Login();
+            loginScreen.Show();
+        }
     }
 }

@@ -4,11 +4,17 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:ProjectMyShop.Views"
+      xmlns:local1="clr-namespace:ProjectMyShop.Converter"
+      
       mc:Ignorable="d" 
       d:DesignHeight="400" d:DesignWidth="650"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       Title="Dashboard"
       Loaded="Page_Loaded">
+
+    <Page.Resources>
+        <local1:RelativeToAbsoluteConverter x:Key="absoluteConverter" />
+    </Page.Resources>
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -18,8 +24,8 @@
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="5*"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="150"/>
             <RowDefinition Height="10*"/>
         </Grid.RowDefinitions>
         <materialDesign:Card
@@ -27,7 +33,7 @@
                 Grid.Row="1"
                 Width="200"
                 Height="100"
-                Background="{DynamicResource MyPurpleGradient}"
+                Background="AliceBlue"
                 VerticalAlignment="Top"
                 UniformCornerRadius="10"
                 materialDesign:ShadowAssist.ShadowDepth="Depth1"
@@ -35,20 +41,23 @@
 
             <Grid Margin="10">
                 <StackPanel>
-                    <TextBlock Text="Total Products"
-                                   Foreground="White"
+                    <TextBlock Text="Tổng số sản phẩm"
+                                   Foreground="Black"
                                    Style="{StaticResource MaterialDesignSubtitle2TextBlock}"/>
 
                     <!-- binding -->
 
                     <TextBlock x:Name="SumProducts" 
                                 Text="{Binding totalProduct}"
-                                   Foreground="White"
-                                   Style="{StaticResource MaterialDesignSubtitle1TextBlock}"/>
+                                   Foreground="Black"
+                                    FontSize="28"
+                               FontWeight="SemiBold"
+                               Margin="20 10 0 0"
+                               />
 
                 </StackPanel>
-                <materialDesign:PackIcon Kind="BookOpenPageVariant" Width="50" Margin="0, 0, 10, 10" VerticalAlignment="Bottom"
-                        HorizontalAlignment="Right" Foreground="Azure"
+                <materialDesign:PackIcon Kind="BookOpenPageVariantOutline" Width="40" Margin="0, 0, 10, 10" VerticalAlignment="Bottom"
+                        HorizontalAlignment="Right" Foreground="Black"
                         Height="50"/>
 
             </Grid>
@@ -59,7 +68,7 @@
                 Grid.Column="1"
                 Width="200"
                 Height="100"
-                Background="{DynamicResource MyBlueGradient}"
+                Background="Bisque"
                 VerticalAlignment="Top"
                 UniformCornerRadius="10"
                 materialDesign:ShadowAssist.ShadowDepth="Depth1"
@@ -67,22 +76,24 @@
 
             <Grid Margin="10">
                 <StackPanel>
-                    <TextBlock Text="Week Orders"
-                                   Foreground="White"
+                    <TextBlock Text="Đơn hàng mới trong tuần"
+                                   Foreground="Black"
                                    Style="{StaticResource MaterialDesignSubtitle2TextBlock}"/>
 
                     <!-- binding -->
 
                     <TextBlock x:Name="SumWeekOrders" 
                                 Text="{Binding weekOrder}"
-                                   Foreground="White"
-                                   Style="{StaticResource MaterialDesignSubtitle1TextBlock}"/>
+                                  Foreground="DarkGreen"
+                                    FontSize="28"
+                               FontWeight="SemiBold"
+                               Margin="20 10 0 0"/>
 
 
                 </StackPanel>
 
-                <materialDesign:PackIcon Kind="Receipt" Width="50" Height="50" Margin="0, 0, 10, 10" VerticalAlignment="Bottom"
-                        HorizontalAlignment="Right" Foreground="Azure"/>
+                <materialDesign:PackIcon Kind="CartPlus" Width="40" Height="40" Margin="0, 0, 10, 10" VerticalAlignment="Bottom"
+                        HorizontalAlignment="Right" Foreground="DarkSlateGray"/>
 
             </Grid>
 
@@ -93,16 +104,16 @@
                 Grid.Column="2"
                 Width="200"
                 Height="100"
-                Background="{DynamicResource MyYellowGradient}"
+                Background="LightSalmon"
                 VerticalAlignment="Top"
                 UniformCornerRadius="10"
                 materialDesign:ShadowAssist.ShadowDepth="Depth1"
                 HorizontalAlignment="Center">
 
-            <Grid Margin="20">
+            <Grid Margin="10">
                 <StackPanel>
-                    <TextBlock Text="Month Orders"
-                                   Foreground="White"
+                    <TextBlock Text="Đơn hàng mới trong tháng"
+                                   Foreground="Black"
                                    Style="{StaticResource MaterialDesignSubtitle2TextBlock}"/>
 
                     <!-- binding -->
@@ -110,85 +121,111 @@
                     <TextBlock x:Name="SumMonthOrders" 
                                 Text="{Binding monthOrder}"
                                    Foreground="White"
-                                   Style="{StaticResource MaterialDesignSubtitle1TextBlock}"/>
+                               FontWeight="SemiBold"
+                                    FontSize="28"
+                               Margin="20 10 0 0"/>
 
 
                 </StackPanel>
-
-                <materialDesign:PackIcon Kind="Receipt" Width="50" Height="50" Margin="0, 0, 10, 10" VerticalAlignment="Bottom"
-                        HorizontalAlignment="Right" Foreground="Azure"/>
+                <materialDesign:PackIcon Kind="Sigma" Width="40" Height="40" Margin="0, 0, 10, 10" VerticalAlignment="Bottom"
+                        HorizontalAlignment="Right" Foreground="Black"/>
 
             </Grid>
 
         </materialDesign:Card>
         <StackPanel Grid.Row="2" Grid.ColumnSpan="3">
-            <TextBlock Text="Top 5 Product (nearly) out of Quantity" Padding="10 0 0 0" FontSize="20" Background="MediumPurple" Foreground="White"/>
+            <Border BorderBrush="DarkSlateBlue" BorderThickness="1" Margin="0 0 0 10" >
+                <TextBlock Text="*** Top 5 sản phẩm sắp hết hàng ***" Padding="0 10 0 10" FontSize="20"  Foreground="DarkOrange"
+                           HorizontalAlignment="Center"
+                       />
+            </Border>
+         
             <DataGrid Grid.Row="0" x:Name="ProductDataGrid" 
                     AutoGenerateColumns="False" ColumnHeaderHeight="30" HeadersVisibility="Column" 
-                    RowHeaderWidth="100" SelectionChanged="ProductDataGrid_SelectionChanged" 
-                    CanUserResizeColumns="False" 
+                     SelectionChanged="ProductDataGrid_SelectionChanged" 
+                    CanUserResizeColumns="True" 
                     BorderBrush="Gray"
                     BorderThickness="1"
-                    VerticalScrollBarVisibility="Hidden"
                       HorizontalScrollBarVisibility="Hidden" 
                       CanUserAddRows="False"
-                    GridLinesVisibility="None" 
                     HorizontalGridLinesBrush="Gray"
                     SelectionMode="Single"
-                      AutomationProperties.IsColumnHeader="True" SelectedIndex="-1" CanUserDeleteRows="False">
+                      AutomationProperties.IsColumnHeader="True" SelectedIndex="-1" CanUserDeleteRows="False"
+                      >
 
 
 
                 <DataGrid.Columns >
-                    <DataGridTemplateColumn Header="  #ID" IsReadOnly="True">
+                    <DataGridTemplateColumn Header="" IsReadOnly="True" Width="80" >
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="{Binding ID}" Margin="5,0,0,0"></TextBlock>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <Image  Height="80" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" 
+                                               Source="{Binding ImagePath, Converter={StaticResource absoluteConverter}}"/>
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="       Product Name" IsReadOnly="True">
+                    <DataGridTemplateColumn Header="Tên sản phẩm" IsReadOnly="True"   Width="2*">
+                        <DataGridTemplateColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                                <Setter Property="Panel.Background" Value="AliceBlue"/>
+                                <Setter Property="TextBlock.Foreground" Value="Black"/>
+                                <Setter Property="TextBlock.Height" Value="30"/>
+                                <Setter Property="TextBlock.FontWeight" Value="Bold"/>
+                                <Setter Property="Margin" Value="15 0 0 0" />
+                            </Style>
+                        </DataGridTemplateColumn.HeaderStyle>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center"   >
                                     <TextBlock Text="{Binding Name}"></TextBlock>
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="            Author"
-                                        IsReadOnly="True">
+                    <DataGridTemplateColumn Header="Tác giả"
+                                        IsReadOnly="True" Width="150">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                                     <TextBlock Text="{Binding Author}"></TextBlock>
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="        Selling price"
-                                        IsReadOnly="True">
+                    <DataGridTemplateColumn Header="Năm XB"
+                                        IsReadOnly="True" Width="100">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <TextBlock Text="{Binding PublishedYear}"></TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Giá"
+                                        IsReadOnly="True" Width="100">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                                     <TextBlock Text="{Binding SellingPrice}" Margin="5,0,0,0"></TextBlock>
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="         Quantity"
-                                        IsReadOnly="True">
+                    <DataGridTemplateColumn Header="SL"
+                                        IsReadOnly="True" Width="50">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                                     <TextBlock Margin="10,0" Text="{Binding Quantity}" FontWeight="DemiBold"/>
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="        #">
+                    <!--<DataGridTemplateColumn Header="        #">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel>
@@ -203,7 +240,7 @@
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
+                    </DataGridTemplateColumn>-->
                 </DataGrid.Columns>
                 <DataGrid.RowStyle>
                     <Style>
@@ -213,16 +250,17 @@
                     </Style>
                 </DataGrid.RowStyle>
                 <DataGrid.ColumnHeaderStyle>
-                    <Style>
-                        <Style.Setters>
-                            <Setter Property="Panel.Background" Value="Black"/>
-                            <Setter Property="TextBlock.Foreground" Value="White"/>
-                            <Setter Property="TextBlock.Padding" Value="10,0"/>
-                            <Setter Property="TextBlock.Height" Value="30"/>
-                            <Setter Property="TextBlock.FontWeight" Value="Bold"/>
-                        </Style.Setters>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Panel.Background" Value="AliceBlue"/>
+                        <Setter Property="TextBlock.Foreground" Value="Black"/>
+                        <Setter Property="TextBlock.Height" Value="30"/>
+                        <Setter Property="TextBlock.FontWeight" Value="Bold"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                       
                     </Style>
                 </DataGrid.ColumnHeaderStyle>
+
+
             </DataGrid>
         </StackPanel>
     </Grid>

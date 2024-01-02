@@ -38,7 +38,7 @@
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="AddCircle"/>
-                            <TextBlock Text="Add" Margin="5 0"/>
+                            <TextBlock Text="Thêm" Margin="5 0"/>
                         </StackPanel>
                     </Button.Content>
                 </Button>

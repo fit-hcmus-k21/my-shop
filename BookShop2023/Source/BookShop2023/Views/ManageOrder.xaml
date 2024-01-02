@@ -4,7 +4,8 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-      xmlns:local="clr-namespace:ProjectMyShop.Views" xmlns:local1="clr-namespace:ProjectMyShop.Converter"
+      xmlns:local="clr-namespace:ProjectMyShop.Views" 
+      xmlns:local1="clr-namespace:ProjectMyShop.Converter"
       mc:Ignorable="d" 
       d:DesignHeight="400" d:DesignWidth="650"
       Title="ManageOrder"
@@ -37,7 +38,7 @@
                             Background="AliceBlue"
                             BorderBrush="LightGray"
                             materialDesign:ShadowAssist.ShadowEdges="All"
-                            Foreground="Gray"
+                            Foreground="Black"
                             Margin="5">
                             <StackPanel Orientation="Horizontal" >
                                 <materialDesign:PackIcon Kind="Update" />
@@ -50,7 +51,7 @@
                             Background="LightBlue"
                             BorderBrush="LightGray"
                             materialDesign:ShadowAssist.ShadowEdges="All"
-                            Foreground="Gray"
+                            Foreground="Black"
                             Margin="5">
                             <StackPanel Orientation="Horizontal" >
                                 <materialDesign:PackIcon Kind="Delete" />
@@ -186,6 +187,7 @@
                                 Background="Pink"
                                 materialDesign:ShadowAssist.ShadowEdges="All"
                                 BorderBrush="Pink"
+                                        Cursor="Arrow"
                                 Margin="2">
                                         <Button.Content >
                                             <StackPanel Orientation="Horizontal">
@@ -215,21 +217,21 @@
                         </DataGridTemplateColumn>
 
                     </DataGrid.Columns>
-                    <DataGrid.ColumnHeaderStyle>
-                        <!--<Style>
-                            <Style.Setters>
-                                <Setter Property="Panel.Background" Value="Black"/>
-                                <Setter Property="TextBlock.Foreground" Value="White"/>
+
+                        <DataGrid.ColumnHeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="Panel.Background" Value="AliceBlue"/>
+                                <Setter Property="TextBlock.Foreground" Value="Black"/>
                                 <Setter Property="TextBlock.Height" Value="30"/>
                                 <Setter Property="TextBlock.FontWeight" Value="Bold"/>
-                            </Style.Setters>
-                         
-                        </Style>-->
-                        <Style TargetType="DataGridColumnHeader">
-                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                            <Setter Property="BorderBrush" Value="Black" />
+                                <Setter Property="BorderThickness" Value ="0.5" />
                         </Style>
 
-                    </DataGrid.ColumnHeaderStyle>
+                        </DataGrid.ColumnHeaderStyle>
+
+
 
                 </DataGrid>
                 

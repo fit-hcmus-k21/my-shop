@@ -20,11 +20,12 @@
                     Click="AddButton_Click"                    
                     Margin="0 0 10 0"
                     Background="DarkSalmon"
+                        Foreground="Black"
                     materialDesign:ButtonAssist.CornerRadius="5">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="AddCircle"/>
-                            <TextBlock Margin="5 0" Text="Add"/>
+                            <TextBlock Margin="5 0" Text="Thêm" />
                         </StackPanel>
                     </Button.Content>
                 </Button>
@@ -55,7 +56,8 @@
                           Background="White"
                           >
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="ID" Binding="{Binding ID}" Width="1*"/>
+                        
+                        <DataGridTextColumn Header="ID" Binding="{Binding ID}" Width="50"/>
                         <DataGridTextColumn Header="Thể loại" Binding="{Binding Name}" Width="4*"/>
 
                         <DataGridTextColumn Header="Số sản phẩm" Binding="{Binding TotalProducts}" Width="2*">
@@ -97,10 +99,18 @@
 
 
                     </DataGrid.Columns>
+                   
                     <DataGrid.ColumnHeaderStyle>
                         <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Panel.Background" Value="AliceBlue"/>
+                            <Setter Property="TextBlock.Foreground" Value="Black"/>
+                            <Setter Property="TextBlock.Height" Value="30"/>
+                            <Setter Property="TextBlock.FontWeight" Value="Bold"/>
                             <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                            <Setter Property="BorderBrush" Value="Black" />
+                            <Setter Property="BorderThickness" Value ="0.5" />
                         </Style>
+                        
                     </DataGrid.ColumnHeaderStyle>
                 </DataGrid>
 

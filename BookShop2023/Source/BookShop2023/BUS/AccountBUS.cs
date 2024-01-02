@@ -26,6 +26,7 @@ namespace ProjectMyShop.BUS
             if (_ins == null)
             {
                 _ins = new AccountBUS();
+
             }
             return _ins;
         }

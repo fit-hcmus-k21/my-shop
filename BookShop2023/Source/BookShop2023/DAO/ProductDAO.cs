@@ -79,17 +79,26 @@ namespace ProjectMyShop.DAO
             {
                 var ID = (int)reader["ID"];
                 var Name = (String)reader["Name"];
-
+                var Author = (string)reader["Author"];
+                var PublishedYear = (int)reader["PublishedYear"];
                 var SellingPrice = (int)(decimal)reader["SellingPrice"];
-                //var SellingPrice = (int)reader["SellingPrice"];
+                var PurchasePrice = (int)(decimal)reader["PurchasePrice"];
+                var Description = (String)reader["Description"];
                 var Quantity = (int)reader["Quantity"];
+                var ImagePath = (string)reader["ImagePath"];
+
 
                 Product Product = new Product()
                 {
                     ID = ID,
                     Name = Name,
+                    Author = Author,
                     SellingPrice = SellingPrice,
+                    PublishedYear = PublishedYear,
                     Quantity = Quantity,
+                    PurchasePrice = PurchasePrice,
+                    Description = Description,
+                    ImagePath = ImagePath
                 };
                 if (Product.Name != "")
                     list.Add(Product);
@@ -116,11 +125,11 @@ namespace ProjectMyShop.DAO
             {
                 var ID = (int)reader["ID"];
                 var Name = (String)reader["Name"];
+                var Author = (string)reader["Author"];
 
                 var SellingPrice = (int)(decimal)reader["SellingPrice"];
                 var PurchasePrice = (int)(decimal)reader["PurchasePrice"];
                 var Description = (String)reader["Description"];
-                //var SellingPrice = (int)reader["SellingPrice"];
                 var Quantity = (int)reader["Quantity"];
                 var ImagePath = (string)reader["ImagePath"];
 
@@ -129,6 +138,7 @@ namespace ProjectMyShop.DAO
                 {
                     ID = ID,
                     Name = Name,
+                    Author = Author,
                     SellingPrice = SellingPrice,
                     Quantity = Quantity,
                     PurchasePrice = PurchasePrice,
@@ -288,22 +298,7 @@ namespace ProjectMyShop.DAO
                     Description = Description,
                     ImagePath = ImagePath
                 };
-                if (!reader["ImagePath"].Equals(DBNull.Value))
-                {
-                    var byteImagePath = (byte[])reader["ImagePath"];
-                    using (MemoryStream ms = new MemoryStream(byteImagePath))
-                    {
-                        var image = new BitmapImage();
-                        image.BeginInit();
-                        image.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
-                        image.CacheOption = BitmapCacheOption.OnLoad;
-                        image.UriSource = null;
-                        image.StreamSource = ms;
-                        image.EndInit();
-                        image.Freeze();
-                        Product.ImagePath = ImagePath;
-                    }
-                }
+                
                 if (Product.Name != "")
                     list.Add(Product);
             }
