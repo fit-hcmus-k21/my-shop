@@ -25,6 +25,7 @@ namespace ProjectMyShop.Config
         public static string  NumberProductPerPage = "NumberProductPerPage";
         public static string  OpenLastWindow = "OpenLastWindow";
         public static string  LastWindow = "LastWindow";
+        public static string UserAccount = "UserAccount";
         #endregion
 
         #region Enums

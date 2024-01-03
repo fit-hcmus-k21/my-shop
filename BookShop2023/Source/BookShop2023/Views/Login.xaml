@@ -74,11 +74,11 @@
                             Padding="10 0 0 2"
                             Width="250"
                             Foreground="#495b67"
-                            HorizontalAlignment="Center" >
-                                <!--Bắt sự kiện thay đổi kí tự trong user-->
-                                
-                            </TextBox>
-                        </Grid>
+                            HorizontalAlignment="Center" 
+                            
+                                />
+                       
+                    </Grid>
                     </Grid>
 
                     <!--Dòng mật khẩu-->

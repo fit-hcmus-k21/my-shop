@@ -264,7 +264,11 @@ namespace ProjectMyShop.DAO
         {
             string sqlFormattedDate = src.ToString("yyyy-MM-dd");
 
-            var sql = "select TOP(5) p.ID, p.Name, p.Author, p.Quantity, p.Description, p.PurchasePrice, p.SellingPrice, p.CatID, p.UploadDate, p.ImagePath, sum(do.Quantity) as Quantity from Orders o join OrderDetail do on o.ID = do.OrderID join Product p on p.ID = do.ProductID where CreatedAt between DATEADD(DAY, -7, @SelectedDate) and DATEADD(DAY, 1, @SelectedDate) group by p.ID, p.Name, p.Author, p.Quantity, p.Description, p.PurchasePrice, p.SellingPrice, p.CatID, p.UploadDate, p.ImagePath order by sum(do.Quantity) desc;";
+            var sql = "select TOP(5) p.ID, p.Name, p.Author, p.Quantity, p.Description, p.PurchasePrice, p.SellingPrice, p.CatID, p.UploadDate, p.ImagePath, sum(do.Quantity) as SoldQuantity " +
+                "from Orders o join OrderDetail do on o.ID = do.OrderID join Product p on p.ID = do.ProductID " +
+                "where CreatedAt between DATEADD(DAY, -7, @SelectedDate) and DATEADD(DAY, 1, @SelectedDate) " +
+                "group by p.ID, p.Name, p.Author, p.Quantity, p.Description, p.PurchasePrice, p.SellingPrice, p.CatID, p.UploadDate, p.ImagePath " +
+                "order by sum(do.Quantity) desc;";
 
             var sqlParameter = new SqlParameter();
             sqlParameter.ParameterName = "@SelectedDate";
@@ -287,16 +291,19 @@ namespace ProjectMyShop.DAO
                 var Description = (String)reader["Description"];
                 var Quantity = (int)reader["Quantity"];
                 var ImagePath = (string)reader["ImagePath"];
+                var SoldQuantity = (int)reader["SoldQuantity"];
 
                 BestSellingProduct Product = new BestSellingProduct()
                 {
                     ID = ID,
                     Name = Name,
+                    Author = Author,
                     SellingPrice = SellingPrice,
                     Quantity = Quantity,
                     PurchasePrice = PurchasePrice,
                     Description = Description,
-                    ImagePath = ImagePath
+                    ImagePath = ImagePath,
+                    SoldQuantity = SoldQuantity
                 };
                 
                 if (Product.Name != "")
@@ -310,7 +317,11 @@ namespace ProjectMyShop.DAO
         {
             string sqlFormattedDate = src.ToString("yyyy-MM-dd");
 
-            var sql = "select TOP(5) p.ID, p.Name, p.Author, p.Quantity, p.Description, p.PurchasePrice, p.SellingPrice, p.CatID, p.UploadDate, p.ImagePath, sum(do.Quantity) as Quantity from Orders o join OrderDetail do on o.ID = do.OrderID join Product p on p.ID = do.ProductID where datepart(year, CreatedAt) = datepart(year, @SelectedDate) and datepart(month, CreatedAt) = datepart(month, @SelectedDate) group by p.ID, p.Name, p.Author, p.Quantity, p.Description, p.PurchasePrice, p.SellingPrice, p.CatID, p.UploadDate, p.ImagePath order by sum(do.Quantity) desc;";
+            var sql = "select TOP(5) p.ID, p.Name, p.Author, p.Quantity, p.Description, p.PurchasePrice, p.SellingPrice, p.CatID, p.UploadDate, p.ImagePath, sum(do.Quantity) as SoldQuantity " +
+                "from Orders o join OrderDetail do on o.ID = do.OrderID join Product p on p.ID = do.ProductID " +
+                "where datepart(year, CreatedAt) = datepart(year, @SelectedDate) and datepart(month, CreatedAt) = datepart(month, @SelectedDate) " +
+                "group by p.ID, p.Name, p.Author, p.Quantity, p.Description, p.PurchasePrice, p.SellingPrice, p.CatID, p.UploadDate, p.ImagePath " +
+                "order by sum(do.Quantity) desc;";
 
             var sqlParameter = new SqlParameter();
             sqlParameter.ParameterName = "@SelectedDate";
@@ -333,6 +344,7 @@ namespace ProjectMyShop.DAO
                 var Description = (String)reader["Description"];
                 var Quantity = (int)reader["Quantity"];
                 var ImagePath = (string)reader["ImagePath"];
+                var SoldQuantity = (int)reader["SoldQuantity"];
 
                 BestSellingProduct Product = new BestSellingProduct()
                 {
@@ -342,7 +354,8 @@ namespace ProjectMyShop.DAO
                     Quantity = Quantity,
                     PurchasePrice = PurchasePrice,
                     Description = Description,
-                    ImagePath = ImagePath
+                    ImagePath = ImagePath,
+                    SoldQuantity = SoldQuantity
                 };
    
                 if (Product.Name != "")
@@ -356,7 +369,11 @@ namespace ProjectMyShop.DAO
         {
             string sqlFormattedDate = src.ToString("yyyy-MM-dd");
 
-            var sql = "select TOP(5) p.ID, p.Name, p.Author, p.Quantity, p.Description, p.PurchasePrice, p.SellingPrice, p.CatID, p.UploadDate, p.ImagePath, sum(do.Quantity) as Quantity from Orders o join OrderDetail do on o.ID = do.OrderID join Product p on p.ID = do.ProductID where datepart(year, CreatedAt) = datepart(year, @SelectedDate) group by p.ID, p.Name, p.Author, p.Quantity, p.Description, p.PurchasePrice, p.SellingPrice, p.CatID, p.UploadDate, p.ImagePath order by sum(do.Quantity) desc;";
+            var sql = "select TOP(5) p.ID, p.Name, p.Author, p.Quantity, p.Description, p.PurchasePrice, p.SellingPrice, p.CatID, p.UploadDate, p.ImagePath, sum(do.Quantity) as SoldQuantity " +
+                "from Orders o join OrderDetail do on o.ID = do.OrderID join Product p on p.ID = do.ProductID " +
+                "where datepart(year, CreatedAt) = datepart(year, @SelectedDate) " +
+                "group by p.ID, p.Name, p.Author, p.Quantity, p.Description, p.PurchasePrice, p.SellingPrice, p.CatID, p.UploadDate, p.ImagePath " +
+                "order by sum(do.Quantity) desc;";
 
             var sqlParameter = new SqlParameter();
             sqlParameter.ParameterName = "@SelectedDate";
@@ -378,6 +395,7 @@ namespace ProjectMyShop.DAO
                 var Description = (String)reader["Description"];
                 var Quantity = (int)reader["Quantity"];
                 var ImagePath = (string)reader["ImagePath"];
+                var SoldQuantity = (int)reader["SoldQuantity"];
 
                 BestSellingProduct Product = new BestSellingProduct()
                 {
@@ -387,24 +405,10 @@ namespace ProjectMyShop.DAO
                     Quantity = Quantity,
                     PurchasePrice = PurchasePrice,
                     Description = Description,
-                    ImagePath = ImagePath
+                    ImagePath = ImagePath,
+                    SoldQuantity = SoldQuantity
                 };
-                if (!reader["ImagePath"].Equals(DBNull.Value))
-                {
-                    var byteImagePath = (byte[])reader["ImagePath"];
-                    using (MemoryStream ms = new MemoryStream(byteImagePath))
-                    {
-                        var image = new BitmapImage();
-                        image.BeginInit();
-                        image.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
-                        image.CacheOption = BitmapCacheOption.OnLoad;
-                        image.UriSource = null;
-                        image.StreamSource = ms;
-                        image.EndInit();
-                        image.Freeze();
-                        Product.ImagePath = ImagePath;
-                    }
-                }
+            
                 if (Product.Name != "")
                     list.Add(Product);
             }

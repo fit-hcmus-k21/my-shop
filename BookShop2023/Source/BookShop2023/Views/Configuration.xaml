@@ -26,16 +26,16 @@
 
 
         <StackPanel  Grid.Row="1" Grid.Column="1"  Margin="30 10 10 0" RenderTransformOrigin="0.624,0.417">
-            <Label Margin="0 0 0 20" FontWeight="Bold">Application Settings</Label>
+            <Label Margin="0 0 0 20" FontWeight="Bold">Cài đặt chung</Label>
             <CheckBox BorderBrush="MediumPurple" Name="lastWindowCheckBox" Margin="0 0 0 20">
                 <CheckBox.Resources>
                     <!--Unchecked state-->
                     <SolidColorBrush x:Key="MaterialDesignCheckBoxOff" Color="Red"/>
                     <!--Checked state-->
                     <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="MediumPurple"/>
-                </CheckBox.Resources> Open the last window when application startup</CheckBox>
+                </CheckBox.Resources> Mở lại màn hình cuối mà lần trước tắt khi khởi chạy ứng dụng</CheckBox>
             <StackPanel Orientation="Horizontal">
-                <Label Content="Number of product per page" />
+                <Label Content="Số lượng phần tử trên 1 trang: " />
                 <TextBox Width="50" Margin="20 0 0 0" Name="rowsPerPage" />
             </StackPanel>
 

@@ -53,5 +53,40 @@ namespace ProjectMyShop.DAO
             }
 
         }
+
+        public string GetName(string username)
+        {
+            // Table Account
+            var sql = "SELECT Name FROM Account WHERE Username = @Username ;";
+
+            // Tạo một đối tượng SqlCommand
+            var command = new SqlCommand(sql, DB.Instance.Connection);
+
+            // Thêm tham số cho Username
+            command.Parameters.Add("@Username", SqlDbType.NVarChar, 50).Value = username;
+
+         
+
+            // Mở DataReader để thực hiện truy vấn
+            using (var reader = command.ExecuteReader())
+            {
+                if (reader.HasRows)
+                {
+                    #region Lấy dữ liệu User
+                    while (reader.Read())
+                    {
+                        // Đọc dữ liệu từ mỗi dòng kết quả
+                        var Name = reader["Name"].ToString();
+
+                        return Name;
+                    }
+                    #endregion
+                }
+                
+            }
+            return "";
+
+
+        }
     }
 }

@@ -59,8 +59,8 @@ namespace ProjectMyShop.Views
         private StatisticsBUS _statisticsBUS;
         public SpecificStatistics _specificStatistics;
         public AdvancedStatistics _advancedStatistics;
-        public List<string> figureValues = new List<string>() { "Daily", "Weekly", "Monthly", "Yearly" };
-        public List<string> statisticsFigureValues = new List<string>() { "General", "Specific", "Advanced" };
+        public List<string> figureValues = new List<string>() { "Hàng ngày", "Hàng tuần", "Hàng tháng", "Hàng năm" };
+        public List<string> statisticsFigureValues = new List<string>() { "Doanh thu - Lợi nhuận", "Sản phẩm - Số lượng bán", "Sản phẩm bán chạy" };
         public int statisticsFigureIndex { get; set; } = 0;
         public int figureIndex { get; set; } = 0;
         public int profitFigureIndex { get; set; } = 0;
@@ -68,10 +68,20 @@ namespace ProjectMyShop.Views
         public DateTime selectedDate { get; set; } = DateTime.Now;
         public System.Globalization.CultureInfo info = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
 
+        public int TotalRevenue {get; set;}
+        public int TotalProfit { get; set;}
+
         public void configureGeneral()
         {
-            TotalRevenueTextBlock.Text = _statisticsBUS.getTotalRevenueUntilDate(selectedDate).ToString();
-            TotalProfitTextBlock.Text = _statisticsBUS.getTotalProfitUntilDate(selectedDate).ToString();
+            TotalRevenue = int.Parse(_statisticsBUS.getTotalRevenueUntilDate(selectedDate));
+            TotalProfit = int.Parse(_statisticsBUS.getTotalProfitUntilDate(selectedDate));
+
+            var info = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+            var RevenueConvertValue = String.Format(info, "{0:c}", TotalRevenue);
+            var ProfitConvertValue = String.Format(info, "{0:c}", TotalProfit);
+
+            TotalRevenueTextBlock.Text = RevenueConvertValue;
+            TotalProfitTextBlock.Text = ProfitConvertValue;
             TotalOrdersTextBlock.Text = _statisticsBUS.getTotalOrdersUntilDate(selectedDate).ToString();
         }
 
@@ -493,5 +503,27 @@ namespace ProjectMyShop.Views
         {
             AppConfig.SetValue(AppConfig.LastWindow, "Statistics");
         }
+
+        private void statisticsCombobox_DropDownOpened(object sender, EventArgs e)
+        {
+            // Thay đổi màu nền khi dropdown mở
+            statisticsCombobox.Background = new SolidColorBrush(Colors.LightBlue);
+        }
+
+        private void statisticsCombobox_DropDownClosed(object sender, EventArgs e)
+        {
+            // Thay đổi màu nền khi dropdown đóng
+            statisticsCombobox.Background = new SolidColorBrush(Colors.White);
+        }
+
+        private void statisticsCombobox_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is System.Windows.Controls.Button button)
+            {
+                // Toggle the IsDropDownOpen state
+                statisticsCombobox.IsDropDownOpen = !statisticsCombobox.IsDropDownOpen;
+            }
+        }
+
     }
 }

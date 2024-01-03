@@ -38,7 +38,7 @@ namespace ProjectMyShop.Views
             _ProductBUS = new ProductBUS();
 
             categories = _categoryBUS.getCategoryList();
-            categoriesCombobox.ItemsSource = categories;
+            categoriesComboBox.ItemsSource = categories;
 
             if (categories.Count() > 0)
                 Products = _ProductBUS.getProductsAccordingToSpecificCategory(categories[categoriesFigureIndex].ID);
@@ -70,12 +70,12 @@ namespace ProjectMyShop.Views
         private ProductBUS _ProductBUS;
         public int statisticsFigureIndex { get; set; } = 1;
         public int bargraphFigureIndex { get; set; } = 0;
-        public int tabSelectedIndex { get; set; } = 0;
+        public int tabSelectedIndex { get; set; } = 1;
         public int categoriesFigureIndex { get; set; } = 0;
         public int productFigureIndex { get; set; } = 0;
         public DateTime selectedDate { get; set; } = DateTime.Now;
-        public List<string> figureValues = new List<string>() { "Daily", "Weekly", "Monthly", "Yearly" };
-        public List<string> statisticsFigureValues = new List<string>() { "General", "Specific", "Advanced" };
+        public List<string> figureValues = new List<string>() { "Hàng ngày", "Hàng tuần", "Hàng tháng", "Hàng năm" };
+        public List<string> statisticsFigureValues = new List<string>() { "Doanh thu - Lợi nhuận", "Sản phẩm - Số lượng bán", "Sản phẩm bán chạy" };
         public List<Category> categories;
         public List<Product> Products;
         private Statistics _statisticsPage;
@@ -104,7 +104,7 @@ namespace ProjectMyShop.Views
                     {
                     new RowSeries
                     {
-                        Title = "Quantity: ",
+                        Title = "Số lượng: ",
                         Values = quantity,
                     }
                     };
@@ -113,14 +113,14 @@ namespace ProjectMyShop.Views
                         productBarGraph.AxisY.Clear();
                         productBarGraph.AxisY.Add(new LiveCharts.Wpf.Axis
                         {
-                            Title = "Date",
+                            Title = "Ngày",
                             Labels = dates
                         });
 
                         productBarGraph.AxisX.Clear();
                         productBarGraph.AxisX.Add(new LiveCharts.Wpf.Axis
                         {
-                            Title = "Quantity",
+                            Title = "Số lượng",
                             LabelFormatter = x => x.ToString("N0")
 
                         });
@@ -131,7 +131,7 @@ namespace ProjectMyShop.Views
                 case 1:
                     if (Products.Count() > 0 && categories.Count() > 0)
                     {
-                        var weeklyProductResult = _statisticsBUS.getMonthlyQuantityOfSpecificProduct(Products[productFigureIndex].ID, categories[categoriesFigureIndex].ID, selectedDate);
+                        var weeklyProductResult = _statisticsBUS.getWeeklyQuantityOfSpecificProduct(Products[productFigureIndex].ID, categories[categoriesFigureIndex].ID, selectedDate);
 
                         var weeklyQuantity = new ChartValues<int>();
                         var weeks = new List<string>();
@@ -146,7 +146,7 @@ namespace ProjectMyShop.Views
                         {
                             new ColumnSeries
                             {
-                                Title = "Quantity: ",
+                                Title = "Số lượng: ",
                                 Values = weeklyQuantity,
                             }
                         };
@@ -154,14 +154,14 @@ namespace ProjectMyShop.Views
                         productBarGraph.AxisX.Clear();
                         productBarGraph.AxisX.Add(new LiveCharts.Wpf.Axis
                         {
-                            Title = "Week",
+                            Title = "Tuần",
                             Labels = weeks
                         });
 
                         productBarGraph.AxisY.Clear();
                         productBarGraph.AxisY.Add(new LiveCharts.Wpf.Axis
                         {
-                            Title = "Quantity",
+                            Title = "Số lượng",
                             LabelFormatter = x => x.ToString("N0")
 
                         });
@@ -187,7 +187,7 @@ namespace ProjectMyShop.Views
                     {
                     new ColumnSeries
                     {
-                        Title = "Quantity: ",
+                        Title = "Số lượng: ",
                         Values = monthlyQuantity,
                     }
                     };
@@ -196,14 +196,14 @@ namespace ProjectMyShop.Views
                         productBarGraph.AxisX.Clear();
                         productBarGraph.AxisX.Add(new LiveCharts.Wpf.Axis
                         {
-                            Title = "Month",
+                            Title = "Tháng",
                             Labels = months
                         });
 
                         productBarGraph.AxisY.Clear();
                         productBarGraph.AxisY.Add(new LiveCharts.Wpf.Axis
                         {
-                            Title = "Quantity",
+                            Title = "Số lượng",
                             LabelFormatter = x => x.ToString("N0")
 
                         });
@@ -229,21 +229,21 @@ namespace ProjectMyShop.Views
                     {
                     new ColumnSeries
                     {
-                        Title = "Quantity: ",
+                        Title = "Số lượng: ",
                         Values = yearlyQuantity,
                     }
                     };
                         productBarGraph.AxisX.Clear();
                         productBarGraph.AxisX.Add(new LiveCharts.Wpf.Axis
                         {
-                            Title = "Month",
+                            Title = "Năm",
                             Labels = years
                         });
 
                         productBarGraph.AxisY.Clear();
                         productBarGraph.AxisY.Add(new LiveCharts.Wpf.Axis
                         {
-                            Title = "Quantity",
+                            Title = "Số lượng",
                             LabelFormatter = x => x.ToString("N0")
 
                         });
@@ -343,6 +343,47 @@ namespace ProjectMyShop.Views
                 case 1:
                     configurePieChart();
                     break;
+            }
+        }
+        private void categoriesComboBox_DropDownOpened(object sender, EventArgs e)
+        {
+            // Thay đổi màu nền khi dropdown mở
+            categoriesComboBox.Background = new SolidColorBrush(Colors.LightBlue);
+        }
+
+        private void categoriesComboBox_DropDownClosed(object sender, EventArgs e)
+        {
+            // Thay đổi màu nền khi dropdown đóng
+            categoriesComboBox.Background = new SolidColorBrush(Colors.White);
+        }
+
+        private void categoriesComboBox_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is System.Windows.Controls.Button button)
+            {
+                // Toggle the IsDropDownOpen state
+                categoriesComboBox.IsDropDownOpen = !categoriesComboBox.IsDropDownOpen;
+            }
+        }
+
+        private void productComboBox_DropDownOpened(object sender, EventArgs e)
+        {
+            // Thay đổi màu nền khi dropdown mở
+            productCombobox.Background = new SolidColorBrush(Colors.LightBlue);
+        }
+
+        private void productComboBox_DropDownClosed(object sender, EventArgs e)
+        {
+            // Thay đổi màu nền khi dropdown đóng
+            productCombobox.Background = new SolidColorBrush(Colors.White);
+        }
+
+        private void productComboBox_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is System.Windows.Controls.Button button)
+            {
+                // Toggle the IsDropDownOpen state
+                productCombobox.IsDropDownOpen = !productCombobox.IsDropDownOpen;
             }
         }
     }

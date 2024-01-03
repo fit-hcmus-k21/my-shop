@@ -36,21 +36,19 @@ namespace ProjectMyShop.Views
         public Login()
         {
             InitializeComponent();
-        }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
             #region Connect to database
             DB.Instance.Connect();
             #endregion
 
 
             #region check whether user logged in or not
-            if (int.Parse(AppConfig.GetValue(AppConfig.LoginStatus)).Equals((int) AppConfig.LoginStatusEnum.LoggedOut))
+            if (int.Parse(AppConfig.GetValue(AppConfig.LoginStatus)).Equals((int)AppConfig.LoginStatusEnum.LoggedOut))
             {
                 // not logged in
                 // ...
-            } else
+            }
+            else
             {
                 // user logged in, open main window
                 MainWindow window = new MainWindow();
@@ -58,6 +56,11 @@ namespace ProjectMyShop.Views
                 window.Show();
             }
             #endregion
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+
 
         }
 
@@ -88,6 +91,7 @@ namespace ProjectMyShop.Views
                     {
                         AppConfig.SetValue(AppConfig.LoginStatus, ((int)AppConfig.LoginStatusEnum.LoggedIn).ToString());
                         AppConfig.SetValue(AppConfig.LoginMode, AccountBUS.Instance().GetRole().Equals("admin") ? "1" : "2");
+                        AppConfig.SetValue(AppConfig.UserAccount, _username);
                        
                     }
 

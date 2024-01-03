@@ -10,6 +10,12 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="SpecificStatistics">
 
+    <Page.Resources>
+        <DataTemplate x:Key="TabHeaderTemplate">
+            <TextBlock Text="{Binding CurrentTabText, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}"/>
+        </DataTemplate>
+    </Page.Resources>
+
     <Grid Name="StatisticsContainer">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
@@ -24,12 +30,10 @@
         </Grid.RowDefinitions>
 
         <materialDesign:Card 
-            Width="130"
+            Width="180"
             Height="45"
             Margin="0, 0, 10, 0"
             HorizontalAlignment="Left"
-            UniformCornerRadius="23"
-            materialDesign:ShadowAssist.ShadowDepth="Depth0"
             Grid.Column="0"
             Grid.Row="0">
             <StackPanel 
@@ -44,7 +48,7 @@
                                 SelectedIndex="{Binding statisticsFigureIndex}"
                                 SelectionChanged="statisticsCombobox_SelectionChanged"
                                 VerticalContentAlignment="Center"
-                                Width="85">
+                                Width="180">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding}"/>
@@ -92,17 +96,7 @@
                     </DatePicker.CalendarStyle>
                 </DatePicker>
 
-                <!--
-                <ComboBox Name="yearCombobox"
-                    Height="30"
-                    SelectedIndex="0"
-                    Style="{StaticResource MaterialDesignComboBox}"
-                    ItemContainerStyle="{StaticResource MaterialDesignDataGridComboBoxItemStyle}"
-                    Margin="0, 0, 0, 0"
-                    OverridesDefaultStyle="True"
-                    Width="50">
-                </ComboBox>
-                -->
+             
             </StackPanel>
         </materialDesign:Card>
 
@@ -120,38 +114,140 @@
                 VerticalAlignment="Center"
                 HorizontalAlignment="Center">
 
-                <ComboBox Name="categoriesCombobox" HorizontalAlignment="Left"
-                                Style="{Binding MaterialDesign}"
-                                Height="50"
-                                SelectionChanged="categoriesCombobox_SelectionChanged"
-                                SelectedIndex="{Binding Path=categoriesFigureIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                Background="#60ffffff"
-                                VerticalContentAlignment="Center"
-                                Padding="10, 0, 0, 0"
-                                Width="100">
-                    <ComboBox.ItemTemplate>
+                <!--Category comboBox-->
+
+                <ComboBox Name="categoriesComboBox" Width="220" Height="36" HorizontalAlignment="Left"
+                              SelectionChanged="categoriesCombobox_SelectionChanged"
+                            SelectedIndex="{Binding Path=categoriesFigureIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              DropDownOpened="categoriesComboBox_DropDownOpened" DropDownClosed="categoriesComboBox_DropDownClosed"
+                              VerticalAlignment="Center"
+                              >
+                    <ComboBox.Template>
+                        <ControlTemplate TargetType="ComboBox">
+                            <Grid>
+                                <Button
+            Name="Button"
+            Width="220"
+            Height="28"
+            BorderBrush="Gray"
+            Background="AliceBlue"
+            Foreground="Black"
+            BorderThickness="1"
+            Focusable="False"
+            ClickMode="Press"
+            Click="categoriesComboBox_Click"                            
+                                        >
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
+                                        <TextBlock Text="{Binding SelectedItem.Name, RelativeSource={RelativeSource AncestorType=ComboBox}}" />
+                                        <TextBlock Text="    ▼" Foreground="Indigo" FontSize="12"  />
+                                    </StackPanel>
+                                </Button>
+                                <Popup
+            Name="Popup"
+            Placement="Bottom"
+            IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+            AllowsTransparency="True"
+            Focusable="False"
+            PopupAnimation="Slide">
+                                    <Grid Name="DropDown" SnapsToDevicePixels="True">
+                                        <Border
+                    x:Name="DropDownBorder"
+                    Background="White"
+                    BorderThickness="1"
+                    BorderBrush="Gray" />
+                                        <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                            <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                        </ScrollViewer>
+                                    </Grid>
+                                </Popup>
+                            </Grid>
+                        </ControlTemplate>
+
+                    </ComboBox.Template>
+                    <ComboBox.ItemContainerStyle>
+                        <Style TargetType="ComboBoxItem" >
+                            <Setter Property="Width" Value="192"/>
+                            <Setter Property="Foreground" Value="Black" />
+                        </Style>
+                    </ComboBox.ItemContainerStyle>
+                    <ComboBox.ItemTemplate >
                         <DataTemplate>
-                            <TextBlock Text="{Binding CatName}"/>
+                            <StackPanel Orientation="Horizontal" >
+                                <TextBlock Text="{Binding Name}" />
+
+                            </StackPanel>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
 
-                <ComboBox Name="productCombobox" HorizontalAlignment="Right"
-                                Style="{Binding MaterialDesign}"
-                                Height="50"
-                                SelectedIndex="{Binding Path=productFigureIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                SelectionChanged="productCombobox_SelectionChanged"
-                                Background="#60ffffff"
-                                Margin="30, 0, 0, 0"
-                                Padding="10, 0, 0, 0"
-                                VerticalContentAlignment="Center"
-                                Width="300">
-                    <ComboBox.ItemTemplate>
+
+                <!--Product comboBox-->
+
+                <ComboBox Name="productCombobox" Width="220" Height="36" HorizontalAlignment="Left" Margin="20 0 0 0"
+                           SelectedIndex="{Binding Path=productFigureIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              DropDownOpened="productComboBox_DropDownOpened" DropDownClosed="productComboBox_DropDownClosed"
+                           SelectionChanged="productCombobox_SelectionChanged"
+                              VerticalAlignment="Center"
+                              >
+                    <ComboBox.Template>
+                        <ControlTemplate TargetType="ComboBox">
+                            <Grid>
+                                <Button
+            Name="Button"
+            Width="220"
+            Height="28"
+            BorderBrush="Gray"
+            Background="AliceBlue"
+            Foreground="Black"
+            BorderThickness="1"
+            Focusable="False"
+            ClickMode="Press"
+            Click="productComboBox_Click"                            
+                                        >
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
+                                        <TextBlock Text="{Binding SelectedItem.Name, RelativeSource={RelativeSource AncestorType=ComboBox}}" />
+                                        <TextBlock Text="    ▼" Foreground="Indigo" FontSize="12"  />
+                                    </StackPanel>
+                                </Button>
+                                <Popup
+            Name="Popup"
+            Placement="Bottom"
+            IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+            AllowsTransparency="True"
+            Focusable="False"
+            PopupAnimation="Slide">
+                                    <Grid Name="DropDown" SnapsToDevicePixels="True">
+                                        <Border
+                    x:Name="DropDownBorder"
+                    Background="White"
+                    BorderThickness="1"
+                    BorderBrush="Gray" />
+                                        <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                            <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                        </ScrollViewer>
+                                    </Grid>
+                                </Popup>
+                            </Grid>
+                        </ControlTemplate>
+
+                    </ComboBox.Template>
+                    <ComboBox.ItemContainerStyle>
+                        <Style TargetType="ComboBoxItem" >
+                            <Setter Property="Width" Value="192"/>
+                            <Setter Property="Foreground" Value="Black" />
+                        </Style>
+                    </ComboBox.ItemContainerStyle>
+                    <ComboBox.ItemTemplate >
                         <DataTemplate>
-                            <TextBlock Text="{Binding Name}"/>
+                            <StackPanel Orientation="Horizontal" >
+                                <TextBlock Text="{Binding Name}" />
+
+                            </StackPanel>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
+
+             
             </StackPanel>
         </materialDesign:Card>
 
@@ -160,14 +256,14 @@
             Grid.Row="2"
             Grid.ColumnSpan="3"
             Grid.RowSpan="2"
-            Background="#60ffffff"
+            Background="AliceBlue"
             UniformCornerRadius="10"
             Padding="10"
             Margin="25, 20, 25, 0"
             materialDesign:ShadowAssist.ShadowDepth="Depth0">
 
             <TabControl Name="chartTabControl" SelectedIndex="{Binding tabSelectedIndex}" SelectionChanged="chartTabControl_SelectionChanged">
-                <TabItem Header="Products Sales">
+                <TabItem Header="Doanh số bán hàng (Product sales)">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="1*"/>
@@ -182,7 +278,7 @@
                                 VerticalContentAlignment="Center"
                                 SelectedIndex="{Binding bargraphFigureIndex}"
                                 SelectionChanged="bargraphCombobox_SelectionChanged"
-                                Width="75">
+                                Width="100">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding}"/>
@@ -203,18 +299,22 @@
                         </lvc:CartesianChart>
                     </Grid>
                 </TabItem>
-                <TabItem Header="Sales Volume">
+                <TabItem Header="Tỷ lệ doanh số (Sales volume)">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="1*"/>
                             <RowDefinition Height="10*"/>
+                            <RowDefinition Height="1*"/>
+
                         </Grid.RowDefinitions>
 
-                        <lvc:PieChart Name="productPieChart" Grid.Row="1" LegendLocation="Bottom" Series="{Binding ProductQuantityCollection}" Hoverable="True">
+                        <lvc:PieChart Name="productPieChart" Grid.Row="1" MaxHeight="360" LegendLocation="Right" Series="{Binding ProductQuantityCollection}" Hoverable="True" Margin="20 0 20 0" >
                         </lvc:PieChart>
                     </Grid>
                 </TabItem>
+              
             </TabControl>
+            
         </materialDesign:Card>
     </Grid>
 </Page>

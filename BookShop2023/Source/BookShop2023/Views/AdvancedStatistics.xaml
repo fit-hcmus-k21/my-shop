@@ -8,7 +8,15 @@
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="AdvancedStatistics">
+      xmlns:local1="clr-namespace:ProjectMyShop.Converter"
+      
+      Title="Báo cáo sản phẩm bán chạy">
+
+
+    <Page.Resources>
+        <local1:RelativeToAbsoluteConverter x:Key="absoluteConverter" />
+        <local1:CurrencyConverter x:Key="currencyConverter" />
+    </Page.Resources>
 
     <Grid Name="StatisticsContainer">
         <Grid.ColumnDefinitions>
@@ -23,27 +31,26 @@
         </Grid.RowDefinitions>
 
         <materialDesign:Card 
-            Width="130"
+            Width="180"
             Height="45"
             Margin="0, 0, 10, 0"
             HorizontalAlignment="Left"
-            UniformCornerRadius="23"
-            materialDesign:ShadowAssist.ShadowDepth="Depth0"
             Grid.Column="0"
             Grid.Row="0">
             <StackPanel 
                 Orientation="Horizontal"
                 VerticalAlignment="Center"
-                HorizontalAlignment="Center">
+                HorizontalAlignment="Stretch">
 
                 <ComboBox Name="statisticsCombobox"
                                 Style="{Binding MaterialDesign}"
-                                HorizontalAlignment="Right"
+                                HorizontalAlignment="Left"
                                 Height="30"
+                                Background="AliceBlue"
                                 SelectedIndex="{Binding statisticsFigureIndex}"
                                 SelectionChanged="statisticsCombobox_SelectionChanged"
                                 VerticalContentAlignment="Center"
-                                Width="85">
+                                Width="180">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding}"/>
@@ -60,24 +67,24 @@
                         </Style>
                     </ComboBox.ItemContainerStyle>
                 </ComboBox>
+               
             </StackPanel>
         </materialDesign:Card>
 
         <materialDesign:Card 
-            Width="130"
+            Width="250"
             Height="45"
             Margin="0, 0, 10, 0"
-            HorizontalAlignment="Right"
-            UniformCornerRadius="23"
-            materialDesign:ShadowAssist.ShadowDepth="Depth0"
             Grid.Column="3"
             Grid.Row="0">
             <StackPanel 
                 Orientation="Horizontal"
                 VerticalAlignment="Center"
-                HorizontalAlignment="Center">
+                HorizontalAlignment="Center"
+                >
 
-                <DatePicker Name="statisticsDatePicker" SelectedDate="{Binding selectedDate}" SelectedDateChanged="statisticsDatePicker_SelectedDateChanged">
+                <DatePicker Name="statisticsDatePicker" SelectedDate="{Binding selectedDate}" 
+                            SelectedDateChanged="statisticsDatePicker_SelectedDateChanged">
                     <DatePicker.CalendarStyle>
                         <Style TargetType="Calendar" BasedOn="{StaticResource MaterialDesignCalendarPortrait}">
                             <Style.Resources>
@@ -90,14 +97,158 @@
                         </Style>
                     </DatePicker.CalendarStyle>
                 </DatePicker>
+
+                <ComboBox Name="timeCombobox" HorizontalAlignment="Right" Margin="40 0 0 0"
+                                Style="{Binding MaterialDesign}"
+                                VerticalContentAlignment="Center"
+                          Background="AliceBlue"
+                                Height="30"
+                                SelectedIndex="{Binding figureIndex}"
+                                SelectionChanged="timeCombobox_SelectionChanged"
+                                Width="100">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
             </StackPanel>
         </materialDesign:Card>
 
-        <StackPanel Grid.Row="1" Grid.ColumnSpan="3" Grid.RowSpan="2" Margin="0, 20, 0, 10">
+        <StackPanel Grid.Row="1" Grid.ColumnSpan="3" Grid.RowSpan="2" Margin="0, 20, 0, 10" >
+            <Border BorderBrush="DarkSlateBlue" BorderThickness="1" Margin="0 0 0 10"  Background="LightSalmon">
+                <TextBlock Text="Top 5 sản phẩm bán chạy nhất" Padding="0 10 0 10" FontSize="20"  Foreground="Black"
+                           FontWeight="SemiBold"
+                           HorizontalAlignment="Center"
+                       />
+             
+            </Border>
+       
+
+            <DataGrid Grid.Row="0" x:Name="ProductDataGrid" 
+                    AutoGenerateColumns="False" ColumnHeaderHeight="30" HeadersVisibility="Column" 
+                    CanUserResizeColumns="True" 
+                    BorderBrush="Gray"
+                    BorderThickness="1"
+                      HorizontalScrollBarVisibility="Hidden" 
+                      CanUserAddRows="False"
+                    HorizontalGridLinesBrush="Gray"
+                    SelectionMode="Single"
+                      AutomationProperties.IsColumnHeader="True" SelectedIndex="-1" CanUserDeleteRows="False"
+                      >
+
+
+
+                <DataGrid.Columns >
+                    <DataGridTemplateColumn Header="" IsReadOnly="True" Width="80" >
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <Image  Height="80" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" 
+                                               Source="{Binding ImagePath, Converter={StaticResource absoluteConverter}}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Tên sản phẩm" IsReadOnly="True"   Width="2*" MaxWidth="360">
+                        <DataGridTemplateColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                                <Setter Property="Panel.Background" Value="AliceBlue"/>
+                                <Setter Property="TextBlock.Foreground" Value="Black"/>
+                                <Setter Property="TextBlock.Height" Value="30"/>
+                                <Setter Property="TextBlock.FontWeight" Value="Bold"/>
+                                <Setter Property="Margin" Value="15 0 0 0" />
+                            </Style>
+                        </DataGridTemplateColumn.HeaderStyle>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center"   >
+                                    <TextBlock Text="{Binding Name}"></TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Tác giả"
+                                        IsReadOnly="True" Width="150">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <TextBlock Text="{Binding Author}"></TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Giá nhập"
+                                        IsReadOnly="True" Width="100">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <TextBlock Text="{Binding PurchasePrice,  Converter={StaticResource currencyConverter}}"></TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Giá bán"
+                                        IsReadOnly="True" Width="100">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <TextBlock Text="{Binding SellingPrice, Converter={StaticResource currencyConverter}}" Margin="5,0,0,0"></TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Đã bán"
+                                        IsReadOnly="True" Width="80">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock Margin="10,0" Text="{Binding SoldQuantity}" FontWeight="DemiBold"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Còn lại"
+                                        IsReadOnly="True" Width="80">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock Margin="10,0" Text="{Binding Quantity}" FontWeight="DemiBold"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                   
+                </DataGrid.Columns>
+                <DataGrid.RowStyle>
+                    <Style>
+                        <Style.Setters>
+                            <Setter Property="TextBlock.FontWeight" Value="Normal"></Setter>
+                        </Style.Setters>
+                    </Style>
+                </DataGrid.RowStyle>
+                <DataGrid.ColumnHeaderStyle>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Panel.Background" Value="AliceBlue"/>
+                        <Setter Property="TextBlock.Foreground" Value="Black"/>
+                        <Setter Property="TextBlock.Height" Value="30"/>
+                        <Setter Property="TextBlock.FontWeight" Value="Bold"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+
+                    </Style>
+                </DataGrid.ColumnHeaderStyle>
+
+
+            </DataGrid>
+        </StackPanel>
+
+        <!--<StackPanel Grid.Row="1" Grid.ColumnSpan="3" Grid.RowSpan="2" Margin="0, 20, 0, 10">
             <DockPanel >
                 <ComboBox DockPanel.Dock="Right" Name="timeCombobox" HorizontalAlignment="Right" Margin="0, 0, 2, 0"
                                 Style="{Binding MaterialDesign}"
                                 VerticalContentAlignment="Center"
+                          Background="AliceBlue"
                                 Height="30"
                                 SelectedIndex="{Binding figureIndex}"
                                 SelectionChanged="timeCombobox_SelectionChanged"
@@ -108,7 +259,7 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
-                <TextBlock Text="Top 5 Best-selling Products" FontSize="20" Background="MediumPurple" Foreground="White"/>
+                <TextBlock Text="Top 5 sản phẩm bán chạy nhất" FontSize="20" Background="MediumPurple" Foreground="White"/>
             </DockPanel>
             <DataGrid Grid.Row="0" x:Name="ProductDataGrid" 
                     AutoGenerateColumns="False" ColumnHeaderHeight="30" HeadersVisibility="Column" 
@@ -167,7 +318,7 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <!-- <DataGridTemplateColumn Header="         Quantity" IsReadOnly="True">
+                    --><!-- <DataGridTemplateColumn Header="         Quantity" IsReadOnly="True">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -175,7 +326,7 @@
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn> -->
+                    </DataGridTemplateColumn> --><!--
                     <DataGridTemplateColumn Header="       Quantity">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -205,7 +356,7 @@
                     </Style>
                 </DataGrid.ColumnHeaderStyle>
             </DataGrid>
-        </StackPanel>
+        </StackPanel>-->
         
     </Grid>
 </Page>

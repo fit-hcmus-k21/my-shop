@@ -6,10 +6,16 @@
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
       xmlns:local="clr-namespace:ProjectMyShop.Views"
+      xmlns:local1="clr-namespace:ProjectMyShop.Converter"
+      
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Statistics"
       Loaded="Page_Loaded">
+
+    <Page.Resources>
+        <local1:CurrencyConverter x:Key="currencyConverter" />
+    </Page.Resources>
 
     <Grid Name="StatisticsContainer">
         <Grid.ColumnDefinitions>
@@ -25,12 +31,10 @@
         </Grid.RowDefinitions>
 
         <materialDesign:Card 
-            Width="130"
+            Width="200"
             Height="45"
             Margin="0, 0, 10, 0"
             HorizontalAlignment="Left"
-            UniformCornerRadius="23"
-            materialDesign:ShadowAssist.ShadowDepth="Depth0"
             Grid.Column="0"
             Grid.Row="0">
             <StackPanel 
@@ -38,17 +42,68 @@
                 VerticalAlignment="Center"
                 HorizontalAlignment="Center">
 
-                <ComboBox Name="statisticsCombobox"
-                                Style="{Binding MaterialDesign}"
-                                HorizontalAlignment="Right"
-                                Height="30"
-                                SelectedIndex="{Binding statisticsFigureIndex}"
-                                VerticalContentAlignment="Center"
+             
+
+                <ComboBox Name="statisticsCombobox" Width="200" Height="36" HorizontalAlignment="Left"
+                         SelectedIndex="{Binding statisticsFigureIndex}"
                                 SelectionChanged="statisticsCombobox_SelectionChanged"
-                                Width="85">
-                    <ComboBox.ItemTemplate>
+                              DropDownOpened="statisticsCombobox_DropDownOpened" DropDownClosed="statisticsCombobox_DropDownClosed"
+                              VerticalAlignment="Center"
+                              >
+                    <ComboBox.Template>
+                        <ControlTemplate TargetType="ComboBox">
+                            <Grid>
+                                <Button
+            Name="Button"
+            Width="200"
+            Height="28"
+            BorderBrush="Gray"
+            Background="AliceBlue"
+            Foreground="Black"
+            BorderThickness="1"
+            Focusable="False"
+            ClickMode="Press"
+            Click="statisticsCombobox_Click"                            
+                                        >
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
+                                        <TextBlock Text="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=ComboBox}}" />
+                                        <TextBlock Text="    ▼" Foreground="Indigo" FontSize="12"  />
+                                    </StackPanel>
+                                </Button>
+                                <Popup
+            Name="Popup"
+            Placement="Bottom"
+            IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+            AllowsTransparency="True"
+            Focusable="False"
+            PopupAnimation="Slide">
+                                    <Grid Name="DropDown" SnapsToDevicePixels="True">
+                                        <Border
+                    x:Name="DropDownBorder"
+                    Background="White"
+                    BorderThickness="1"
+                    BorderBrush="Gray" />
+                                        <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                            <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                        </ScrollViewer>
+                                    </Grid>
+                                </Popup>
+                            </Grid>
+                        </ControlTemplate>
+
+                    </ComboBox.Template>
+                    <ComboBox.ItemContainerStyle>
+                        <Style TargetType="ComboBoxItem" >
+                            <Setter Property="Width" Value="192"/>
+                            <Setter Property="Foreground" Value="Black" />
+                        </Style>
+                    </ComboBox.ItemContainerStyle>
+                    <ComboBox.ItemTemplate >
                         <DataTemplate>
-                            <TextBlock Text="{Binding}"/>
+                            <StackPanel Orientation="Horizontal" >
+                                <TextBlock Text="{Binding}" />
+
+                            </StackPanel>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
@@ -83,17 +138,7 @@
                             </DatePicker.CalendarStyle>
                 </DatePicker>
 
-                <!--
-                <ComboBox Name="yearCombobox"
-                    Height="30"
-                    SelectedIndex="0"
-                    Style="{StaticResource MaterialDesignComboBox}"
-                    ItemContainerStyle="{StaticResource MaterialDesignDataGridComboBoxItemStyle}"
-                    Margin="0, 0, 0, 0"
-                    OverridesDefaultStyle="True"
-                    Width="50">
-                </ComboBox>
-                -->
+          
             </StackPanel>
         </materialDesign:Card>
 
@@ -102,27 +147,33 @@
                 Grid.Row="1"
                 Width="200"
                 Height="100"
-                Background="{DynamicResource MyPurpleGradient}"
+                Background="AliceBlue"
                 VerticalAlignment="Top"
                 UniformCornerRadius="10"
                 materialDesign:ShadowAssist.ShadowDepth="Depth1"
                 HorizontalAlignment="Center">
 
             <Grid Margin="10">
+             
                 <StackPanel>
-                    <TextBlock Text="Revenue"
-                                   Foreground="White"
+                    <TextBlock Text="Tổng doanh thu"
+                                   Foreground="Black"
                                    Style="{StaticResource MaterialDesignSubtitle2TextBlock}"/>
+
+                    <!-- binding -->
 
                     <TextBlock x:Name="TotalRevenueTextBlock" 
                                 Text="{Binding}"
-                                   Foreground="White"
-                                   Style="{StaticResource MaterialDesignSubtitle1TextBlock}"/>
+                                   Foreground="Black"
+                                    FontSize="18"
+                               FontWeight="SemiBold"
+                               Margin="15 10 0 0"
+                               />
 
                 </StackPanel>
-                <materialDesign:PackIcon Kind="Store" Width="50" Margin="0, 0, 10, 10" VerticalAlignment="Bottom"
-                        HorizontalAlignment="Right" Foreground="Azure"
-                        Height="50"/>
+                <materialDesign:PackIcon Kind="SubdirectoryArrowLeft" Width="40"  Margin="0, 0, 10, 10" VerticalAlignment="Bottom"
+                        HorizontalAlignment="Right" Foreground="Black"
+                        Height="40"/>
 
             </Grid>
 
@@ -132,28 +183,31 @@
                 Grid.Column="1"
                 Width="200"
                 Height="100"
-                Background="{DynamicResource MyBlueGradient}"
+                Background="LightSalmon"
                 VerticalAlignment="Top"
                 UniformCornerRadius="10"
                 materialDesign:ShadowAssist.ShadowDepth="Depth1"
                 HorizontalAlignment="Center">
 
             <Grid Margin="10">
+             
                 <StackPanel>
-                    <TextBlock Text="Profit"
-                                   Foreground="White"
+                    <TextBlock Text="Lợi nhuận"
+                                   Foreground="Black"
                                    Style="{StaticResource MaterialDesignSubtitle2TextBlock}"/>
 
                     <TextBlock x:Name="TotalProfitTextBlock" 
                                 Text="{Binding}"
-                                   Foreground="White"
-                                   Style="{StaticResource MaterialDesignSubtitle1TextBlock}"/>
-
+                                   Foreground="Black"
+                                    FontSize="18"
+                               FontWeight="SemiBold"
+                               Margin="15 10 0 0"
+                               />
 
                 </StackPanel>
 
-                <materialDesign:PackIcon Kind="Dollar" Width="50" Height="50" Margin="0, 0, 10, 10" VerticalAlignment="Bottom"
-                        HorizontalAlignment="Right" Foreground="Azure"/>
+                <materialDesign:PackIcon Kind="Dollar" Width="40" Height="40" Margin="0, 0, 10, 10" VerticalAlignment="Bottom"
+                        HorizontalAlignment="Right" Foreground="LightGoldenrodYellow"/>
 
             </Grid>
 
@@ -164,26 +218,35 @@
                 Grid.Column="2"
                 Width="200"
                 Height="100"
-                Background="{DynamicResource MyYellowGradient}"
+                Background="Bisque"
                 VerticalAlignment="Top"
                 UniformCornerRadius="10"
                 materialDesign:ShadowAssist.ShadowDepth="Depth1"
                 HorizontalAlignment="Center">
 
             <Grid Margin="10">
+            
+
                 <StackPanel>
-                    <TextBlock Text="Orders"
-                                   Foreground="White"
+                    <TextBlock Text="Tổng số đơn hàng"
+                                   Foreground="Black"
                                    Style="{StaticResource MaterialDesignSubtitle2TextBlock}"/>
+
+     
 
                     <TextBlock x:Name="TotalOrdersTextBlock" 
                                 Text="{Binding Count}"
-                                   Foreground="White"
-                                   Style="{StaticResource MaterialDesignSubtitle1TextBlock}"/>
+                                   Foreground="Black"
+                                    FontSize="18"
+                               FontWeight="SemiBold"
+                               Margin="15 10 0 0"
+                               />
+
+
                 </StackPanel>
 
-                <materialDesign:PackIcon Kind="Receipt" Width="50" Height="50" Margin="0, 0, 10, 10" VerticalAlignment="Bottom"
-                        HorizontalAlignment="Right" Foreground="Azure"/>
+                <materialDesign:PackIcon Kind="CartPlus" Width="40" Height="40" Margin="0, 0, 10, 10" VerticalAlignment="Bottom"
+                        HorizontalAlignment="Right" Foreground="Black"/>
             </Grid>
         </materialDesign:Card>
 
@@ -192,14 +255,14 @@
             Grid.Row="2"
             Grid.ColumnSpan="3"
             Grid.RowSpan="2"
-            Background="#60ffffff"
+            Background="AliceBlue"
             UniformCornerRadius="10"
             Padding="10"
             Margin="25, 20, 25, 0"
             materialDesign:ShadowAssist.ShadowDepth="Depth0">
 
             <TabControl Name="chartTabControl" SelectionChanged="chartTabControl_SelectionChanged" SelectedIndex="{Binding tabSelectedIndex}">
-                <TabItem Header="Revenue">
+                <TabItem Header="Doanh thu">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="1.5*"/>
@@ -213,7 +276,7 @@
                                 Style="{Binding MaterialDesign}"
                                 VerticalContentAlignment="Center"
                                 SelectionChanged="revenueCombobox_SelectionChanged"
-                                Width="75">
+                                Width="100">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding}"/>
@@ -249,7 +312,7 @@
                         </lvc:CartesianChart>
                     </Grid>
                 </TabItem>
-                <TabItem Header="Profit">
+                <TabItem Header="Lợi nhuận">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="1.5*"/>
@@ -263,7 +326,7 @@
                                 SelectedIndex="{Binding profitFigureIndex}"
                                 Style="{Binding MaterialDesign}"
                                 SelectionChanged="profitCombobox_SelectionChanged"
-                                Width="75">
+                                Width="100">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding}"/>

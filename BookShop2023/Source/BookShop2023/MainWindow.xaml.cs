@@ -242,15 +242,33 @@ namespace ProjectMyShop
 
         }
 
+        private void custButton_Click(object sender, RoutedEventArgs e)
+        {
+            changeButtonColor(custButton);
+            //...
+        }
+
+        private void voucherButton_Click(object sender, RoutedEventArgs e)
+        {
+            changeButtonColor(voucherButton);
+            //...
+
+        }
+
         private void loggoutButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
 
             AppConfig.SetValue(AppConfig.LoginStatus, ((int)AppConfig.LoginStatusEnum.LoggedOut).ToString());
+
             AppConfig.SetValue(AppConfig.LastWindow, "0");
 
             var loginScreen = new Login();
             loginScreen.Show();
+
+            this.Close();
+
         }
+
+
     }
 }

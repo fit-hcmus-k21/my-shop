@@ -592,13 +592,13 @@ namespace ProjectMyShop.Views
         private void categoriesComboBox_DropDownOpened(object sender, EventArgs e)
         {
             // Thay đổi màu nền khi dropdown mở
-            pagingComboBox.Background = new SolidColorBrush(Colors.LightBlue);
+            categoriesComboBox.Background = new SolidColorBrush(Colors.LightBlue);
         }
 
         private void categoriesComboBox_DropDownClosed(object sender, EventArgs e)
         {
             // Thay đổi màu nền khi dropdown đóng
-            pagingComboBox.Background = new SolidColorBrush(Colors.White);
+            categoriesComboBox.Background = new SolidColorBrush(Colors.White);
         }
 
         private void pagingComboBox_Click(object sender, RoutedEventArgs e)

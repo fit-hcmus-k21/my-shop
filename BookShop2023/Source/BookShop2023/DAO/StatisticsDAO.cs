@@ -14,7 +14,7 @@ namespace ProjectMyShop.DAO
         {
             string sqlFormattedDate = src.ToString("yyyy-MM-dd");
 
-            var sql = "select convert(varchar,cast(SUM(do.Quantity * p.SellingPrice) as money), 1) as Revenue from OrderDetail do join Product p on do.ProductID = p.ID join Orders o on do.OrderID = o.ID where CreatedAt <= @SelectedDate;";
+            var sql = "select convert(varchar,cast(SUM(do.Quantity * p.SellingPrice) as int), 1) as Revenue from OrderDetail do join Product p on do.ProductID = p.ID join Orders o on do.OrderID = o.ID where CreatedAt <= @SelectedDate;";
             var sqlParameter = new SqlParameter();
             sqlParameter.ParameterName = "@SelectedDate";
             sqlParameter.Value = sqlFormattedDate;
@@ -38,7 +38,7 @@ namespace ProjectMyShop.DAO
         {
             string sqlFormattedDate = src.ToString("yyyy-MM-dd");
 
-            var sql = "select convert(varchar,cast(SUM(do.Quantity *(p.SellingPrice - p.PurchasePrice)) as money), 1) as Profit from OrderDetail do join Product p on do.ProductID = p.ID join Orders o on do.OrderID = o.ID where CreatedAt <= @SelectedDate;";
+            var sql = "select convert(varchar,cast(SUM(do.Quantity *(p.SellingPrice - p.PurchasePrice)) as int), 1) as Profit from OrderDetail do join Product p on do.ProductID = p.ID join Orders o on do.OrderID = o.ID where CreatedAt <= @SelectedDate;";
             var sqlParameter = new SqlParameter();
             sqlParameter.ParameterName = "@SelectedDate";
             sqlParameter.Value = sqlFormattedDate;
@@ -315,7 +315,9 @@ namespace ProjectMyShop.DAO
         {
             string sqlFormattedDate = src.ToString("yyyy");
 
-            var sql = "SELECT DATEPART(iso_week, o.CreatedAt) AS Week, convert(varchar,cast(SUM(do.Quantity * (p.SellingPrice - p.PurchasePrice)) as money), 1) as Profit FROM Product p join OrderDetail do on p.ID = do.ProductID join Orders o on o.ID = do.OrderID WHERE DATEPART(year, o.CreatedAt) = @SelectedYear and p.ID = @ProductID  and p.CatID = @CategoryID GROUP BY DATEPART(iso_week, o.CreatedAt) ORDER BY DATEPART(iso_week, o.CreatedAt);";
+            var sql = "SELECT DATEPART(iso_week, o.CreatedAt) AS Week, SUM(do.Quantity) as Quantity, " +
+                "convert(varchar,cast(SUM(do.Quantity * (p.SellingPrice - p.PurchasePrice)) as money), 1) as Profit" +
+                " FROM Product p join OrderDetail do on p.ID = do.ProductID join Orders o on o.ID = do.OrderID WHERE DATEPART(year, o.CreatedAt) = @SelectedYear and p.ID = @ProductID  and p.CatID = @CategoryID GROUP BY DATEPART(iso_week, o.CreatedAt) ORDER BY DATEPART(iso_week, o.CreatedAt);";
             
             var sqlParameter = new SqlParameter();
             sqlParameter.ParameterName = "@SelectedYear";
@@ -339,7 +341,9 @@ namespace ProjectMyShop.DAO
             var resultList = new List<Tuple<string, int>>();
             while (reader.Read())
             {
-                var tuple = Tuple.Create((string)reader["Week"], (int)reader["Quantity"]);
+                var week = (string)reader["Week"].ToString();
+                var quantity = (int)reader["Quantity"];
+                var tuple = Tuple.Create(week, quantity);
                 resultList.Add(tuple);
             }
             reader.Close();
@@ -348,7 +352,12 @@ namespace ProjectMyShop.DAO
 
         public List<Tuple<string, int>> getMonthlyQuantityOfSpecificProduct(int srcProductID, int srcCategoryID, DateTime srcDate)
         {
-            var sql = "WITH Months as (select month(GETDATE()) as Monthnumber, datename(month, GETDATE()) as NameOfMonth, 1 as number union all select month(dateadd(month, number, (GETDATE()))) Monthnumber, datename(month, dateadd(month, number, (GETDATE()))) as NameOfMonth, number + 1  from Months  where number < 12) select NameOfMonth, Quantity from Months left join (select datepart(month, o.CreatedAt) as OrderMonth, SUM(do.Quantity) as Quantity from OrderDetail do join Product p on do.ProductID = p.ID join Orders o on do.OrderID = o.ID where datepart(year, o.CreatedAt) = @SelectedYear and p.ID = @ProductID and p.CatID = @CategoryID group by datepart(month, o.CreatedAt)) MonthlyQuantity on Months.Monthnumber = MonthlyQuantity .OrderMonth order by Monthnumber;";
+            var sql = "WITH Months as (select month(GETDATE()) as Monthnumber, datename(month, GETDATE()) as NameOfMonth, 1 as number " +
+                "union all " +
+                "select month(dateadd(month, number, (GETDATE()))) Monthnumber, datename(month, dateadd(month, number, (GETDATE()))) as NameOfMonth, number + 1  from Months  where number < 12) select NameOfMonth, Quantity from Months left join (select datepart(month, o.CreatedAt) as OrderMonth, SUM(do.Quantity) as Quantity " +
+                "from OrderDetail do join Product p on do.ProductID = p.ID join Orders o on do.OrderID = o.ID " +
+                "where datepart(year, o.CreatedAt) = @SelectedYear and p.ID = @ProductID and p.CatID = @CategoryID " +
+                "group by datepart(month, o.CreatedAt)) MonthlyQuantity on Months.Monthnumber = MonthlyQuantity .OrderMonth order by Monthnumber;";
 
             var sqlParameter = new SqlParameter();
             sqlParameter.ParameterName = "@ProductID";

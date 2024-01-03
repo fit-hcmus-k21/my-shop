@@ -30,6 +30,6 @@ namespace ProjectMyShop.DTO
 
     public class BestSellingProduct : Product
     {
-        //public int Quantity { get; set; }
+        public int SoldQuantity { get; set; }
     }
 }

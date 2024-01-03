@@ -48,6 +48,10 @@ namespace ProjectMyShop.BUS
 
         public string GetName()
         {
+            if (string.IsNullOrEmpty(_account.Name))
+            {
+                _account.Name = _accountDAO.GetName(AppConfig.GetValue(AppConfig.UserAccount));
+            }
             return _account.Name;
         }
 

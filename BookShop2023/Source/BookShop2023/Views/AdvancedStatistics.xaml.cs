@@ -54,8 +54,8 @@ namespace ProjectMyShop.Views
         }
         public DateTime selectedDate { get; set; } = DateTime.Now;
         public int figureIndex { get; set; } = 0;
-        public List<string> figureValues = new List<string>() {"In Week", "In Month", "In Year" };
-        public List<string> statisticsFigureValues = new List<string>() { "General", "Specific", "Advanced" };
+        public List<string> figureValues = new List<string>() {"Trong tuần", "Trong tháng", "Trong năm" };
+        public List<string> statisticsFigureValues = new List<string>() { "Doanh thu - Lợi nhuận", "Sản phẩm - Số lượng bán", "Sản phẩm bán chạy" };
         public int statisticsFigureIndex { get; set; } = 2;
         public List<BestSellingProduct> Products;
         private Statistics _statisticsPage;
