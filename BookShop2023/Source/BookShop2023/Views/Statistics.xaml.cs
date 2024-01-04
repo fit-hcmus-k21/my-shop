@@ -105,7 +105,7 @@ namespace ProjectMyShop.Views
                     {
                     new LineSeries
                     {
-                        Title = "Revenue: ",
+                        Title = "Doanh thu:",
                         Values = revenues,
                         LabelPoint = point => String.Format(info, "{0:c}", point.Y)
                     }
@@ -145,7 +145,7 @@ namespace ProjectMyShop.Views
                     {
                     new ColumnSeries
                     {
-                        Title = "Revenue: ",
+                        Title = "Doanh thu:",
                         Values = weeklyRevenues,
                         LabelPoint = point => String.Format(info, "{0:c}", point.Y)
                     }
@@ -184,7 +184,7 @@ namespace ProjectMyShop.Views
                     {
                     new ColumnSeries
                     {
-                        Title = "Revenue: ",
+                        Title = "Doanh thu:",
                         Values = monthlyRevenues,
                         LabelPoint = point => String.Format(info, "{0:c}", point.Y)
                     }
@@ -223,7 +223,7 @@ namespace ProjectMyShop.Views
                     {
                     new ColumnSeries
                     {
-                        Title = "Revenue: ",
+                        Title = "Doanh thu:",
                         Values = yearlyRevenues,
                         LabelPoint = point => String.Format(info, "{0:c}", point.Y)
                     }
@@ -270,7 +270,7 @@ namespace ProjectMyShop.Views
                     {
                     new LineSeries
                     {
-                        Title = "Profit: ",
+                        Title = "Lợi nhuận: ",
                         Values = profits,
                         LabelPoint = point => String.Format(info, "{0:c}", point.Y)
                     }
@@ -310,7 +310,7 @@ namespace ProjectMyShop.Views
                     {
                     new ColumnSeries
                     {
-                        Title = "Profit: ",
+                        Title = "Lợi nhuận: ",
                         Values = weeklyProfits,
                         LabelPoint = point => String.Format(info, "{0:c}", point.Y)
                     }
@@ -351,7 +351,7 @@ namespace ProjectMyShop.Views
                     {
                     new ColumnSeries
                     {
-                        Title = "Profit: ",
+                        Title = "Lợi nhuận: ",
                         Values = monthlyProfits,
                         LabelPoint = point => String.Format(info, "{0:c}", point.Y)
                     }
@@ -391,7 +391,7 @@ namespace ProjectMyShop.Views
                     {
                     new ColumnSeries
                     {
-                        Title = "Profit: ",
+                        Title = "Lợi nhuận: ",
                         Values = yearlyProfits,
                         LabelPoint = point => String.Format(info, "{0:c}", point.Y)
                     }

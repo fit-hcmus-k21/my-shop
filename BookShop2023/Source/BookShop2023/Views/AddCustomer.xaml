@@ -1,0 +1,104 @@
+﻿<Window x:Class="BookShop2023.Views.AddCustomer"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                xmlns:local1="clr-namespace:ProjectMyShop.Converter"
+      WindowStartupLocation="CenterScreen" 
+        Loaded="Window_Loaded"
+        
+        xmlns:local="clr-namespace:BookShop2023.Views"
+        mc:Ignorable="d"
+        Title="Thêm khách hàng mới" Height="400" Width="600">
+    <Window.Resources>
+        <local1:CurrencyConverter x:Key="currencyConverter" />
+    </Window.Resources>
+     
+   
+            <materialDesign:Card Background="White" UniformCornerRadius="10" materialDesign:ShadowAssist.ShadowEdges="All" Padding="20,10,20,20">
+                <DockPanel LastChildFill="True">
+
+                    <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Khách hàng #" FontWeight="DemiBold" Foreground="Black" FontSize="16"/>
+                            <TextBlock x:Name="OrderIDText" Text="{Binding ID}" FontWeight="DemiBold" Foreground="Black" FontSize="16"/>
+                        </StackPanel>
+
+                    </StackPanel>
+                    <Grid Margin="0,20,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="10"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <materialDesign:Card Background="White" UniformCornerRadius="10" materialDesign:ShadowAssist.ShadowEdges="All" Grid.Row="0"
+                                     Padding="10" BorderBrush="Gray" Margin="5">
+                            <DockPanel LastChildFill="True">
+
+                                <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
+                                    <TextBlock Text="Thông tin khách hàng" FontWeight="DemiBold" Foreground="Black" FontSize="20" Margin="5,0,0,20" HorizontalAlignment="Center"/>
+                                    <DockPanel x:Name="CustomerInfo" LastChildFill="True">
+                                        <StackPanel Width="Auto" Orientation="Vertical" DockPanel.Dock="Left">
+                                            <StackPanel Width="Auto" Orientation="Horizontal" HorizontalAlignment="Left" Margin="0 0 0 10" >
+                                        <Label Content="Họ tên: " FontWeight="SemiBold" Width="60" FontSize="16" Margin="0 0 20 0"/>
+                                        <TextBox x:Name="CustomerNameText" Text="{Binding Name}" TextWrapping="Wrap"  Width="400" FontSize="16"/>
+                                            </StackPanel>
+                                    <StackPanel Width="Auto" Orientation="Horizontal" Margin="0 0 0 10" >
+                                        <Label Content="Địa chỉ: " FontWeight="SemiBold" Width="60" FontSize="16" Margin="0 0 20 0" />
+                                        <TextBox x:Name="CustomerAddressText" Text="{Binding Address}" TextWrapping="Wrap"  Width="400" FontSize="16"/>
+                                            </StackPanel>
+                                    <StackPanel Width="Auto" Orientation="Horizontal" HorizontalAlignment="Left" Margin="0 0 0 10">
+                                        <Label Content="SĐT: " FontWeight="SemiBold" Width="60" FontSize="16" Margin="0 0 20 0"/>
+                                        <TextBox x:Name="CustomerPhoneNumberText" Text="{Binding PhoneNumber}" TextWrapping="Wrap"  Width="400" FontSize="16"/>
+                                            </StackPanel>
+                                        </StackPanel>
+
+
+                                   
+
+                                    </DockPanel>
+                                </StackPanel>
+                            </DockPanel>
+                        </materialDesign:Card>
+                     
+                        <StackPanel Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Right"  Margin="0,5,0,0">
+                            <Button Name="SaveButton" Click="SaveButton_Click" 
+                            materialDesign:ButtonAssist.CornerRadius="5"
+                            Background="LightGreen"
+                            Foreground="Black"
+                            materialDesign:ShadowAssist.ShadowEdges="All"
+                            BorderBrush="DeepPink"
+                            >
+                                <Button.Content>
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="ContentSave"/>
+                                        <TextBlock Margin="5,-2" Text="Save"></TextBlock>
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+
+                            <Button Name="ReturnButton" Click="ReturnButton_Click"
+                            materialDesign:ButtonAssist.CornerRadius="5"
+                            Background="LightGray"
+                            BorderBrush="LightGray"
+                            materialDesign:ShadowAssist.ShadowEdges="All"
+                            Foreground="Gray"
+                            Margin="5,0">
+                                <Button.Content>
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="KeyboardReturn"/>
+                                        <TextBlock Margin="5,-2" Text="Cancel"></TextBlock>
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                </DockPanel>
+            </materialDesign:Card>
+
+
+</Window>

@@ -49,23 +49,57 @@
 
                 <DataGrid Name="categoriesDataGrid" Grid.Row="1" Grid.Column="1"
                           AutoGenerateColumns="False" CanUserAddRows="False" 
-                  CanUserDeleteRows="False" IsReadOnly="False"
-                  CellEditEnding="dataGrid_CellEditEnding"
+                          IsReadOnly="True"
+                  CanUserDeleteRows="False" 
+                          SelectionMode="Single"
+                          ColumnHeaderHeight="50"
                           BorderBrush="Gray"
                     BorderThickness="1"
                           Background="White"
+                          RowHeight="48"
+                          
                           >
-                    <DataGrid.Columns>
-                        
-                        <DataGridTextColumn Header="ID" Binding="{Binding ID}" Width="50"/>
-                        <DataGridTextColumn Header="Thể loại" Binding="{Binding Name}" Width="4*"/>
+                    <DataGrid.RowStyleSelector>
+                        <StyleSelector/>
+                    </DataGrid.RowStyleSelector>
+                    <DataGrid.RowStyle>
+                        <Style TargetType="{x:Type DataGridRow}">
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="AliceBlue"/>
+                                    <Setter Property="Foreground" Value="Black"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
+                    <DataGrid.Columns >
+
+                        <DataGridTextColumn Header="ID" Binding="{Binding ID}" Width="50"  >
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="TextAlignment" Value="Center"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Thể loại" Binding="{Binding Name}" Width="4*">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="TextAlignment" Value="Center"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
 
                         <DataGridTextColumn Header="Số sản phẩm" Binding="{Binding TotalProducts}" Width="2*">
                             <DataGridTextColumn.ElementStyle>
-                            <Style>
-                                <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                                    <Style TargetType="{x:Type TextBlock}">
+                                        <Setter Property="TextAlignment" Value="Center"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
 
-                                </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
@@ -104,7 +138,6 @@
                         <Style TargetType="DataGridColumnHeader">
                             <Setter Property="Panel.Background" Value="AliceBlue"/>
                             <Setter Property="TextBlock.Foreground" Value="Black"/>
-                            <Setter Property="TextBlock.Height" Value="30"/>
                             <Setter Property="TextBlock.FontWeight" Value="Bold"/>
                             <Setter Property="HorizontalContentAlignment" Value="Center"/>
                             <Setter Property="BorderBrush" Value="Black" />

@@ -25,6 +25,11 @@ namespace BookShop2023.BUS
             return _customerDAO.loadAll();
         }
 
+        public List<CustomerDataGrid> loadAllCustomerDataGrid()
+        {
+            return _customerDAO.loadAllCustomerDataGrid();
+        }
+
         public Dictionary<int, Customer> CustomerDictionary ()
         {
             List<Customer> list = loadAll();

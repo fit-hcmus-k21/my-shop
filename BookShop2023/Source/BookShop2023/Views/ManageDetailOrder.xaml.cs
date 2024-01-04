@@ -250,6 +250,8 @@ namespace ProjectMyShop.Views
                 if (res == MessageBoxResult.Yes)
                 {
                     orderDetailList.RemoveAt(i);
+                    order.FinalTotal -= orderDetailList[i].Total;
+
                     Reload();
                 }
             }

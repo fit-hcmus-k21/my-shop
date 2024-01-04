@@ -43,6 +43,45 @@ namespace BookShop2023.DAO
             return _customerList;
         }
 
+        public List<CustomerDataGrid> loadAllCustomerDataGrid()
+        {
+            List<CustomerDataGrid> _customerList = new List<CustomerDataGrid>();
+
+            var sql = "select cust.ID, cust.Name, cust.Address, cust.PhoneNumber, count(distinct o.ID) as TotalOrders, SUM(ISNULL(od.Total, 0)) AS TotalCost, count(distinct od.ProductID) as TotalProducts " +
+                "FROM Customer AS cust\r\n" +
+                "LEFT JOIN Orders AS o ON cust.ID = o.CustomerID\r\n" +
+                "LEFT JOIN OrderDetail AS od ON od.OrderID = o.ID " +
+                "group by cust.ID, cust.Name, cust.Address, cust.PhoneNumber " +
+                "order by TotalCost DESC";
+
+            var command = new SqlCommand(sql, DB.Instance.Connection);
+
+            var reader = command.ExecuteReader();
+            int rank = 0;
+
+            while (reader.Read())
+            {
+                rank++;
+                CustomerDataGrid customer = new CustomerDataGrid()
+                {
+                    Rank = rank,
+                    ID = (int)reader["ID"],
+                    Name = (string)reader["Name"],
+                    Address = (string)reader["Address"],
+                    PhoneNumber = (string)reader["PhoneNumber"],
+                    TotalCost = Convert.ToInt32(reader["TotalCost"]),
+                    TotalOrders = (int)reader["TotalOrders"],
+                    TotalProducts = (int)reader["TotalProducts"]
+                };
+
+                _customerList.Add(customer);
+            }
+
+
+            reader.Close();
+            return _customerList;
+        }
+
         public void InsertCustomer(Customer customer)
         {
             var sql = "";

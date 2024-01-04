@@ -13,4 +13,12 @@ namespace BookShop2023.DTO
         public string Address { get; set; }
         public string PhoneNumber { get; set; }
     }
+
+    public class CustomerDataGrid : Customer
+    {
+        public int Rank { get; set; }
+        public int TotalOrders { get; set; }
+        public int TotalCost { get; set; }
+        public int TotalProducts { get; set; }
+}
 }

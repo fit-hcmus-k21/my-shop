@@ -103,7 +103,8 @@ namespace ProjectMyShop.Views
                         CustomerName = CustomerDictionary[order.CustomerID].Name,
                         CustomerAddress = CustomerDictionary[order.CustomerID].Address,
                         CreatedAt = order.CreatedAt,
-                        Status = StatusDitionary[order.Status]
+                        Status = StatusDitionary[order.Status],
+                        FinalTotal = (int) order.FinalTotal
 
                     });
 

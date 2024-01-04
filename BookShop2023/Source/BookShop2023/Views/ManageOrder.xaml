@@ -12,6 +12,7 @@
       Loaded="Page_Loaded">
     <Page.Resources>
         <local1:StatusConverter x:Key="statusConverter"/>
+        <local1:CurrencyConverter x:Key="currencyConverter" />
     </Page.Resources>
 
     <materialDesign:Card Background="White" UniformCornerRadius="10" materialDesign:ShadowAssist.ShadowEdges="All" Padding="20,20,20,30">
@@ -106,13 +107,12 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <DataGrid Grid.Row="0" x:Name="OrderDataGrid" 
-                    AutoGenerateColumns="False" ColumnHeaderHeight="30" HeadersVisibility="Column" 
+                    AutoGenerateColumns="False" ColumnHeaderHeight="50" HeadersVisibility="Column" 
                      SelectionChanged="OrderDataGrid_SelectionChanged" 
                     BorderBrush="Gray"
                     BorderThickness="1"
                     VerticalScrollBarVisibility="Hidden" 
                     HorizontalScrollBarVisibility="Hidden" 
-                    GridLinesVisibility="None" 
                     CanUserAddRows="False"
                     SelectionMode="Single"
                     Margin="0,0,0,10" Grid.ColumnSpan="7" AutomationProperties.IsColumnHeader="True" SelectedIndex="-1" CanUserDeleteRows="False">
@@ -160,21 +160,32 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="Địa chỉ" Width="4*">
+
+                        <DataGridTemplateColumn Header="Địa chỉ" Width="3*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                        <TextBlock Text="{Binding CustomerAddress}"></TextBlock>
+                                        <TextBlock Text="{Binding CustomerAddress}" Margin="5,0,0,0"></TextBlock>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
+
                         <DataGridTemplateColumn Header="Ngày đặt" Width="3*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                                         <materialDesign:PackIcon Kind="Calendar" Margin="0,2,0,0"/>
                                         <TextBlock Text="{Binding CreatedAt}" Margin="5,0,0,0"></TextBlock>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Tổng tiền" Width="2*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                        <TextBlock Text="{Binding FinalTotal, Converter={StaticResource currencyConverter}}"></TextBlock>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -199,7 +210,7 @@
                             </DataGridTemplateColumn.CellTemplate>
 
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="Chi tiết" Width="2*">
+                        <DataGridTemplateColumn Header="Chi tiết" Width="100">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel HorizontalAlignment="Center">

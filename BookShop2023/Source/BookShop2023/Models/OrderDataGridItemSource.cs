@@ -13,5 +13,7 @@ namespace BookShop2023.Models
         public string CustomerAddress { get; set; }
         public DateOnly CreatedAt { get; set; }
         public string Status { get; set; }
+
+        public int FinalTotal { get; set; }
     }
 }

@@ -26,14 +26,21 @@
 
 
         <StackPanel  Grid.Row="1" Grid.Column="1"  Margin="30 10 10 0" RenderTransformOrigin="0.624,0.417">
-            <Label Margin="0 0 0 20" FontWeight="Bold">Cài đặt chung</Label>
-            <CheckBox BorderBrush="MediumPurple" Name="lastWindowCheckBox" Margin="0 0 0 20">
-                <CheckBox.Resources>
-                    <!--Unchecked state-->
-                    <SolidColorBrush x:Key="MaterialDesignCheckBoxOff" Color="Red"/>
-                    <!--Checked state-->
-                    <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="MediumPurple"/>
-                </CheckBox.Resources> Mở lại màn hình cuối mà lần trước tắt khi khởi chạy ứng dụng</CheckBox>
+            <Label Margin="0 0 0 20" FontWeight="Bold" FontSize="20">Cài đặt chung</Label>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock
+                Text="Mở lại màn hình cuối mà lần trước tắt khi khởi chạy ứng dụng: "
+                />
+                <CheckBox BorderBrush="MediumPurple" Name="lastWindowCheckBox" Margin="30 0 0 20">
+
+                    <CheckBox.Resources>
+                        <!--Unchecked state-->
+                        <SolidColorBrush x:Key="MaterialDesignCheckBoxOff" Color="Red"/>
+                        <!--Checked state-->
+                        <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="MediumPurple"/>
+                    </CheckBox.Resources>
+                </CheckBox>
+            </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Label Content="Số lượng phần tử trên 1 trang: " />
                 <TextBox Width="50" Margin="20 0 0 0" Name="rowsPerPage" />
@@ -42,8 +49,9 @@
 
         </StackPanel>
 
-        <Button Height="30" Width="100" x:Name="cancelButton" Click="cancelButton_Click"  Content="Cancel" Grid.Column="1" Grid.Row="1" Margin="59,206,354,72" />
-        <Button Height="30" Width="100" x:Name="saveButton" Click="saveButton_Click"  Content="Save" Grid.Column="1" Grid.Row="1" Margin="206,206,207,72" />
+        <Button Height="30" Width="100" x:Name="saveButton" Click="saveButton_Click"  Content="Save" Background="Beige" Foreground="Black" Grid.Column="1" Grid.Row="1" Margin="206,206,207,72" />
+        <Button Height="30" Width="100" x:Name="cancelButton" Click="cancelButton_Click" Background="AliceBlue" Foreground="Black" Content="Cancel" Grid.Column="1" Grid.Row="1" Margin="59,206,354,72" />
+
 
     </Grid>
 </Page>

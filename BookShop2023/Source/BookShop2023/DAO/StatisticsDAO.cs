@@ -14,7 +14,9 @@ namespace ProjectMyShop.DAO
         {
             string sqlFormattedDate = src.ToString("yyyy-MM-dd");
 
-            var sql = "select convert(varchar,cast(SUM(do.Quantity * p.SellingPrice) as int), 1) as Revenue from OrderDetail do join Product p on do.ProductID = p.ID join Orders o on do.OrderID = o.ID where CreatedAt <= @SelectedDate;";
+            var sql = "select convert(varchar,cast(SUM(Total) as int), 1) as Revenue " +
+                "from OrderDetail od join Orders o on od.OrderID = o.ID " +
+                "where CreatedAt <= @SelectedDate ;";
             var sqlParameter = new SqlParameter();
             sqlParameter.ParameterName = "@SelectedDate";
             sqlParameter.Value = sqlFormattedDate;
@@ -28,7 +30,7 @@ namespace ProjectMyShop.DAO
             if (reader.Read())
             {
                 if (reader["Revenue"].GetType() != typeof(DBNull))
-                    result = (string)reader["Revenue"];
+                    result = Convert.ToString (reader["Revenue"]);
             }
             reader.Close();
             return result.ToString();

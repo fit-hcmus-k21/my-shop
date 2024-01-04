@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using BookShop2023.Views;
+using Microsoft.IdentityModel.Tokens;
 using ProjectMyShop.BUS;
 using ProjectMyShop.Config;
 using ProjectMyShop.Views;
@@ -35,6 +36,7 @@ namespace ProjectMyShop
         ManageOrder _manageOrderPage;
         Statistics _statisticsPage;
         ManageCategory _manageCategory;
+        ManageCustomer _manageCustomer;
         Configuration _configPage;
         Login login;
         Button[] buttons;
@@ -91,13 +93,11 @@ namespace ProjectMyShop
         #region Mở dashboard cho admin: có cả thống kê chi tiêu, quản lý ...
         private void openDashBoardAdmin()
         {
-            dashboard = new Dashboard();
-            _manageOrderPage = new ManageOrder();
-            _manageCategory = new ManageCategory();
+
 
             dashboardText.Text = greeting + username;
 
-            Button[] buttons1 = new Button[] { dashboardButton, categoriesButton, productButton, orderButton, statButton, configButton };
+            Button[] buttons1 = new Button[] { dashboardButton, categoriesButton, productButton, orderButton, statButton, configButton, custButton, voucherButton };
             buttons = buttons1;
             if (AppConfig.GetValue(AppConfig.LastWindow) == "0")
             {
@@ -131,6 +131,12 @@ namespace ProjectMyShop
                     _manageProductPage = new ManageProduct();
                     pageNavigation.NavigationService.Navigate(_manageProductPage);
                 }
+                else if (AppConfig.GetValue(AppConfig.LastWindow) == "ManageCustomer")
+                {
+                    changeButtonColor(custButton);
+                    _manageCustomer = new ManageCustomer();
+                    pageNavigation.NavigationService.Navigate(_manageCustomer);
+                }
 
             }
 
@@ -141,9 +147,7 @@ namespace ProjectMyShop
         private void openDashBoardStaff()
         {
            
-            dashboard = new Dashboard();
-            _manageOrderPage = new ManageOrder();
-            _manageCategory = new ManageCategory();
+
 
             dashboardText.Text = greeting + username;
 
@@ -151,7 +155,7 @@ namespace ProjectMyShop
             // hide statistics
             statButton.Visibility = Visibility.Collapsed;
 
-            Button[] buttons1 = new Button[] { dashboardButton, categoriesButton, productButton, orderButton, configButton };
+            Button[] buttons1 = new Button[] { dashboardButton, categoriesButton, productButton, orderButton, configButton, custButton, voucherButton };
             buttons = buttons1;
             if (AppConfig.GetValue(AppConfig.LastWindow) == "0")
             {
@@ -179,6 +183,12 @@ namespace ProjectMyShop
                     changeButtonColor(productButton);
                     _manageProductPage = new ManageProduct();
                     pageNavigation.NavigationService.Navigate(_manageProductPage);
+                }
+                else if (AppConfig.GetValue(AppConfig.LastWindow) == "ManageCustomer")
+                {
+                    changeButtonColor(custButton);
+                    _manageCustomer = new ManageCustomer();
+                    pageNavigation.NavigationService.Navigate(_manageCustomer);
                 }
 
             }
@@ -213,6 +223,7 @@ namespace ProjectMyShop
         private void orderButton_Click(object sender, RoutedEventArgs e)
         {
             changeButtonColor(orderButton);
+            _manageOrderPage = new ManageOrder();
             pageNavigation.NavigationService.Navigate(_manageOrderPage);
         }
 
@@ -233,6 +244,7 @@ namespace ProjectMyShop
         private void categoriesButton_Click(object sender, RoutedEventArgs e)
         {
             changeButtonColor(categoriesButton);
+            _manageCategory = new ManageCategory();
             pageNavigation.NavigationService.Navigate(_manageCategory);
         }
         #endregion
@@ -245,7 +257,8 @@ namespace ProjectMyShop
         private void custButton_Click(object sender, RoutedEventArgs e)
         {
             changeButtonColor(custButton);
-            //...
+            _manageCustomer = new ManageCustomer();
+            pageNavigation.NavigationService.Navigate(_manageCustomer);
         }
 
         private void voucherButton_Click(object sender, RoutedEventArgs e)
