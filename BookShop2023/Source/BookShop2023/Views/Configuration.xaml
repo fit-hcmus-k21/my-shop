@@ -17,21 +17,23 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="3*"/>
-            <RowDefinition Height="20*"/>
-            <RowDefinition Height="3*"/>
+            <RowDefinition Height="40*"/>
+            <RowDefinition Height="1*"/>
 
 
         </Grid.RowDefinitions>
 
 
 
-        <StackPanel  Grid.Row="1" Grid.Column="1"  Margin="30 10 10 0" RenderTransformOrigin="0.624,0.417">
+        <StackPanel  Grid.Row="1" Grid.Column="1"  Margin="30 10 10 20">
             <Label Margin="0 0 0 20" FontWeight="Bold" FontSize="20">Cài đặt chung</Label>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock
-                Text="Mở lại màn hình cuối mà lần trước tắt khi khởi chạy ứng dụng: "
+            <StackPanel Orientation="Horizontal" Margin="0 0 0 20">
+                <Label
+                Content="Mở lại màn hình cuối mà lần trước tắt khi khởi chạy ứng dụng: "
                 />
-                <CheckBox BorderBrush="MediumPurple" Name="lastWindowCheckBox" Margin="30 0 0 20">
+                <CheckBox BorderBrush="MediumPurple" 
+                          Name="lastWindowCheckBox" Margin="30 0 0 0"
+                          >
 
                     <CheckBox.Resources>
                         <!--Unchecked state-->
@@ -44,6 +46,23 @@
             <StackPanel Orientation="Horizontal">
                 <Label Content="Số lượng phần tử trên 1 trang: " />
                 <TextBox Width="50" Margin="20 0 0 0" Name="rowsPerPage" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0 20 0 0" >
+                <Label Content="Nhập dữ liệu sản phẩm và phân loại từ file excel : " />
+                <Button x:Name="ImportButton"
+                    Click="ImportButton_Click"
+                    Margin="20 0 10 0"
+                        Height="28"
+                    Background="DarkCyan"
+                    materialDesign:ButtonAssist.CornerRadius="5">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Gear"/>
+                            <TextBlock Margin="5 0" Text="Import"/>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
             </StackPanel>
 
 

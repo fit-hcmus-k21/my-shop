@@ -38,6 +38,7 @@ namespace ProjectMyShop
         ManageCategory _manageCategory;
         ManageCustomer _manageCustomer;
         Configuration _configPage;
+        ManageVoucher _manageVoucher;
         Login login;
         Button[] buttons;
 
@@ -102,6 +103,7 @@ namespace ProjectMyShop
             if (AppConfig.GetValue(AppConfig.LastWindow) == "0")
             {
                 changeButtonColor(dashboardButton);
+                dashboard = new Dashboard();
                 pageNavigation.NavigationService.Navigate(dashboard);
             }
             else
@@ -137,6 +139,12 @@ namespace ProjectMyShop
                     _manageCustomer = new ManageCustomer();
                     pageNavigation.NavigationService.Navigate(_manageCustomer);
                 }
+                else if (AppConfig.GetValue(AppConfig.LastWindow) == "ManageVoucher")
+                {
+                    changeButtonColor(voucherButton);
+                    _manageVoucher = new ManageVoucher();
+                    pageNavigation.NavigationService.Navigate(_manageVoucher);
+                }
 
             }
 
@@ -160,6 +168,7 @@ namespace ProjectMyShop
             if (AppConfig.GetValue(AppConfig.LastWindow) == "0")
             {
                 changeButtonColor(dashboardButton);
+                dashboard = new Dashboard();
                 pageNavigation.NavigationService.Navigate(dashboard);
             }
             else
@@ -189,6 +198,12 @@ namespace ProjectMyShop
                     changeButtonColor(custButton);
                     _manageCustomer = new ManageCustomer();
                     pageNavigation.NavigationService.Navigate(_manageCustomer);
+                }
+                else if (AppConfig.GetValue(AppConfig.LastWindow) == "ManageVoucher")
+                {
+                    changeButtonColor(voucherButton);
+                    _manageVoucher = new ManageVoucher();
+                    pageNavigation.NavigationService.Navigate(_manageVoucher);
                 }
 
             }
@@ -264,6 +279,8 @@ namespace ProjectMyShop
         private void voucherButton_Click(object sender, RoutedEventArgs e)
         {
             changeButtonColor(voucherButton);
+            _manageVoucher = new ManageVoucher();
+            pageNavigation.NavigationService.Navigate(_manageVoucher);
             //...
 
         }
