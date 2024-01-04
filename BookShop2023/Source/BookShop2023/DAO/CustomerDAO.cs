@@ -3,6 +3,7 @@ using ProjectMyShop.DTO;
 using ProjectMyShop.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -72,6 +73,39 @@ namespace BookShop2023.DAO
                     TotalCost = Convert.ToInt32(reader["TotalCost"]),
                     TotalOrders = (int)reader["TotalOrders"],
                     TotalProducts = (int)reader["TotalProducts"]
+                };
+
+                _customerList.Add(customer);
+            }
+
+
+            reader.Close();
+            return _customerList;
+        }
+
+        public List<Customer> GetCustomersByKeyWord(string keyword)
+        {
+            _customerList = new List<Customer>();
+            var sql = @"select * from Customer  
+                     where (LOWER(CONVERT(VARCHAR(100), Name)) LIKE LOWER(CONVERT(VARCHAR(100), @Keyword))
+                        OR LOWER(CONVERT(NVARCHAR(100), PhoneNumber)) LIKE LOWER(CONVERT(NVARCHAR(100), @Keyword))
+                    );
+                    ";
+
+
+            var command = new SqlCommand(sql, DB.Instance.Connection);
+            command.Parameters.Add("@Keyword", SqlDbType.NVarChar).Value = $"%{keyword}%";
+
+            var reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                Customer customer = new Customer()
+                {
+                    ID = (int)reader["ID"],
+                    Name = (string)reader["Name"],
+                    Address = (string)reader["Address"],
+                    PhoneNumber = (string)reader["PhoneNumber"],
                 };
 
                 _customerList.Add(customer);

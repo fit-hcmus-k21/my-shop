@@ -8,23 +8,23 @@
       xmlns:local="clr-namespace:ProjectMyShop.Views" xmlns:local1="clr-namespace:ProjectMyShop.Converter"
       mc:Ignorable="d" 
       d:DesignHeight="800" d:DesignWidth="600"
-      WindowStyle="None"
-      Width="550"
-        Height="700"
+        Title="Chi tiết đơn hàng"
+      Width="650"
+        Height="800"
       WindowStartupLocation="CenterScreen" 
       Loaded="Window_Loaded">
     <Window.Resources>
         <local1:CurrencyConverter x:Key="currencyConverter" />
     </Window.Resources>
 
-    <materialDesign:Card Background="White" UniformCornerRadius="10" materialDesign:ShadowAssist.ShadowEdges="All" Padding="20,20,20,30">
+    <materialDesign:Card Background="White" UniformCornerRadius="10" materialDesign:ShadowAssist.ShadowEdges="All" Padding="20,10,20,30">
         <DockPanel LastChildFill="True">
             
             <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
-                <TextBlock Text="Chi tiết đơn hàng" FontWeight="Normal" FontSize="16"/>
+                <TextBlock Text="Chi tiết đơn hàng" FontWeight="Normal" FontSize="18"/>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Đơn hàng #" FontWeight="DemiBold" Foreground="Gray" FontSize="12"/>
-                    <TextBlock x:Name="OrderIDText" Text="{Binding ID}" FontWeight="DemiBold" Foreground="Gray" FontSize="12"/>
+                    <TextBlock Text="Đơn hàng #" FontWeight="DemiBold" Foreground="Gray" FontSize="14"/>
+                    <TextBlock x:Name="OrderIDText" Text="{Binding ID}" FontWeight="DemiBold" Foreground="Gray" FontSize="14"/>
                 </StackPanel>
             
             </StackPanel>
@@ -37,78 +37,174 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <materialDesign:Card Background="White" UniformCornerRadius="10" materialDesign:ShadowAssist.ShadowEdges="All" Grid.Row="0"
-                                     Padding="10" BorderBrush="Gray" Margin="5">
+                <materialDesign:Card Background="AliceBlue" UniformCornerRadius="10" materialDesign:ShadowAssist.ShadowEdges="All" Grid.Row="0"
+                                     Padding="10" BorderBrush="Black" Margin="5">
                     <DockPanel LastChildFill="True">
 
                         <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
-                            <TextBlock Text="Thông tin khách hàng" FontWeight="DemiBold" Foreground="Black" FontSize="14" Margin="5,0,0,5"/>
-                            <DockPanel x:Name="CustomerInfo" LastChildFill="True">
-                                <StackPanel Width="Auto" Orientation="Vertical" DockPanel.Dock="Left">
-                                    <StackPanel Width="Auto" Orientation="Horizontal" HorizontalAlignment="Left">
-                                        <Label Content="Họ tên: " FontWeight="Light" Width="60"/>
-                                        <TextBox x:Name="CustomerNameText" TextWrapping="Wrap"  Width="150"/>
-                                    </StackPanel>
-                                    <StackPanel Width="Auto" Orientation="Horizontal" >
-                                        <Label Content="Địa chỉ" FontWeight="Light" Width="60"/>
-                                        <TextBox x:Name="CustomerAddressText" TextWrapping="Wrap"  Width="150"/>
-                                    </StackPanel>
-                                    <StackPanel Width="Auto" Orientation="Horizontal" HorizontalAlignment="Left">
-                                        <Label Content="SĐT: " FontWeight="Light" Width="60"/>
-                                        <TextBox x:Name="CustomerPhoneNumberText" TextWrapping="Wrap"  Width="150"/>
+                            <TextBlock Text="Thông tin khách hàng" FontWeight="DemiBold" 
+                                       HorizontalAlignment="Center"
+                                       Foreground="Black" FontSize="18" Margin="5,5,0,10"/>
+                            <StackPanel  Orientation="Vertical">
+                                
+
+                                <StackPanel Orientation="Horizontal" >
+                                    <ComboBox x:Name="customerTypeComboBox" FontSize="13" 
+                                              VerticalAlignment="Top"
+                                              HorizontalAlignment="Left" Width="150" Margin="0 0 60 0 "
+                                              SelectionChanged="CustomerTypeComboBox_SelectionChanged" 
+                                              
+                                              >
+                                        <ComboBoxItem Content="Khách hàng mới" Background="AntiqueWhite" Foreground="Black" />
+                                        <ComboBoxItem Content="Khách hàng cũ" Background="AntiqueWhite" Foreground="Black"/>
+                                    </ComboBox>
+                                    <StackPanel Orientation="Vertical" HorizontalAlignment="Right" Name="searchOldCustomerBox">
+                                        <materialDesign:Card Name="searchBoxContainer"
+                                 Width="250"
+                                 Height="32"
+                                 UniformCornerRadius="23"
+                                                         BorderBrush="Black"
+                                                         BorderThickness="1"
+                                 >
+                                            <Grid Name="searchContentCard">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="28"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Button Name="searchButton"
+                                materialDesign:ButtonAssist.CornerRadius="20"
+                                Background="Transparent"
+                                Padding="0"
+                                BorderThickness="0"
+                                Width="28"
+                                Height="30">
+                                                    <materialDesign:PackIcon Kind="Search" Width="20" Height="20" Foreground="Black" VerticalAlignment="Center"/>
+                                                </Button>
+                                                <TextBox Name="searchTextBox"
+                                 TextChanged="searchTextBox_TextChanged"
+                                 Padding="5"
+                                     Height="32"
+                                 FontSize="13"
+                                 Foreground="Black"
+                                 materialDesign:HintAssist.Hint="Nhập tên hoặc SĐT khách hàng..."
+                                 Grid.Column="1" 
+                                 />
+                                            </Grid>
+                                        </materialDesign:Card>
+
+                                        <ListBox x:Name="customerListBox" Margin="0,10,0,0" Visibility="Collapsed" Background="Beige" MaxHeight="100" 
+                                                 BorderBrush="Black" BorderThickness="1" 
+                                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                                 SelectionChanged="CustomerListBox_SelectionChanged"
+                                                 >
+                                            <!-- Add search results to this ListBox dynamically in code-behind -->
+                                            <ListBox.Resources>
+                                                <Style TargetType="ScrollBar">
+                                                    <Setter Property="Background" Value="AntiqueWhite" />
+                                                    <Setter Property="Thumb.Background" Value="CornflowerBlue" />
+                                                </Style>
+
+                                               
+                                            </ListBox.Resources>
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal" >
+                                                        <TextBlock Text="{Binding Name}" Foreground="Red" FontWeight="SemiBold"/>
+                                                        <TextBlock Text=" - " />
+                                                        <TextBlock Text="{Binding PhoneNumber}" Foreground="Brown"/>
+                                                    </StackPanel>
+
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
                                     </StackPanel>
                                 </StackPanel>
+                               
 
+                                <Grid x:Name="CustomerInfo">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="4*" />
+                                        <ColumnDefinition Width="3*" />
+                                        
+                                      
 
-                                <StackPanel Width="Auto" Orientation="Vertical" DockPanel.Dock="Right" Margin="10 5 0 0">
-                                    <StackPanel Width="Auto" Orientation="Horizontal" HorizontalAlignment="Left">
-                                        <Label Content="Ngày đặt:  " Width="92" FontWeight="Light"/>
-                                        <DatePicker Name="CreatedAtPicker"  IsTodayHighlighted="True"
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Width="Auto" Orientation="Vertical" Grid.Column="0">
+                                       
+                                      
+                                        <StackPanel Width="Auto" Orientation="Horizontal" HorizontalAlignment="Left">
+                                            <Label Content="Họ tên: "  Width="60" FontWeight="SemiBold" />
+                                            <TextBox x:Name="CustomerNameText" Text="{Binding customer.Name}"
+                                                     TextWrapping="Wrap"  Width="180" FontWeight="Light" FontSize="14"/>
+                                        </StackPanel>
+                                        <StackPanel Width="Auto" Orientation="Horizontal" >
+                                            <Label Content="Địa chỉ" FontWeight="SemiBold" Width="60" />
+                                            <TextBox x:Name="CustomerAddressText" TextWrapping="Wrap"  Text="{Binding customer.Address}"
+                                                     Width="180" FontSize="14" FontWeight="Light"/>
+                                        </StackPanel>
+                                        <StackPanel Width="Auto" Orientation="Horizontal" HorizontalAlignment="Left">
+                                            <Label Content="SĐT: " FontWeight="SemiBold" Width="60"/>
+                                            <TextBox x:Name="CustomerPhoneNumberText" TextWrapping="Wrap"  Text="{Binding customer.PhoneNumber}"
+                                                     Width="180" FontSize="14" FontWeight="Light"/>
+                                        </StackPanel>
+                                    </StackPanel>
+
+                                    <StackPanel Width="Auto" Orientation="Vertical" Grid.Column="1" Margin="10 5 0 0">
+                                        <StackPanel Width="Auto" Orientation="Horizontal" HorizontalAlignment="Left">
+                                            <Label Content="Ngày đặt:  " Width="100" FontWeight="SemiBold"/>
+                                            <DatePicker Name="CreatedAtPicker"  IsTodayHighlighted="True"
                                                     SelectedDate="{x:Static sys:DateTime.Now}"
                                                     >
-                                            <DatePicker.CalendarStyle>
-                                                <Style TargetType="Calendar" BasedOn="{StaticResource MaterialDesignCalendarPortrait}">
-                                                    <Style.Resources>
-                                                        <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="DeepPink" />
-                                                        <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="Green" />
-                                                    </Style.Resources>
-                                                    <Style.Setters>
-                                                        <Setter Property="Background" Value="White"/>
-                                                    </Style.Setters>
-                                                </Style>
-                                            </DatePicker.CalendarStyle>
-                                        </DatePicker>
-                                    </StackPanel>
-                                    <StackPanel Width="Auto" Orientation="Horizontal" HorizontalAlignment="Left">
-                                        <Label Content="Mã khuyến mãi:" Width="92" FontWeight="Light"/>
-                                        <TextBox x:Name="Voucher" TextWrapping="Wrap" Text="" Width="80" IsReadOnly="True"/>
-                                    </StackPanel>
-                                    <StackPanel Width="Auto" Orientation="Horizontal" HorizontalAlignment="Left">
-                                        <Label Content="Trạng thái:" Width="92" FontWeight="Light"/>
-                                        <ComboBox Name="StatusComboBox" 
+                                                <DatePicker.CalendarStyle>
+                                                    <Style TargetType="Calendar" BasedOn="{StaticResource MaterialDesignCalendarPortrait}">
+                                                        <Style.Resources>
+                                                            <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="DeepPink" />
+                                                            <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="Green" />
+                                                        </Style.Resources>
+                                                        <Style.Setters>
+                                                            <Setter Property="Background" Value="White"/>
+                                                        </Style.Setters>
+                                                    </Style>
+                                                </DatePicker.CalendarStyle>
+                                            </DatePicker>
+                                        </StackPanel>
+                                        <StackPanel Width="Auto" Orientation="Horizontal" HorizontalAlignment="Left">
+                                            <Label Content="Mã khuyến mãi:" Width="100" FontWeight="SemiBold"/>
+                                            <TextBox x:Name="Voucher" TextWrapping="Wrap" Text="" Width="80" IsReadOnly="True" FontWeight="Light" FontSize="14"/>
+                                        </StackPanel>
+                                        <StackPanel Width="Auto" Orientation="Horizontal" HorizontalAlignment="Left">
+                                            <Label Content="Trạng thái:" Width="100" FontWeight="SemiBold"/>
+                                            <ComboBox Name="StatusComboBox" 
                                                   >
-                                            <ComboBox.ItemTemplate >
-                                                <DataTemplate>
-                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                                        <TextBlock Text="{Binding DisplayText}" />
-                                                        
-                                                    </StackPanel>
-                                                </DataTemplate>
-                                            </ComboBox.ItemTemplate>
-                                        </ComboBox>
-                                    </StackPanel>
-                                </StackPanel>
+                                                <ComboBox.ItemTemplate >
+                                                    <DataTemplate>
+                                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                            <TextBlock Text="{Binding DisplayText}" FontWeight="Light" FontSize="14" />
 
-                            </DockPanel>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </ComboBox.ItemTemplate>
+                                            </ComboBox>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Grid>
+                                
+
+
+                             
+
+                            </StackPanel>
                         </StackPanel>
                     </DockPanel>
                 </materialDesign:Card>
-                <materialDesign:Card Background="White" UniformCornerRadius="10" materialDesign:ShadowAssist.ShadowEdges="All" Grid.Row="1"
+                <materialDesign:Card Background="AntiqueWhite" UniformCornerRadius="10" materialDesign:ShadowAssist.ShadowEdges="All" Grid.Row="1"
                                      Padding="10" BorderBrush="Gray" Margin="5">
                     <DockPanel LastChildFill="True">
 
                         <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
-                            <TextBlock Text="Danh sách sản phẩm" FontWeight="DemiBold" Foreground="Black" FontSize="14" Margin="5,0,0,5"/>
+                            <TextBlock Text="Danh sách sản phẩm" FontWeight="DemiBold" 
+                                       HorizontalAlignment="Center"
+                                       Foreground="Black" FontSize="18" Margin="5,5,0,10"/>
                             <StackPanel x:Name="ActionBar" Orientation="Horizontal" Margin="0,10" HorizontalAlignment="Left">
                            
 
@@ -151,7 +247,12 @@
                                     </Button.Content>
                                 </Button>
 
+                              
+
+
                             </StackPanel>
+
+                            
 
                         </StackPanel>
                 <!--
@@ -227,6 +328,10 @@
                                 <DataGrid.ColumnHeaderStyle>
                                     <Style TargetType="DataGridColumnHeader">
                                         <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                        <Setter Property="Background" Value="Bisque" />
+                                        <Setter Property="FontWeight" Value="SemiBold" />
+                                        <Setter Property="Height" Value="40" />
+                                        <Setter Property="FontSize" Value="16" />
                                     </Style>
                                 </DataGrid.ColumnHeaderStyle>
                             </DataGrid>
@@ -235,36 +340,47 @@
                     </DockPanel>
                     
                 </materialDesign:Card>
-                <StackPanel Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Right"  Margin="0,5,0,0">
-                    <Button Name="SaveButton" Click="SaveButton_Click" 
+                <StackPanel  Grid.Row="3"   Margin="0,5,0,0">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" 
+                                Margin="10 0 0 0"
+                                >
+                        <Label Content="Tổng hóa đơn: " FontSize="15" FontWeight="SemiBold"/>
+                        <TextBlock Name="BillFinalTotal" Text="{Binding FinalTotal,Converter={StaticResource currencyConverter}}"
+                                   VerticalAlignment="Center" FontSize="15"
+                                   />
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Name="SaveButton" Click="SaveButton_Click" 
                             materialDesign:ButtonAssist.CornerRadius="5"
                             Background="LightGreen"
                             Foreground="Black"
                             materialDesign:ShadowAssist.ShadowEdges="All"
                             BorderBrush="DeepPink"
                             >
-                        <Button.Content>
-                            <StackPanel Orientation="Horizontal">
-                                <materialDesign:PackIcon Kind="ContentSave"/>
-                                <TextBlock Margin="5,-2" Text="Save"></TextBlock>
-                            </StackPanel>
-                        </Button.Content>
-                    </Button>
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="ContentSave"/>
+                                    <TextBlock Margin="5,-2" Text="Save"></TextBlock>
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
 
-                    <Button Name="ReturnButton" Click="ReturnButton_Click"
+                        <Button Name="ReturnButton" Click="ReturnButton_Click"
                             materialDesign:ButtonAssist.CornerRadius="5"
                             Background="LightGray"
                             BorderBrush="LightGray"
                             materialDesign:ShadowAssist.ShadowEdges="All"
                             Foreground="Gray"
                             Margin="5,0">
-                        <Button.Content>
-                            <StackPanel Orientation="Horizontal">
-                                <materialDesign:PackIcon Kind="KeyboardReturn"/>
-                                <TextBlock Margin="5,-2" Text="Return"></TextBlock>
-                            </StackPanel>
-                        </Button.Content>
-                    </Button>
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="KeyboardReturn"/>
+                                    <TextBlock Margin="5,-2" Text="Return"></TextBlock>
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
+                    </StackPanel>
                 </StackPanel>
             </Grid>
         </DockPanel>

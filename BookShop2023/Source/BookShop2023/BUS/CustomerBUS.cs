@@ -67,5 +67,10 @@ namespace BookShop2023.BUS
         {
             return _customerDAO.GetCustomerByID(id);
         }
+
+        public List<Customer> GetCustomersByKeyWord(string keyword)
+        {
+            return _customerDAO.GetCustomersByKeyWord(keyword);
+        }
     }
 }

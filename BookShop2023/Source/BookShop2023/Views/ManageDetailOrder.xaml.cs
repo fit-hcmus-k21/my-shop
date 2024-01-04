@@ -2,6 +2,7 @@
 using BookShop2023.DTO;
 using BookShop2023.Models;
 using ProjectMyShop.BUS;
+using ProjectMyShop.Converter;
 using ProjectMyShop.DTO;
 using System;
 using System.Collections.Generic;
@@ -29,9 +30,11 @@ namespace ProjectMyShop.Views
     {
         public Order order { get; set; }
 
+
         public List<OrderDetail> orderDetailList { get; set; }
 
         public Customer customer { get; set; }
+        public Boolean IsNewCustomer { get; set; }
         public BindingList<ProductDataGridItemSource> ListBinding { get; set; }
 
         private OrderDetailBUS _orderDetailBus;
@@ -45,6 +48,7 @@ namespace ProjectMyShop.Views
 
             this.order = order;
             this.customer = customer;
+
 
             _orderDetailBus = new OrderDetailBUS();
             ListBinding = new BindingList<ProductDataGridItemSource>();
@@ -133,6 +137,7 @@ namespace ProjectMyShop.Views
                 orderDetailList = new List<OrderDetail>();
             }
 
+            customerTypeComboBox.SelectedIndex = 1;
 
             Reload();
 
@@ -149,12 +154,16 @@ namespace ProjectMyShop.Views
             if (CreatedAtPicker.SelectedDate != null)
                 order.CreatedAt = DateOnly.Parse(CreatedAtPicker.SelectedDate.Value.Date.ToShortDateString());
 
-            string name = CustomerNameText.Text;
-            string address = CustomerAddressText.Text;
-            string phoneNum = CustomerPhoneNumberText.Text;
-            customer.Name = name;
-            customer.Address = address;
-            customer.PhoneNumber = phoneNum;
+            if (IsNewCustomer)
+            {
+                string name = CustomerNameText.Text;
+                string address = CustomerAddressText.Text;
+                string phoneNum = CustomerPhoneNumberText.Text;
+                customer.Name = name;
+                customer.Address = address;
+                customer.PhoneNumber = phoneNum;
+            }
+        
 
             var status = StatusComboBox.SelectedItem as OrderStatusEnum;
             if (status != null)
@@ -205,6 +214,9 @@ namespace ProjectMyShop.Views
                     screen.OrderDetail.OrderID = order.ID;
                     orderDetailList.Add(screen.OrderDetail);
                     order.FinalTotal += screen.OrderDetail.Total;
+                    var info = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+                    var result = String.Format(info, "{0:c}", order.FinalTotal);
+                    BillFinalTotal.Text = result;
                 }
                 else
                 {
@@ -229,7 +241,12 @@ namespace ProjectMyShop.Views
                     if (orderDetailList[i].ProductID == screen.OrderDetail.ProductID || !isInProductList(screen.OrderDetail.ProductID))
                     {
                         _orderDetailBus.UpdateOrderDetail(orderDetailList[i].ProductID, screen.OrderDetail);
+                        order.FinalTotal -= orderDetailList[i].Total;
+                        order.FinalTotal += screen.OrderDetail.Total;
                         orderDetailList[i] = (OrderDetail)screen.OrderDetail.Clone();
+                        var info = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+                        var result = String.Format(info, "{0:c}", order.FinalTotal);
+                        BillFinalTotal.Text = result;
                     }
                     else
                     {
@@ -251,6 +268,10 @@ namespace ProjectMyShop.Views
                 {
                     orderDetailList.RemoveAt(i);
                     order.FinalTotal -= orderDetailList[i].Total;
+                    var info = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+                    var result = String.Format(info, "{0:c}", order.FinalTotal);
+                    BillFinalTotal.Text = result;
+
 
                     Reload();
                 }
@@ -319,5 +340,80 @@ namespace ProjectMyShop.Views
             return _regex.IsMatch(text);
         }
 
+        private void searchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            // Xử lý sự kiện khi người dùng nhập liệu vào ô tìm kiếm
+            string searchText = searchTextBox.Text.ToLower();
+            List<Customer> searchResults = new CustomerBUS().GetCustomersByKeyWord(searchText);
+
+            // Hiển thị kết quả tìm kiếm trong ListBox
+            customerListBox.ItemsSource = searchResults;
+
+            if (searchResults.Count > 0)
+            {
+                customerListBox.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                customerListBox.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void resetTextBox()
+        {
+            CustomerNameText.Text = "";
+            CustomerAddressText.Text = "";
+            CustomerPhoneNumberText.Text = "";
+        }
+
+  
+
+        private void CustomerTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (customerTypeComboBox.SelectedIndex == 0)
+            {
+                searchOldCustomerBox.Visibility = Visibility.Collapsed;
+
+
+                CustomerNameText.IsReadOnly = false;
+                CustomerAddressText.IsReadOnly = false;
+                CustomerPhoneNumberText.IsReadOnly = false;
+
+
+                resetTextBox();
+                IsNewCustomer = true;
+            }
+            else
+            {
+                searchOldCustomerBox.Visibility = Visibility.Visible;
+
+                CustomerNameText.IsReadOnly = true;
+                CustomerAddressText.IsReadOnly = true;
+                CustomerPhoneNumberText.IsReadOnly = true;
+
+                resetTextBox() ;
+                IsNewCustomer = false;
+            }
+        }
+
+        private void CustomerListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Customer cust = customerListBox.SelectedItem as Customer;
+            if (cust != null)
+            {
+                customer.ID = cust.ID;
+                customer.Address = cust.Address;
+                customer.PhoneNumber = cust.PhoneNumber;
+                customer.Name = cust.Name;
+
+                CustomerNameText.Text = cust.Name;
+                CustomerAddressText.Text = cust.Address;
+                CustomerPhoneNumberText.Text = cust.PhoneNumber;
+
+                searchTextBox.Text = "";
+                searchOldCustomerBox.Visibility = Visibility.Collapsed;
+                customerListBox.ItemsSource = new List<Customer>();
+            }
+        }
     }
 }

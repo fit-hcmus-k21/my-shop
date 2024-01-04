@@ -12,6 +12,7 @@ namespace ProjectMyShop.Converter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            // Sử dụng Convert.ToInt32
             int number = (int)value;
             var info = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
             var result = String.Format(info, "{0:c}", number);

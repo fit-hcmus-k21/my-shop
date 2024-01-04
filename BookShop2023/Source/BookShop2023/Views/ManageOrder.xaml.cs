@@ -203,10 +203,18 @@ namespace ProjectMyShop.Views
                 #region insert thông tin khách hàng, insert Order, insert list OrderDetail
 
                 // insert customer info
-                //MessageBox.Show("Name: " + customer.Name + ", Address: " + customer.Address, "Thông tin khách hàng", MessageBoxButton.OK);
+                MessageBox.Show("Name: " + customer.Name + ", Address: " + customer.Address + " ID: " + customer.ID, "Thông tin khách hàng", MessageBoxButton.OK);
 
-                _customerBUS.Insert(customer);
-                int customerId = _customerBUS.GetLatestInsertID();
+                int customerId;
+
+                if (screen.IsNewCustomer)
+                {
+                    _customerBUS.Insert(customer);
+                    customerId = _customerBUS.GetLatestInsertID();
+                } else
+                {
+                    customerId = customer.ID;
+                }
 
                 // insert order info               
                 order.CustomerID = customerId;
