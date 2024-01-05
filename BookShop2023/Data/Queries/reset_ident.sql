@@ -1,11 +1,9 @@
 USE BookShop2023
 GO
 
-DELETE FROM Product;
 DBCC CHECKIDENT ('Product', RESEED, 0);
-
-DELETE FROM Category;
 DBCC CHECKIDENT ('Category', RESEED, 0);
-
-SELECT * FROM Category;
-SELECT * FROM Product;
+DBCC CHECKIDENT ('Orders', RESEED, 0);
+DBCC CHECKIDENT ('OrderDetail', RESEED, 0);
+DBCC CHECKIDENT ('Customer', RESEED, 0);
+DBCC CHECKIDENT ('Voucher', RESEED, 0);

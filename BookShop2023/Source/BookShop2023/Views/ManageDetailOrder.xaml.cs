@@ -125,10 +125,10 @@ namespace ProjectMyShop.Views
                 {
                     if (v.ID == order.VoucherID)
                     {
+                        BillFinalTotalWithVoucher.Visibility = Visibility.Collapsed;
                         VoucherComboBox.SelectedItem = v;
                         //MessageBox.Show("Voucher: " + v.ID);
-                        BillFinalTotalWithVoucher.Visibility = Visibility.Collapsed;
-                        BillFinalTotal.TextDecorations = null;
+                        
                         break;
                     }
                 }
@@ -489,7 +489,15 @@ namespace ProjectMyShop.Views
                     info = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
                     result = String.Format(info, "{0:c}", totalBill);
                     BillFinalTotalWithVoucher.Text = result;
-                    BillFinalTotal.TextDecorations = TextDecorations.Strikethrough;
+                    if (type.Equals("view") || type.Equals("update"))
+                    {
+                        BillFinalTotal.TextDecorations = null;
+
+                    }else
+                    {
+                        BillFinalTotal.TextDecorations = TextDecorations.Strikethrough;
+
+                    }
 
                     HasVoucher = true;
                 } else

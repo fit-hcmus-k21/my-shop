@@ -135,7 +135,7 @@
         </materialDesign:Card>
         <StackPanel Grid.Row="2" Grid.ColumnSpan="3">
             <Border BorderBrush="DarkSlateBlue" BorderThickness="1" Margin="0 0 0 10" >
-                <TextBlock Text="*** Top 5 sản phẩm sắp hết hàng ***" Padding="0 10 0 10" FontSize="20"  Foreground="DarkOrange"
+                <TextBlock Text="Top 5 sản phẩm sắp hết hàng" Padding="0 10 0 10" FontSize="20"  Foreground="DarkOrange"
                            HorizontalAlignment="Center"
                        />
             </Border>

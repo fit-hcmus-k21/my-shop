@@ -268,7 +268,7 @@ namespace ProjectMyShop.Views
                 #endregion
 
 
-        
+                MessageBox.Show("Nhập dữ liệu thành công !", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
 
             }
         }
