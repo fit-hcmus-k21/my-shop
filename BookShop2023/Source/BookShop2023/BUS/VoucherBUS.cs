@@ -46,6 +46,11 @@ namespace BookShop2023.BUS
             
         }
 
+        public List<Voucher> GetAllVouchersExist(DateOnly orderDate)
+        {
+            return _voucherDAO.getVoucherListExist(orderDate);
+        }
+
         public void removeVoucher(Voucher cat)
         {
             _voucherDAO.removeVoucher(cat.ID);

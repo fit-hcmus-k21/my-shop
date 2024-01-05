@@ -1,6 +1,7 @@
 ﻿using BookShop2023.BUS;
 using BookShop2023.DTO;
 using BookShop2023.Models;
+using Microsoft.Graph;
 using ProjectMyShop.BUS;
 using ProjectMyShop.Converter;
 using ProjectMyShop.DTO;
@@ -32,6 +33,9 @@ namespace ProjectMyShop.Views
 
 
         public List<OrderDetail> orderDetailList { get; set; }
+        public List<Voucher> listVouchers = new List<Voucher>();
+
+        public bool HasVoucher { get; set; }
 
         public Customer customer { get; set; }
         public Boolean IsNewCustomer { get; set; }
@@ -41,6 +45,8 @@ namespace ProjectMyShop.Views
 
         public List<OrderStatusEnum> Statuses = OrderStatusEnumBUS.Instance();
 
+        public string type;
+
 
         public ManageOrderDetail(Order order, Customer customer, string type)
         {
@@ -48,6 +54,8 @@ namespace ProjectMyShop.Views
 
             this.order = order;
             this.customer = customer;
+
+            listVouchers = new VoucherBUS().GetAllVouchersExist(DateOnly.Parse(CreatedAtPicker.SelectedDate.Value.Date.ToShortDateString()));
 
 
             _orderDetailBus = new OrderDetailBUS();
@@ -58,16 +66,8 @@ namespace ProjectMyShop.Views
 
             // type: view, update, add
             // nếu là type view thì hide btn save, btn add, remove, disable edit text
-            if (type.Equals("view"))
-            {
-                DoReadOnly();
-                BindingData();
-            }
+            this.type = type;
 
-            if (type.Equals("update"))
-            {
-                BindingData();
-            }
 
             if (order != null)
             {
@@ -100,14 +100,19 @@ namespace ProjectMyShop.Views
             CustomerAddressText.IsReadOnly = true;
             CustomerPhoneNumberText.IsReadOnly = true;
             CreatedAtPicker.IsEnabled = false;
-            Voucher.IsReadOnly = true;
 
-            StatusComboBox.IsEditable = false;
+            VoucherComboBox.IsReadOnly = true;
+            customerTypeComboBox.Visibility = Visibility.Collapsed;
+            searchOldCustomerBox.Visibility = Visibility.Collapsed;
+
+
+            StatusComboBox.IsReadOnly = true;
         }
 
         private void BindingData()
         {
             // customer info
+            //MessageBox.Show("Custumer: " + customer.Name + " " + customer.Address);
             CustomerNameText.Text = customer.Name;
             CustomerAddressText.Text = customer.Address;
             CustomerPhoneNumberText.Text = customer.PhoneNumber;
@@ -115,29 +120,66 @@ namespace ProjectMyShop.Views
             CreatedAtPicker.SelectedDate = order.CreatedAt.ToDateTime(new TimeOnly());
             if (order.VoucherID != null)
             {
-                Voucher.Text = order.VoucherID.ToString();
+                //MessageBox.Show("Voucher != null");
+                foreach (var v in listVouchers)
+                {
+                    if (v.ID == order.VoucherID)
+                    {
+                        VoucherComboBox.SelectedItem = v;
+                        //MessageBox.Show("Voucher: " + v.ID);
+                        BillFinalTotalWithVoucher.Visibility = Visibility.Collapsed;
+                        BillFinalTotal.TextDecorations = null;
+                        break;
+                    }
+                }
             }
 
             // data list product
             if (order != null)
             {
                 orderDetailList = _orderDetailBus.GetListByOrderID(order.ID);
-                Reload();
             }
+            Reload();
+
 
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-           
+            customerTypeComboBox.SelectedIndex = 1;
+
             DataContext = order;
+
+            if (!type.Equals("add"))
+            {
+                listVouchers = new VoucherBUS().GetAllVouchers();
+
+
+            }
+            if (type.Equals("view"))
+            {
+                BindingData();
+
+                DoReadOnly();
+
+            }
+
+            if (type.Equals("update"))
+            {
+                BindingData();
+                customerTypeComboBox.Visibility = Visibility.Collapsed;
+                searchOldCustomerBox.Visibility = Visibility.Collapsed;
+            }
 
             if (orderDetailList == null)
             {
                 orderDetailList = new List<OrderDetail>();
             }
 
-            customerTypeComboBox.SelectedIndex = 1;
+            VoucherComboBox.ItemsSource = listVouchers;
+
+  
+
 
             Reload();
 
@@ -169,6 +211,14 @@ namespace ProjectMyShop.Views
             if (status != null)
             {
                 order.Status = status.Value;
+            }
+
+            if (HasVoucher)
+            {
+                Voucher voucher = VoucherComboBox.SelectedItem as Voucher;
+                order.VoucherID = voucher.ID;
+                int totalBill = order.FinalTotal - voucher.PercentOff * order.FinalTotal / 100;
+                order.FinalTotal = totalBill;
             }
 
             DialogResult = true;
@@ -214,9 +264,8 @@ namespace ProjectMyShop.Views
                     screen.OrderDetail.OrderID = order.ID;
                     orderDetailList.Add(screen.OrderDetail);
                     order.FinalTotal += screen.OrderDetail.Total;
-                    var info = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
-                    var result = String.Format(info, "{0:c}", order.FinalTotal);
-                    BillFinalTotal.Text = result;
+                    
+                    calcBill();
                 }
                 else
                 {
@@ -244,9 +293,8 @@ namespace ProjectMyShop.Views
                         order.FinalTotal -= orderDetailList[i].Total;
                         order.FinalTotal += screen.OrderDetail.Total;
                         orderDetailList[i] = (OrderDetail)screen.OrderDetail.Clone();
-                        var info = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
-                        var result = String.Format(info, "{0:c}", order.FinalTotal);
-                        BillFinalTotal.Text = result;
+                        
+                        calcBill();
                     }
                     else
                     {
@@ -268,9 +316,8 @@ namespace ProjectMyShop.Views
                 {
                     orderDetailList.RemoveAt(i);
                     order.FinalTotal -= orderDetailList[i].Total;
-                    var info = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
-                    var result = String.Format(info, "{0:c}", order.FinalTotal);
-                    BillFinalTotal.Text = result;
+                    
+                    calcBill();
 
 
                     Reload();
@@ -414,6 +461,51 @@ namespace ProjectMyShop.Views
                 searchOldCustomerBox.Visibility = Visibility.Collapsed;
                 customerListBox.ItemsSource = new List<Customer>();
             }
+        }
+
+        private void DatePicker_SelectedChange(object sender, SelectionChangedEventArgs e)
+        {
+            listVouchers.Clear();
+            listVouchers = new VoucherBUS().GetAllVouchersExist(DateOnly.Parse(CreatedAtPicker.SelectedDate.Value.Date.ToShortDateString()));
+
+            if (VoucherComboBox != null)
+            {
+                VoucherComboBox.ItemsSource = listVouchers;
+            }
+        }
+
+        private void calcBill()
+        {
+            var info = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+            var result = String.Format(info, "{0:c}", order.FinalTotal);
+            BillFinalTotal.Text = result;
+
+            var voucher = VoucherComboBox.SelectedItem as Voucher;
+            if (voucher != null)
+            {
+                if (voucher.MinCost <= order.FinalTotal)
+                {
+                    int totalBill = order.FinalTotal - voucher.PercentOff * order.FinalTotal / 100;
+                    info = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+                    result = String.Format(info, "{0:c}", totalBill);
+                    BillFinalTotalWithVoucher.Text = result;
+                    BillFinalTotal.TextDecorations = TextDecorations.Strikethrough;
+
+                    HasVoucher = true;
+                } else
+                {
+                    BillFinalTotal.TextDecorations = null;
+
+                    BillFinalTotalWithVoucher.Text = "Đơn hàng chưa đủ điều kiện áp dụng mã.";
+                    HasVoucher = false;
+                }
+
+            }
+        }
+
+        private void VoucherComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            calcBill();
         }
     }
 }

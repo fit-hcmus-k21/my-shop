@@ -9,7 +9,7 @@
       mc:Ignorable="d" 
       d:DesignHeight="800" d:DesignWidth="600"
         Title="Chi tiết đơn hàng"
-      Width="650"
+      Width="700"
         Height="800"
       WindowStartupLocation="CenterScreen" 
       Loaded="Window_Loaded">
@@ -17,7 +17,7 @@
         <local1:CurrencyConverter x:Key="currencyConverter" />
     </Window.Resources>
 
-    <materialDesign:Card Background="White" UniformCornerRadius="10" materialDesign:ShadowAssist.ShadowEdges="All" Padding="20,10,20,30">
+    <materialDesign:Card Background="White" UniformCornerRadius="10" materialDesign:ShadowAssist.ShadowEdges="All" Padding="10,10,10,10">
         <DockPanel LastChildFill="True">
             
             <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
@@ -123,8 +123,8 @@
 
                                 <Grid x:Name="CustomerInfo">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="4*" />
-                                        <ColumnDefinition Width="3*" />
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="1*" />
                                         
                                       
 
@@ -134,17 +134,17 @@
                                       
                                         <StackPanel Width="Auto" Orientation="Horizontal" HorizontalAlignment="Left">
                                             <Label Content="Họ tên: "  Width="60" FontWeight="SemiBold" />
-                                            <TextBox x:Name="CustomerNameText" Text="{Binding customer.Name}"
+                                            <TextBox x:Name="CustomerNameText" 
                                                      TextWrapping="Wrap"  Width="180" FontWeight="Light" FontSize="14"/>
                                         </StackPanel>
                                         <StackPanel Width="Auto" Orientation="Horizontal" >
                                             <Label Content="Địa chỉ" FontWeight="SemiBold" Width="60" />
-                                            <TextBox x:Name="CustomerAddressText" TextWrapping="Wrap"  Text="{Binding customer.Address}"
+                                            <TextBox x:Name="CustomerAddressText" TextWrapping="Wrap"  
                                                      Width="180" FontSize="14" FontWeight="Light"/>
                                         </StackPanel>
                                         <StackPanel Width="Auto" Orientation="Horizontal" HorizontalAlignment="Left">
                                             <Label Content="SĐT: " FontWeight="SemiBold" Width="60"/>
-                                            <TextBox x:Name="CustomerPhoneNumberText" TextWrapping="Wrap"  Text="{Binding customer.PhoneNumber}"
+                                            <TextBox x:Name="CustomerPhoneNumberText" TextWrapping="Wrap"  
                                                      Width="180" FontSize="14" FontWeight="Light"/>
                                         </StackPanel>
                                     </StackPanel>
@@ -154,6 +154,7 @@
                                             <Label Content="Ngày đặt:  " Width="100" FontWeight="SemiBold"/>
                                             <DatePicker Name="CreatedAtPicker"  IsTodayHighlighted="True"
                                                     SelectedDate="{x:Static sys:DateTime.Now}"
+                                                        SelectedDateChanged="DatePicker_SelectedChange"
                                                     >
                                                 <DatePicker.CalendarStyle>
                                                     <Style TargetType="Calendar" BasedOn="{StaticResource MaterialDesignCalendarPortrait}">
@@ -169,8 +170,34 @@
                                             </DatePicker>
                                         </StackPanel>
                                         <StackPanel Width="Auto" Orientation="Horizontal" HorizontalAlignment="Left">
-                                            <Label Content="Mã khuyến mãi:" Width="100" FontWeight="SemiBold"/>
-                                            <TextBox x:Name="Voucher" TextWrapping="Wrap" Text="" Width="80" IsReadOnly="True" FontWeight="Light" FontSize="14"/>
+                                            <Label Content="Mã giảm:" Width="100"  FontWeight="SemiBold"/>
+                                            <ComboBox Name="VoucherComboBox" Width="150" SelectionChanged="VoucherComboBox_SelectionChanged" >
+                                                <ComboBox.ItemTemplate >
+                                                    <DataTemplate>
+                                                        <StackPanel Orientation="Vertical">
+                                                            <TextBlock>
+                                                                            <Run Text="Mã" Foreground="Red"/>
+                            <Run Text="{Binding DisplayText}" Foreground="Red" />
+                                                            </TextBlock>
+                                                            <TextBlock >
+                             <Run Text="Giảm" Foreground="Blue"/>
+                            <Run Text="{Binding PercentOff}" Foreground="Blue" />
+                            <Run Text="%" Foreground="Blue" />
+                                                            </TextBlock>
+                                                            <TextBlock>
+                                                                <Run Text="Đơn tối thiểu" Foreground="Blue"/>
+                            <Run Text="{Binding MinCost, Converter={StaticResource currencyConverter}}" Foreground="Blue" />
+                                                            </TextBlock>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </ComboBox.ItemTemplate>
+                                                <ComboBox.ItemContainerStyle>
+                                                    <Style TargetType="ComboBoxItem">
+                                                        <Setter Property="Background" Value="AntiqueWhite"/>
+                                                        <!-- Bổ sung các Setter khác nếu cần -->
+                                                    </Style>
+                                                </ComboBox.ItemContainerStyle>
+                                            </ComboBox>
                                         </StackPanel>
                                         <StackPanel Width="Auto" Orientation="Horizontal" HorizontalAlignment="Left">
                                             <Label Content="Trạng thái:" Width="100" FontWeight="SemiBold"/>
@@ -184,6 +211,12 @@
                                                         </StackPanel>
                                                     </DataTemplate>
                                                 </ComboBox.ItemTemplate>
+                                                <ComboBox.ItemContainerStyle>
+                                                    <Style TargetType="ComboBoxItem">
+                                                        <Setter Property="Background" Value="AntiqueWhite"/>
+                                                        <!-- Bổ sung các Setter khác nếu cần -->
+                                                    </Style>
+                                                </ComboBox.ItemContainerStyle>
                                             </ComboBox>
                                         </StackPanel>
                                     </StackPanel>
@@ -346,6 +379,10 @@
                                 >
                         <Label Content="Tổng hóa đơn: " FontSize="15" FontWeight="SemiBold"/>
                         <TextBlock Name="BillFinalTotal" Text="{Binding FinalTotal,Converter={StaticResource currencyConverter}}"
+                                   VerticalAlignment="Center" FontSize="15"
+                                   />
+                        
+                        <TextBlock Name="BillFinalTotalWithVoucher" Foreground="Blue" Margin=" 20 0 0 0"
                                    VerticalAlignment="Center" FontSize="15"
                                    />
                     </StackPanel>

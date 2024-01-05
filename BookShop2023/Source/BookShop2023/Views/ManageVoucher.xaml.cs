@@ -90,10 +90,10 @@ namespace BookShop2023.Views
         private void viewMenuItem_Click(object sender, RoutedEventArgs e)
         {
             var p = (Voucher)VouchersListView.SelectedItem;
-            
 
-            //var screen = new ViewDetailVoucher(p, catName);
-            //screen.ShowDialog();
+
+            var screen = new AddVoucherScreen(p, "View");
+            screen.ShowDialog();
         }
 
         private void editMenuItem_Click(object sender, RoutedEventArgs e)
@@ -262,7 +262,8 @@ namespace BookShop2023.Views
 
         private void AddMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            var screen = new AddVoucherScreen();
+            var voucher = new Voucher();
+            var screen = new AddVoucherScreen(voucher, "Add");
             if (screen.ShowDialog() == true)
             {
                 //MessageBox.Show(screen.voucher.DisplayText);

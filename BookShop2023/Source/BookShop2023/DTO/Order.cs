@@ -14,7 +14,7 @@ namespace ProjectMyShop.DTO
         public int CustomerID { get; set; }
       
         public int? VoucherID { get; set; }
-        public int? FinalTotal { get; set; }
+        public int FinalTotal { get; set; }
         public DateOnly CreatedAt { get; set; }
 
     }

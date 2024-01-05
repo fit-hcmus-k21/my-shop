@@ -24,15 +24,23 @@ namespace BookShop2023.Views
     {
         public Voucher voucher { get; set; }
         VoucherBUS _voucherBus { get; set; }
+        string type; 
 
-
-        public AddVoucherScreen()
+        public AddVoucherScreen(Voucher voucher, string type)
              {
                 InitializeComponent();
 
-                voucher = new Voucher();
+            this.voucher = voucher;
             _voucherBus = new VoucherBUS();
                 this.DataContext = voucher;
+            this.type = type;
+
+            if (type.Equals("View"))
+            {
+                this.Title = "Thông tin mã giảm";
+                cancelButton.Visibility = Visibility.Hidden;
+                addButton.Content = "Trở về";
+            }
             }
 
 
@@ -45,13 +53,18 @@ namespace BookShop2023.Views
 
             private void addButton_Click(object sender, RoutedEventArgs e)
             {
+            if (type.Equals("View") )
+            {
+                DialogResult = false;
+                return;
+            }
             if (StartDatePicker.SelectedDate != null)
                 voucher.StartDate = DateOnly.Parse(StartDatePicker.SelectedDate.Value.Date.ToShortDateString());
 
             if (EndDatePicker.SelectedDate != null)
                 voucher.EndDate = DateOnly.Parse(EndDatePicker.SelectedDate.Value.Date.ToShortDateString());
 
-            DialogResult = true;
+                DialogResult = true;
             }
         
 

@@ -88,6 +88,48 @@ namespace BookShop2023.DAO
             reader.Close();
             return resultList;
         }
+
+        public List<Voucher> getVoucherListExist(DateOnly orderDate)
+        {
+            string sqlFormattedDate = orderDate.ToString("yyyy-MM-dd");
+
+            var sql = "SELECT * FROM Voucher WHERE @OrderDate BETWEEN StartDate AND EndDate;";
+
+            var command = new SqlCommand(sql, DB.Instance.Connection);
+            command.Parameters.AddWithValue("@OrderDate", sqlFormattedDate); // Chuyển đổi DateOnly sang DateTime
+
+            var reader = command.ExecuteReader();
+
+            var resultList = new List<Voucher>();
+            while (reader.Read())
+            {
+                var voucherId = (int)reader["ID"];
+                var DisplayText = (string)reader["DisplayText"];
+                var DateStart = DateOnly.Parse(DateTime.Parse(reader["StartDate"].ToString()).Date.ToShortDateString());
+                var DateEnd = DateOnly.Parse(DateTime.Parse(reader["EndDate"].ToString()).Date.ToShortDateString());
+                var PercentOff = (int)reader["PercentOff"];
+                var MinCost = (int)reader["MinCost"];
+                var Description = (string)reader["Description"];
+
+                Voucher v = new Voucher()
+                {
+                    ID = voucherId,
+                    DisplayText = DisplayText,
+                    StartDate = DateStart,
+                    EndDate = DateEnd,
+                    PercentOff = PercentOff,
+                    MinCost = MinCost,
+                    Description = Description,
+                };
+
+                resultList.Add(v);
+            }
+
+            reader.Close();
+            return resultList;
+        }
+
+
         public void AddVoucher(Voucher voucher)
         {
             var sql = "";

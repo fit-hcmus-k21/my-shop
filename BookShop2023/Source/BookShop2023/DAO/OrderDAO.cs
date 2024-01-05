@@ -142,6 +142,32 @@ namespace ProjectMyShop.DAO
             }
         }
 
+        public void AddOrderWithVoucher(Order order)
+        {
+
+            // ID Auto Increment
+            var sql = "insert into Orders(CustomerID, CreatedAt, Status, FinalTotal, VoucherID) " +
+                "values (@CustomerID, @CreatedAt, @Status, @FinalTotal, @VoucherID)";
+            SqlCommand sqlCommand = new SqlCommand(sql, DB.Instance.Connection);
+
+            sqlCommand.Parameters.AddWithValue("@CustomerID", order.CustomerID);
+            sqlCommand.Parameters.AddWithValue("@CreatedAt", DateTime.Parse(order.CreatedAt.ToString()));
+            sqlCommand.Parameters.AddWithValue("@Status", order.Status);
+            sqlCommand.Parameters.AddWithValue("@VoucherID", order.VoucherID);
+            sqlCommand.Parameters.AddWithValue("@FinalTotal", order.FinalTotal);
+
+
+            try
+            {
+                sqlCommand.ExecuteNonQuery();
+                System.Diagnostics.Debug.WriteLine($"Inserted {order.ID} OK");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Inserted {order.ID} Fail: " + ex.Message);
+            }
+        }
+
         public int GetLastestInsertID()
         {
             string sql = "select ident_current('Orders')";

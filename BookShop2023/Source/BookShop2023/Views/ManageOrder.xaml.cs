@@ -111,6 +111,12 @@ namespace ProjectMyShop.Views
                 }
             }
 
+
+            OrderDataGrid.ItemsSource = DataGridBinding;
+
+
+
+
             dividePaging();
 
             
@@ -203,7 +209,7 @@ namespace ProjectMyShop.Views
                 #region insert thông tin khách hàng, insert Order, insert list OrderDetail
 
                 // insert customer info
-                MessageBox.Show("Name: " + customer.Name + ", Address: " + customer.Address + " ID: " + customer.ID, "Thông tin khách hàng", MessageBoxButton.OK);
+                //MessageBox.Show("Name: " + customer.Name + ", Address: " + customer.Address + " ID: " + customer.ID, "Thông tin khách hàng", MessageBoxButton.OK);
 
                 int customerId;
 
@@ -218,7 +224,14 @@ namespace ProjectMyShop.Views
 
                 // insert order info               
                 order.CustomerID = customerId;
-                _orderBUS.InsertOrder(order);
+                if (screen.HasVoucher)
+                {
+                    _orderBUS.InsertOrderWithVoucher(order);
+                } else
+                {
+                    _orderBUS.InsertOrder(order);
+
+                }
 
 
                 // insert order detail

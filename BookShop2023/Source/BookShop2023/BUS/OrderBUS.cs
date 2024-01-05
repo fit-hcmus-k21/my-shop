@@ -41,6 +41,11 @@ namespace ProjectMyShop.BUS
             _orderDAO.AddOrder(order);
         }
 
+        public void InsertOrderWithVoucher(Order order)
+        {
+            _orderDAO.AddOrderWithVoucher(order);
+        }
+
         public int GetLatestInsertID()
         {
             return _orderDAO.GetLastestInsertID();

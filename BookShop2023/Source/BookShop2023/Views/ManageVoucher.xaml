@@ -122,24 +122,24 @@
                                                 <TextBlock Grid.Row="1">
                                            <Run Text="{Binding ID}" Foreground="Blue" FontWeight="Bold"/> -
                                                     
-                            <Run Text="Mã giảm" Foreground="Red"/>
-                            <Run Text="{Binding PercentOff}" Foreground="Red" />
-                            <Run Text="%" Foreground="Red" />
+                            <Run Text="Mã" Foreground="Red"/>
+                            <Run Text="{Binding DisplayText}" Foreground="Red" />
 
                                         </TextBlock>
-                                                <TextBlock Grid.Row="2">
+                                                <TextBlock Grid.Row="3">
                             <Run Text="Ngày bắt đầu: "/>
                                                     <Run Text="{Binding StartDate, Converter={StaticResource DateOnlyConverter}}"/>
 
                                         </TextBlock >
-                                                <TextBlock Grid.Row="3">
+                                                <TextBlock Grid.Row="4">
                             <Run Text="Ngày kết thúc: " />
                                                     
                             <Run Text="{Binding EndDate, Converter={StaticResource DateOnlyConverter}}" />
                                                 </TextBlock >
-                                                <TextBlock Grid.Row="4">
-                            <Run Text="Chi tiết: " />
-                            <Run Text="{Binding Description}" />
+                                                <TextBlock Grid.Row="2">
+                             <Run Text="Giảm" Foreground="Blue"/>
+                            <Run Text="{Binding PercentOff}" Foreground="Blue" />
+                            <Run Text="%" Foreground="Blue" />
                                                 </TextBlock>
                                             </Grid>
 

@@ -218,6 +218,7 @@ namespace BookShop2023.DAO
                     Name = (string)reader["Name"],
                     Address = (string)reader["Address"],
                     PhoneNumber = (string)reader["PhoneNumber"],
+                    
                 };
 
                 reader.Close();
